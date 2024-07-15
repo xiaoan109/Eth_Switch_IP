@@ -1,0 +1,100 @@
+#! /usr/local/Cellar/icarus-verilog/11.0/bin/vvp
+:ivl_version "11.0 (stable)";
+:ivl_delay_selection "TYPICAL";
+:vpi_time_precision + 0;
+:vpi_module "/usr/local/Cellar/icarus-verilog/11.0/lib/ivl/system.vpi";
+:vpi_module "/usr/local/Cellar/icarus-verilog/11.0/lib/ivl/vhdl_sys.vpi";
+:vpi_module "/usr/local/Cellar/icarus-verilog/11.0/lib/ivl/vhdl_textio.vpi";
+:vpi_module "/usr/local/Cellar/icarus-verilog/11.0/lib/ivl/v2005_math.vpi";
+:vpi_module "/usr/local/Cellar/icarus-verilog/11.0/lib/ivl/va_math.vpi";
+S_0x7fd42bd0b980 .scope module, "queue" "queue" 2 1;
+ .timescale 0 0;
+    .port_info 0 /INPUT 1 "clk";
+    .port_info 1 /INPUT 1 "rst";
+    .port_info 2 /INPUT 1 "wr_en";
+    .port_info 3 /INPUT 1 "rd_en";
+    .port_info 4 /INPUT 33 "wr_data";
+    .port_info 5 /OUTPUT 33 "rd_data";
+o0x7fd430040008 .functor BUFZ 1, C4<z>; HiZ drive
+v0x7fd42bd05a40_0 .net "clk", 0 0, o0x7fd430040008;  0 drivers
+v0x7fd42bd1b910 .array "fifo_datas", 0 1, 32 0;
+v0x7fd42bd1b9b0_0 .var "ptr", 0 0;
+v0x7fd42bd1ba40_0 .var "rd_data", 32 0;
+o0x7fd430040098 .functor BUFZ 1, C4<z>; HiZ drive
+v0x7fd42bd1baf0_0 .net "rd_en", 0 0, o0x7fd430040098;  0 drivers
+o0x7fd4300400c8 .functor BUFZ 1, C4<z>; HiZ drive
+v0x7fd42bd1bbd0_0 .net "rst", 0 0, o0x7fd4300400c8;  0 drivers
+o0x7fd4300400f8 .functor BUFZ 33, C4<zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz>; HiZ drive
+v0x7fd42bd1bc70_0 .net "wr_data", 32 0, o0x7fd4300400f8;  0 drivers
+o0x7fd430040128 .functor BUFZ 1, C4<z>; HiZ drive
+v0x7fd42bd1bd20_0 .net "wr_en", 0 0, o0x7fd430040128;  0 drivers
+E_0x7fd42bd0a950/0 .event edge, v0x7fd42bd1bbd0_0;
+E_0x7fd42bd0a950/1 .event posedge, v0x7fd42bd05a40_0;
+E_0x7fd42bd0a950 .event/or E_0x7fd42bd0a950/0, E_0x7fd42bd0a950/1;
+E_0x7fd42bd05f30 .event negedge, v0x7fd42bd05a40_0;
+    .scope S_0x7fd42bd0b980;
+T_0 ;
+    %wait E_0x7fd42bd05f30;
+    %load/vec4 v0x7fd42bd1bbd0_0;
+    %pushi/vec4 1, 0, 1;
+    %cmp/ne;
+    %flag_get/vec4 4;
+    %load/vec4 v0x7fd42bd1bd20_0;
+    %pushi/vec4 1, 0, 1;
+    %cmp/e;
+    %flag_get/vec4 4;
+    %and;
+    %flag_set/vec4 8;
+    %jmp/0xz  T_0.0, 8;
+    %load/vec4 v0x7fd42bd1bc70_0;
+    %load/vec4 v0x7fd42bd1b9b0_0;
+    %pad/u 33;
+    %addi 1, 0, 33;
+    %ix/vec4 3;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x7fd42bd1b910, 0, 4;
+T_0.0 ;
+    %jmp T_0;
+    .thread T_0;
+    .scope S_0x7fd42bd0b980;
+T_1 ;
+    %wait E_0x7fd42bd0a950;
+    %load/vec4 v0x7fd42bd1bbd0_0;
+    %cmpi/e 1, 0, 1;
+    %jmp/0xz  T_1.0, 4;
+    %pushi/vec4 0, 0, 33;
+    %ix/load 3, 0, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x7fd42bd1b910, 0, 4;
+    %pushi/vec4 0, 0, 33;
+    %ix/load 3, 1, 0;
+    %flag_set/imm 4, 0;
+    %ix/load 4, 0, 0; Constant delay
+    %assign/vec4/a/d v0x7fd42bd1b910, 0, 4;
+    %pushi/vec4 0, 0, 1;
+    %assign/vec4 v0x7fd42bd1b9b0_0, 0;
+    %jmp T_1.1;
+T_1.0 ;
+    %load/vec4 v0x7fd42bd1baf0_0;
+    %cmpi/e 1, 0, 1;
+    %jmp/0xz  T_1.2, 4;
+    %load/vec4 v0x7fd42bd1b9b0_0;
+    %pad/u 3;
+    %ix/vec4 4;
+    %load/vec4a v0x7fd42bd1b910, 4;
+    %store/vec4 v0x7fd42bd1ba40_0, 0, 33;
+    %load/vec4 v0x7fd42bd1b9b0_0;
+    %pad/u 2;
+    %addi 1, 0, 2;
+    %pad/u 1;
+    %store/vec4 v0x7fd42bd1b9b0_0, 0, 1;
+T_1.2 ;
+T_1.1 ;
+    %jmp T_1;
+    .thread T_1;
+# The file index is used to find the file name in the following table.
+:file_names 3;
+    "N/A";
+    "<interactive>";
+    "components/queue.v";

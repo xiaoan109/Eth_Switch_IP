@@ -1,0 +1,279 @@
+
+*** Running vivado
+    with args -log stimulus_for_Crossbar4.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source stimulus_for_Crossbar4.tcl
+
+
+
+****** Vivado v2020.1 (64-bit)
+  **** SW Build 2902540 on Wed May 27 19:54:49 MDT 2020
+  **** IP Build 2902112 on Wed May 27 22:43:36 MDT 2020
+    ** Copyright 1986-2020 Xilinx, Inc. All Rights Reserved.
+
+source stimulus_for_Crossbar4.tcl -notrace
+Command: synth_design -top stimulus_for_Crossbar4 -part xc7a35ticsg324-1L
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35ti'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35ti'
+INFO: [Device 21-403] Loading part xc7a35ticsg324-1L
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 2 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 18640
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:05 ; elapsed = 00:00:06 . Memory (MB): peak = 1024.059 ; gain = 0.000
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'stimulus_for_Crossbar4' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/stimulus_TOP_LEVEL.v:24]
+INFO: [Synth 8-6157] synthesizing module 'shifttt' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/shifttter.v:23]
+INFO: [Synth 8-6155] done synthesizing module 'shifttt' (1#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/shifttter.v:23]
+INFO: [Synth 8-6157] synthesizing module 'main_module_of_Crossbar' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/Crossbar.v:23]
+INFO: [Synth 8-6157] synthesizing module 'procedure' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/output_crossbar_procedure.v:24]
+INFO: [Synth 8-6157] synthesizing module 'mux4_to_1' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/MUX4.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'mux4_to_1' (2#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/MUX4.v:6]
+INFO: [Synth 8-6157] synthesizing module 'point' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/point_of_commutation_for_crossbar.v:24]
+INFO: [Synth 8-6157] synthesizing module 'mux2_to_1' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/MUX2.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'mux2_to_1' (3#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/MUX2.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'point' (4#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/point_of_commutation_for_crossbar.v:24]
+INFO: [Synth 8-6155] done synthesizing module 'procedure' (5#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/output_crossbar_procedure.v:24]
+INFO: [Synth 8-6157] synthesizing module 'connection' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/input_mux_for_crossbar.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'connection' (6#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/input_mux_for_crossbar.v:3]
+INFO: [Synth 8-6157] synthesizing module 'round_robin_module' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/RoundRobin_Arbiter.v:3]
+INFO: [Synth 8-6157] synthesizing module 'out_arbiter' [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/output_arbiter_RR.v:23]
+INFO: [Synth 8-155] case statement is not full and has no default [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/output_arbiter_RR.v:71]
+INFO: [Synth 8-6155] done synthesizing module 'out_arbiter' (7#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/output_arbiter_RR.v:23]
+INFO: [Synth 8-6155] done synthesizing module 'round_robin_module' (8#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/RoundRobin_Arbiter.v:3]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'RR_Arbiter_unit'. This will prevent further optimization [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/Crossbar.v:156]
+INFO: [Synth 8-6155] done synthesizing module 'main_module_of_Crossbar' (9#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/Crossbar.v:23]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'Crossbar4'. This will prevent further optimization [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/stimulus_TOP_LEVEL.v:147]
+INFO: [Synth 8-6071] Mark debug on the nets applies keep_hierarchy on instance 'zero_state'. This will prevent further optimization [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/stimulus_TOP_LEVEL.v:55]
+INFO: [Synth 8-6155] done synthesizing module 'stimulus_for_Crossbar4' (10#1) [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/stimulus_TOP_LEVEL.v:24]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:06 ; elapsed = 00:00:09 . Memory (MB): peak = 1024.059 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:06 ; elapsed = 00:00:09 . Memory (MB): peak = 1024.059 ; gain = 0.000
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:06 ; elapsed = 00:00:09 . Memory (MB): peak = 1024.059 ; gain = 0.000
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.152 . Memory (MB): peak = 1024.059 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/constrs_1/new/crossbar_constraints.xdc]
+Finished Parsing XDC File [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/constrs_1/new/crossbar_constraints.xdc]
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/constrs_1/new/crossbar_constraints.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/stimulus_for_Crossbar4_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/stimulus_for_Crossbar4_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.011 . Memory (MB): peak = 1078.688 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.056 . Memory (MB): peak = 1078.688 ; gain = 0.000
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:14 ; elapsed = 00:00:17 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35ticsg324-1L
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:14 ; elapsed = 00:00:17 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:14 ; elapsed = 00:00:17 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'State_reg' in module 'procedure'
+INFO: [Synth 8-802] inferred FSM for state register 'Previous_reg' in module 'out_arbiter'
+INFO: [Synth 8-6159] Found Keep on FSM register 'State_reg' in module 'procedure', re-encoding will not be performed
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+*
+                 iSTATE5 |                              000 |                              000
+                  iSTATE |                              001 |                              001
+                 iSTATE0 |                              010 |                              010
+                 iSTATE1 |                              011 |                              011
+                 iSTATE3 |                              101 |                              101
+                 iSTATE2 |                              100 |                              100
+                 iSTATE4 |                              110 |                              110
+---------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                  iSTATE |                               00 |                              011
+                 iSTATE0 |                               01 |                              000
+                 iSTATE1 |                               10 |                              001
+                 iSTATE2 |                               11 |                              010
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'Previous_reg' using encoding 'sequential' in module 'out_arbiter'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:18 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Registers : 
+	              128 Bit    Registers := 7     
+	               32 Bit    Registers := 12    
+	                8 Bit    Registers := 1     
+	                4 Bit    Registers := 13    
+	                3 Bit    Registers := 24    
+	                1 Bit    Registers := 114   
++---Muxes : 
+	   3 Input  128 Bit        Muxes := 3     
+	   2 Input  127 Bit        Muxes := 2     
+	   2 Input    4 Bit        Muxes := 9     
+	   8 Input    4 Bit        Muxes := 8     
+	   2 Input    3 Bit        Muxes := 137   
+	   8 Input    3 Bit        Muxes := 4     
+	   3 Input    3 Bit        Muxes := 4     
+	   4 Input    3 Bit        Muxes := 4     
+	   5 Input    3 Bit        Muxes := 4     
+	   4 Input    2 Bit        Muxes := 4     
+	   2 Input    1 Bit        Muxes := 142   
+	   7 Input    1 Bit        Muxes := 80    
+	   8 Input    1 Bit        Muxes := 16    
+	   4 Input    1 Bit        Muxes := 12    
+	   3 Input    1 Bit        Muxes := 6     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:19 ; elapsed = 00:00:22 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:00:27 ; elapsed = 00:00:30 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:27 ; elapsed = 00:00:30 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:27 ; elapsed = 00:00:30 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:31 ; elapsed = 00:00:34 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:31 ; elapsed = 00:00:34 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:31 ; elapsed = 00:00:34 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:31 ; elapsed = 00:00:34 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:31 ; elapsed = 00:00:34 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:31 ; elapsed = 00:00:34 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+------+------+
+|      |Cell  |Count |
++------+------+------+
+|1     |BUFG  |     1|
+|2     |LUT1  |    14|
+|3     |LUT2  |    37|
+|4     |LUT3  |    30|
+|5     |LUT4  |    29|
+|6     |LUT5  |   180|
+|7     |LUT6  |   147|
+|8     |MUXF7 |     8|
+|9     |FDRE  |   174|
+|10    |FDSE  |     6|
+|11    |IBUF  |     2|
+|12    |OBUF  |     4|
++------+------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:31 ; elapsed = 00:00:34 . Memory (MB): peak = 1078.688 ; gain = 54.629
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:21 ; elapsed = 00:00:31 . Memory (MB): peak = 1078.688 ; gain = 0.000
+Synthesis Optimization Complete : Time (s): cpu = 00:00:31 ; elapsed = 00:00:35 . Memory (MB): peak = 1078.688 ; gain = 54.629
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.018 . Memory (MB): peak = 1080.422 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 8 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 1 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.001 . Memory (MB): peak = 1081.473 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+43 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:36 ; elapsed = 00:00:43 . Memory (MB): peak = 1081.473 ; gain = 57.414
+INFO: [Common 17-1381] The checkpoint 'D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.runs/synth_1/stimulus_for_Crossbar4.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file stimulus_for_Crossbar4_utilization_synth.rpt -pb stimulus_for_Crossbar4_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Mon Jul 12 18:56:34 2021...

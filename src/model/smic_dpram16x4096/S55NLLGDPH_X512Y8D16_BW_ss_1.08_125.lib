@@ -1,0 +1,1228 @@
+/*
+     Copyright (c) 2024 SMIC             
+     Filename:      S55NLLGDPH_X512Y8D16_BW_ss_1.08_125.lib
+     IP code:       S55NLLGDPH
+     Version:       1.3.a
+     CreateDate:    May 18, 2024        
+                    
+    Synopsys Technology Library for General Dual-Port SRAM
+    SMIC 55nm LL Logic Process
+
+    Configuration: -instname S55NLLGDPH_X512Y8D16_BW -rows 512 -bits 16 -mux 8 
+    Redundancy: Off
+    Bit-Write: On
+*/
+
+/* DISCLAIMER                                                                      */
+/*                                                                                 */  
+/*   SMIC hereby provides the quality information to you but makes no claims,      */
+/* promises or guarantees about the accuracy, completeness, or adequacy of the     */
+/* information herein. The information contained herein is provided on an "AS IS"  */
+/* basis without any warranty, and SMIC assumes no obligation to provide support   */
+/* of any kind or otherwise maintain the information.                              */  
+/*   SMIC disclaims any representation that the information does not infringe any  */
+/* intellectual property rights or proprietary rights of any third parties. SMIC   */
+/* makes no other warranty, whether express, implied or statutory as to any        */
+/* matter whatsoever, including but not limited to the accuracy or sufficiency of  */
+/* any information or the merchantability and fitness for a particular purpose.    */
+/* Neither SMIC nor any of its representatives shall be liable for any cause of    */
+/* action incurred to connect to this service.                                     */  
+/*                                                                                 */
+/* STATEMENT OF USE AND CONFIDENTIALITY                                            */  
+/*                                                                                 */  
+/*   The following/attached material contains confidential and proprietary         */  
+/* information of SMIC. This material is based upon information which SMIC         */  
+/* considers reliable, but SMIC neither represents nor warrants that such          */
+/* information is accurate or complete, and it must not be relied upon as such.    */
+/* This information was prepared for informational purposes and is for the use     */
+/* by SMIC's customer only. SMIC reserves the right to make changes in the         */  
+/* information at any time without notice.                                         */  
+/*   No part of this information may be reproduced, transmitted, transcribed,      */  
+/* stored in a retrieval system, or translated into any human or computer          */ 
+/* language, in any form or by any means, electronic, mechanical, magnetic,        */  
+/* optical, chemical, manual, or otherwise, without the prior written consent of   */
+/* SMIC. Any unauthorized use or disclosure of this material is strictly           */  
+/* prohibited and may be unlawful. By accepting this material, the receiving       */  
+/* party shall be deemed to have acknowledged, accepted, and agreed to be bound    */
+/* by the foregoing limitations and restrictions. Thank you.                       */  
+/*                                                                                 */  
+
+library(S55NLLGDPH_X512Y8D16_BW_ss_1.08_125) {
+	delay_model		: table_lookup;
+	time_unit		: "1ns";
+	voltage_unit		: "1V";
+	current_unit		: "1mA";
+	leakage_power_unit	: "1mW";
+	nom_process		: 1;
+	nom_temperature         : 125;
+	nom_voltage		: 1.08;
+	capacitive_load_unit	 (1,pf);
+
+	pulling_resistance_unit	        : "1kohm";
+
+	/* additional header data */
+	default_cell_leakage_power        : 0;
+	default_fanout_load		  : 1;
+	default_inout_pin_cap		: 0.005;
+	default_input_pin_cap		: 0.005;
+	default_output_pin_cap		: 0.0;
+	default_max_transition		: 1.000;
+
+        /* default attributes */
+        default_leakage_power_density : 0.0;
+        slew_derate_from_library      : 1.000;
+        slew_lower_threshold_pct_fall : 10.000;
+        slew_upper_threshold_pct_fall : 90.000;
+        slew_lower_threshold_pct_rise : 10.000;
+        slew_upper_threshold_pct_rise : 90.000;
+        input_threshold_pct_fall      : 50.000;
+        input_threshold_pct_rise      : 50.000;
+        output_threshold_pct_fall     : 50.000;
+        output_threshold_pct_rise     : 50.000;
+
+ 	/* k-factors */
+ 	k_process_cell_fall             : 1;
+ 	k_process_cell_leakage_power    : 0;
+ 	k_process_cell_rise             : 1;
+ 	k_process_fall_transition       : 1;
+ 	k_process_hold_fall             : 1;
+ 	k_process_hold_rise             : 1;
+ 	k_process_internal_power        : 0;
+ 	k_process_min_pulse_width_high  : 1;
+ 	k_process_min_pulse_width_low   : 1;
+ 	k_process_pin_cap               : 0;
+ 	k_process_recovery_fall         : 1;
+ 	k_process_recovery_rise         : 1;
+ 	k_process_rise_transition       : 1;
+ 	k_process_setup_fall            : 1;
+ 	k_process_setup_rise            : 1;
+ 	k_process_wire_cap              : 0;
+ 	k_process_wire_res              : 0;
+	k_temp_cell_fall		: 0.000;
+	k_temp_cell_rise		: 0.000;
+	k_temp_hold_fall                : 0.000;
+	k_temp_hold_rise                : 0.000;
+	k_temp_min_pulse_width_high     : 0.000;
+	k_temp_min_pulse_width_low      : 0.000;
+	k_temp_min_period               : 0.000;
+	k_temp_rise_propagation         : 0.000;
+	k_temp_fall_propagation         : 0.000;
+	k_temp_rise_transition          : 0.0;
+	k_temp_fall_transition          : 0.0;
+	k_temp_recovery_fall            : 0.000;
+	k_temp_recovery_rise            : 0.000;
+	k_temp_setup_fall               : 0.000;
+	k_temp_setup_rise               : 0.000;
+	k_volt_cell_fall                : 0.000;
+	k_volt_cell_rise                : 0.000;
+	k_volt_hold_fall                : 0.000;
+	k_volt_hold_rise                : 0.000;
+	k_volt_min_pulse_width_high     : 0.000;
+	k_volt_min_pulse_width_low      : 0.000;
+	k_volt_min_period               : 0.000;
+	k_volt_rise_propagation         : 0.000;
+	k_volt_fall_propagation         : 0.000;
+	k_volt_rise_transition	    : 0.0;
+	k_volt_fall_transition	    : 0.0;
+	k_volt_recovery_fall            : 0.000;
+	k_volt_recovery_rise            : 0.000;
+	k_volt_setup_fall               : 0.000;
+	k_volt_setup_rise               : 0.000;
+
+
+        operating_conditions(ss_1.08_125) {
+		process	         : 1;
+		temperature	 : 125;
+		voltage	         : 1.08;
+		tree_type	 : balanced_tree;
+	}
+        default_operating_conditions : ss_1.08_125;
+	wire_load("sample") {
+		resistance	 : 1.6e-05;
+		capacitance	 : 0.0002;
+		area	 : 1.7;
+  		slope	 : 500;
+		fanout_length	 (1,500);
+	}
+        lu_table_template(S55NLLGDPH_X512Y8D16_BW_bist_mux_delay_template) {
+           variable_1 : input_net_transition;
+           variable_2 : total_output_net_capacitance;
+               index_1 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+               index_2 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+        lu_table_template(S55NLLGDPH_X512Y8D16_BW_mux_mem_out_delay_template) {
+           variable_1 : input_net_transition;
+           variable_2 : total_output_net_capacitance;
+               index_1 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+               index_2 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+        lu_table_template(S55NLLGDPH_X512Y8D16_BW_mem_out_delay_template) {
+           variable_1 : input_net_transition;
+           variable_2 : total_output_net_capacitance;
+               index_1 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+               index_2 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+	lu_table_template(S55NLLGDPH_X512Y8D16_BW_bist_mux_slew_template) {
+           variable_1 : total_output_net_capacitance;
+               index_1 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+	lu_table_template(S55NLLGDPH_X512Y8D16_BW_mem_out_slew_template) {
+           variable_1 : total_output_net_capacitance;
+               index_1 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+	lu_table_template(S55NLLGDPH_X512Y8D16_BW_clk_setup_constraint_template) {
+           variable_1 : related_pin_transition;
+           variable_2 : constrained_pin_transition;
+               index_1 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+               index_2 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+	lu_table_template(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+           variable_1 : related_pin_transition;
+           variable_2 : constrained_pin_transition;
+               index_1 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+               index_2 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+        power_lut_template(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew_load) {
+           variable_1 : input_transition_time;
+           variable_2 : total_output_net_capacitance;
+               index_1 ("1000, 1001");
+               index_2 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+        power_lut_template(S55NLLGDPH_X512Y8D16_BW_energy_template_sigslew_load) {
+           variable_1 : input_transition_time;
+           variable_2 : total_output_net_capacitance;
+               index_1 ("1000, 1001");
+               index_2 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+        power_lut_template(S55NLLGDPH_X512Y8D16_BW_energy_template_load) {
+           variable_1 : total_output_net_capacitance;
+               index_1 ("1000, 1001, 1002, 1003, 1004, 1005, 1006");
+        }
+        power_lut_template(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+           variable_1 : input_transition_time;
+               index_1 ("1000, 1001");
+        }
+        power_lut_template(S55NLLGDPH_X512Y8D16_BW_energy_template_sigslew) {
+           variable_1 : input_transition_time;
+               index_1 ("1000, 1001");
+        }
+	library_features(report_delay_calculation);
+	type (S55NLLGDPH_X512Y8D16_BW_DATA) {
+		base_type : array ;
+		data_type : bit ;
+		bit_width : 16;
+		bit_from : 15;
+		bit_to : 0 ;
+		downto : true ;
+	}
+	type (S55NLLGDPH_X512Y8D16_BW_ADDRESS) {
+		base_type : array ;
+		data_type : bit ;
+		bit_width : 12;
+		bit_from : 11;
+		bit_to : 0 ;
+		downto : true ;
+	}
+
+	type (S55NLLGDPH_X512Y8D16_BW_WRITE) {
+		base_type : array ;
+		data_type : bit ;
+		bit_width : 16;
+		bit_from : 15;
+		bit_to : 0 ;
+		downto : true ;
+	}
+
+cell(S55NLLGDPH_X512Y8D16_BW) {
+	area		 : 100091.260;
+	dont_use	 : TRUE;
+	dont_touch	 : TRUE;
+        interface_timing : TRUE;
+	memory() {
+		type : ram;
+		address_width : 12;
+		word_width : 16;
+	}
+        bus(QA)   {
+                bus_type : S55NLLGDPH_X512Y8D16_BW_DATA;
+		direction : output;
+		max_capacitance : 0.400;
+                memory_read() {
+			address : AA;
+		}
+                timing() {
+                        related_pin :   "CLKA" ;
+                        timing_type : rising_edge ;
+                        timing_sense : non_unate;
+                        cell_rise(S55NLLGDPH_X512Y8D16_BW_mem_out_delay_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.001, 0.005, 0.010, 0.050, 0.100, 0.200, 0.400");
+                        values(\
+			"3.767, 3.797, 3.806, 3.863, 3.931, 4.065, 4.331",\
+			"3.785, 3.765, 3.806, 3.863, 3.942, 4.048, 4.335",\
+			"3.810, 3.782, 3.817, 3.851, 3.948, 4.064, 4.322",\
+			"3.819, 3.826, 3.825, 3.888, 3.937, 4.092, 4.335",\
+			"3.800, 3.817, 3.842, 3.907, 3.946, 4.072, 4.340",\
+			"3.819, 3.827, 3.819, 3.872, 3.938, 4.073, 4.357",\
+			"3.807, 3.794, 3.810, 3.830, 3.934, 4.030, 4.337"\
+                        );
+                        }
+                        rise_transition(S55NLLGDPH_X512Y8D16_BW_mem_out_slew_template) {
+                        index_1("0.001, 0.005, 0.010, 0.050, 0.100, 0.200, 0.400");
+			values("0.032, 0.043, 0.057, 0.167, 0.311, 0.604, 1.197");
+                        }
+                        cell_fall(S55NLLGDPH_X512Y8D16_BW_mem_out_delay_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.001, 0.005, 0.010, 0.050, 0.100, 0.200, 0.400");
+                        values(\
+			"3.746, 3.756, 3.765, 3.822, 3.880, 4.008, 4.266",\
+			"3.760, 3.780, 3.773, 3.852, 3.897, 4.017, 4.286",\
+			"3.784, 3.774, 3.808, 3.849, 3.903, 4.050, 4.308",\
+			"3.784, 3.787, 3.786, 3.880, 3.898, 4.051, 4.289",\
+			"3.815, 3.736, 3.829, 3.871, 3.947, 4.069, 4.305",\
+			"3.791, 3.801, 3.812, 3.879, 3.910, 4.070, 4.287",\
+			"3.769, 3.802, 3.750, 3.828, 3.922, 4.058, 4.258"\
+                        );
+                        }
+                        fall_transition(S55NLLGDPH_X512Y8D16_BW_mem_out_slew_template) {
+                        index_1("0.001, 0.005, 0.010, 0.050, 0.100, 0.200, 0.400");
+			values("0.036, 0.047, 0.060, 0.152, 0.277, 0.535, 1.066");
+                        }
+                }
+        }
+        bus(QB)   {
+                bus_type : S55NLLGDPH_X512Y8D16_BW_DATA;
+		direction : output;
+		max_capacitance : 0.400;
+                memory_read() {
+			address : AB;
+		}
+                timing() {
+                        related_pin :   "CLKB" ;
+                        timing_type : rising_edge ;
+                        timing_sense : non_unate;
+                        cell_rise(S55NLLGDPH_X512Y8D16_BW_mem_out_delay_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.001, 0.005, 0.010, 0.050, 0.100, 0.200, 0.400");
+                        values(\
+			"3.767, 3.797, 3.806, 3.863, 3.931, 4.065, 4.331",\
+			"3.785, 3.765, 3.806, 3.863, 3.942, 4.048, 4.335",\
+			"3.810, 3.782, 3.817, 3.851, 3.948, 4.064, 4.322",\
+			"3.819, 3.826, 3.825, 3.888, 3.937, 4.092, 4.335",\
+			"3.800, 3.817, 3.842, 3.907, 3.946, 4.072, 4.340",\
+			"3.819, 3.827, 3.819, 3.872, 3.938, 4.073, 4.357",\
+			"3.807, 3.794, 3.810, 3.830, 3.934, 4.030, 4.337"\
+                        );
+                        }
+                        rise_transition(S55NLLGDPH_X512Y8D16_BW_mem_out_slew_template) {
+                        index_1("0.001, 0.005, 0.010, 0.050, 0.100, 0.200, 0.400");
+			values("0.032, 0.043, 0.057, 0.167, 0.311, 0.604, 1.197");
+                        }
+                        cell_fall(S55NLLGDPH_X512Y8D16_BW_mem_out_delay_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.001, 0.005, 0.010, 0.050, 0.100, 0.200, 0.400");
+                        values(\
+			"3.746, 3.756, 3.765, 3.822, 3.880, 4.008, 4.266",\
+			"3.760, 3.780, 3.773, 3.852, 3.897, 4.017, 4.286",\
+			"3.784, 3.774, 3.808, 3.849, 3.903, 4.050, 4.308",\
+			"3.784, 3.787, 3.786, 3.880, 3.898, 4.051, 4.289",\
+			"3.815, 3.736, 3.829, 3.871, 3.947, 4.069, 4.305",\
+			"3.791, 3.801, 3.812, 3.879, 3.910, 4.070, 4.287",\
+			"3.769, 3.802, 3.750, 3.828, 3.922, 4.058, 4.258"\
+                        );
+                        }
+                        fall_transition(S55NLLGDPH_X512Y8D16_BW_mem_out_slew_template) {
+                        index_1("0.001, 0.005, 0.010, 0.050, 0.100, 0.200, 0.400");
+			values("0.036, 0.047, 0.060, 0.152, 0.277, 0.535, 1.066");
+                        }
+                }
+        }
+
+        pin(CLKA)   {
+		direction : input;
+		capacitance : 0.017;
+                clock : true;
+                max_transition : 1.000;
+                timing() {
+                        related_pin     : "CLKB" ;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_clk_setup_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972"\
+                        );
+                        }
+                 }
+
+                 min_pulse_width_high  : 0.040 ;
+                 min_pulse_width_low   : 0.253 ;
+                 min_period            : 4.972 ;
+
+
+                internal_power(){
+                        when : "(!CENA & ! \
+                                (WENA) & !( \
+                                (BWENA[0]) & \
+                                (BWENA[1]) & \
+                                (BWENA[2]) & \
+                                (BWENA[3]) & \
+                                (BWENA[4]) & \
+                                (BWENA[5]) & \
+                                (BWENA[6]) & \
+                                (BWENA[7]) & \
+                                (BWENA[8]) & \
+                                (BWENA[9]) & \
+                                (BWENA[10]) & \
+                                (BWENA[11]) & \
+                                (BWENA[12]) & \
+                                (BWENA[13]) & \
+                                (BWENA[14]) & \
+                                (BWENA[15])) \
+                                ) \
+                                 ";
+                        rise_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("14.104, 14.104")
+                        }
+                        fall_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.000, 0.000")
+                        }
+                }
+                internal_power(){
+                        when : "(!CENA & \
+                                !( !(WENA) & !(\
+                                (BWENA[0]) & \
+                                (BWENA[1]) & \
+                                (BWENA[2]) & \
+                                (BWENA[3]) & \
+                                (BWENA[4]) & \
+                                (BWENA[5]) & \
+                                (BWENA[6]) & \
+                                (BWENA[7]) & \
+                                (BWENA[8]) & \
+                                (BWENA[9]) & \
+                                (BWENA[10]) & \
+                                (BWENA[11]) & \
+                                (BWENA[12]) & \
+                                (BWENA[13]) & \
+                                (BWENA[14]) & \
+                                (BWENA[15]))) \
+                                ) \
+                                 ";
+                        rise_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("11.087, 11.087")
+                        }
+                        fall_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.000, 0.000")
+                        }
+                }
+                internal_power(){
+                 when : "(CENA)";
+                        rise_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.019, 0.019")
+                        }
+                        fall_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.000, 0.000")
+                        }
+                }
+        }
+
+        pin(CENA)   {
+                direction : input;
+                capacitance : 0.005;
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.241, 0.253, 0.267, 0.288, 0.327, 0.352, 0.376",\
+			"0.235, 0.247, 0.262, 0.282, 0.322, 0.351, 0.370",\
+			"0.232, 0.244, 0.258, 0.280, 0.321, 0.348, 0.368",\
+			"0.233, 0.245, 0.258, 0.279, 0.319, 0.342, 0.368",\
+			"0.253, 0.264, 0.278, 0.299, 0.342, 0.365, 0.380",\
+			"0.280, 0.289, 0.302, 0.324, 0.366, 0.392, 0.412",\
+			"0.308, 0.320, 0.334, 0.353, 0.393, 0.420, 0.442"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.298, 0.298, 0.308, 0.324, 0.357, 0.429, 0.493",\
+			"0.291, 0.291, 0.302, 0.317, 0.350, 0.430, 0.473",\
+			"0.298, 0.298, 0.309, 0.325, 0.352, 0.437, 0.493",\
+			"0.537, 0.325, 0.335, 0.352, 0.382, 0.461, 0.517",\
+			"0.564, 0.395, 0.405, 0.420, 0.450, 0.531, 0.584",\
+			"0.631, 0.448, 0.456, 0.470, 0.501, 0.578, 0.631",\
+			"0.683, 0.495, 0.504, 0.516, 0.546, 0.618, 0.679"\
+                        );
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182"\
+                        );
+                        }
+               }
+        }
+       
+
+        bus(BWENA){
+                bus_type : S55NLLGDPH_X512Y8D16_BW_WRITE;
+                direction : input;
+                capacitance : 0.002;
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.398, 0.411, 0.399, 0.423, 0.476, 0.512, 0.534",\
+			"0.387, 0.400, 0.389, 0.417, 0.463, 0.496, 0.527",\
+			"0.377, 0.390, 0.387, 0.405, 0.462, 0.488, 0.511",\
+			"0.377, 0.398, 0.393, 0.393, 0.451, 0.482, 0.503",\
+			"0.371, 0.387, 0.387, 0.377, 0.432, 0.464, 0.489",\
+			"0.377, 0.387, 0.387, 0.390, 0.438, 0.472, 0.498",\
+			"0.390, 0.387, 0.398, 0.403, 0.455, 0.498, 0.512"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.401, 0.415, 0.390, 0.422, 0.496, 0.542, 0.577",\
+			"0.390, 0.403, 0.390, 0.411, 0.488, 0.534, 0.571",\
+			"0.383, 0.394, 0.390, 0.400, 0.475, 0.522, 0.561",\
+			"0.377, 0.401, 0.390, 0.389, 0.470, 0.514, 0.549",\
+			"0.369, 0.390, 0.390, 0.383, 0.425, 0.490, 0.519",\
+			"0.375, 0.390, 0.390, 0.386, 0.443, 0.502, 0.538",\
+			"0.388, 0.390, 0.401, 0.399, 0.457, 0.487, 0.551"\
+                        );
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.209, 0.196, 0.188, 0.188, 0.195, 0.202, 0.195",\
+			"0.219, 0.205, 0.190, 0.195, 0.195, 0.202, 0.202",\
+			"0.231, 0.218, 0.203, 0.195, 0.180, 0.202, 0.211",\
+			"0.243, 0.232, 0.212, 0.195, 0.188, 0.202, 0.211",\
+			"0.258, 0.244, 0.233, 0.203, 0.195, 0.202, 0.211",\
+			"0.261, 0.241, 0.232, 0.195, 0.202, 0.180, 0.211",\
+			"0.242, 0.223, 0.212, 0.195, 0.202, 0.188, 0.211"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.219, 0.205, 0.208, 0.208, 0.217, 0.227, 0.217",\
+			"0.229, 0.215, 0.208, 0.217, 0.217, 0.227, 0.227",\
+			"0.241, 0.228, 0.210, 0.217, 0.199, 0.227, 0.235",\
+			"0.253, 0.241, 0.219, 0.217, 0.208, 0.227, 0.235",\
+			"0.268, 0.253, 0.240, 0.217, 0.217, 0.227, 0.235",\
+			"0.271, 0.250, 0.240, 0.217, 0.227, 0.199, 0.235",\
+			"0.252, 0.233, 0.220, 0.217, 0.227, 0.208, 0.235"\
+                        );
+                        }
+               }
+        }
+    pin(WENA){
+                direction : input;
+                capacitance : 0.003;
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.480, 0.492, 0.485, 0.512, 0.564, 0.593, 0.622",\
+			"0.470, 0.481, 0.476, 0.500, 0.556, 0.588, 0.615",\
+			"0.465, 0.472, 0.470, 0.490, 0.544, 0.575, 0.600",\
+			"0.463, 0.480, 0.481, 0.478, 0.540, 0.568, 0.591",\
+			"0.454, 0.470, 0.470, 0.465, 0.515, 0.547, 0.572",\
+			"0.460, 0.470, 0.470, 0.474, 0.521, 0.551, 0.581",\
+			"0.473, 0.470, 0.480, 0.487, 0.543, 0.574, 0.595"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.476, 0.490, 0.474, 0.501, 0.571, 0.640, 0.653",\
+			"0.464, 0.478, 0.465, 0.495, 0.558, 0.605, 0.659",\
+			"0.458, 0.468, 0.464, 0.485, 0.556, 0.593, 0.624",\
+			"0.454, 0.476, 0.469, 0.474, 0.552, 0.598, 0.633",\
+			"0.445, 0.464, 0.464, 0.458, 0.529, 0.577, 0.602",\
+			"0.451, 0.464, 0.464, 0.471, 0.531, 0.588, 0.628",\
+			"0.464, 0.464, 0.476, 0.484, 0.557, 0.603, 0.637"\
+                        );
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.077, 0.062, 0.048, 0.021, 0.008, 0.009, 0.008",\
+			"0.086, 0.072, 0.057, 0.030, 0.008, 0.009, 0.009",\
+			"0.098, 0.085, 0.069, 0.043, 0.000, 0.009, 0.018",\
+			"0.110, 0.098, 0.079, 0.056, 0.003, 0.009, 0.018",\
+			"0.125, 0.110, 0.100, 0.071, 0.016, 0.009, 0.018",\
+			"0.128, 0.108, 0.100, 0.061, 0.020, 0.000, 0.018",\
+			"0.109, 0.093, 0.079, 0.056, 0.009, 0.003, 0.018"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.085, 0.071, 0.054, 0.026, 0.026, 0.031, 0.026",\
+			"0.095, 0.080, 0.063, 0.030, 0.026, 0.031, 0.031",\
+			"0.106, 0.093, 0.075, 0.042, 0.008, 0.031, 0.040",\
+			"0.118, 0.107, 0.085, 0.057, 0.020, 0.031, 0.040",\
+			"0.133, 0.119, 0.105, 0.070, 0.026, 0.031, 0.040",\
+			"0.138, 0.117, 0.107, 0.061, 0.031, 0.008, 0.040",\
+			"0.117, 0.101, 0.085, 0.055, 0.031, 0.020, 0.040"\
+                        );
+                        }
+               }
+        }
+
+        bus(AA)   {
+                bus_type : S55NLLGDPH_X512Y8D16_BW_ADDRESS;
+                direction : input;
+                capacitance : 0.004;
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.687, 0.698, 0.677, 0.699, 0.757, 0.790, 0.820",\
+			"0.677, 0.687, 0.677, 0.688, 0.746, 0.781, 0.810",\
+			"0.674, 0.678, 0.677, 0.677, 0.735, 0.771, 0.800",\
+			"0.676, 0.687, 0.677, 0.674, 0.722, 0.755, 0.786",\
+			"0.668, 0.677, 0.677, 0.674, 0.700, 0.738, 0.766",\
+			"0.674, 0.677, 0.677, 0.674, 0.708, 0.745, 0.777",\
+			"0.688, 0.677, 0.687, 0.674, 0.728, 0.766, 0.798"\
+			);
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.688, 0.697, 0.697, 0.727, 0.803, 0.852, 0.894",\
+			"0.676, 0.686, 0.686, 0.716, 0.792, 0.843, 0.883",\
+			"0.665, 0.676, 0.676, 0.705, 0.782, 0.832, 0.874",\
+			"0.657, 0.688, 0.676, 0.690, 0.769, 0.819, 0.860",\
+			"0.675, 0.676, 0.676, 0.676, 0.752, 0.803, 0.843",\
+			"0.682, 0.676, 0.676, 0.670, 0.747, 0.799, 0.843",\
+			"0.696, 0.676, 0.688, 0.692, 0.770, 0.810, 0.853"\
+			);
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.167, 0.153, 0.136, 0.110, 0.054, 0.027, 0.015",\
+			"0.176, 0.162, 0.146, 0.119, 0.068, 0.039, 0.023",\
+			"0.188, 0.175, 0.157, 0.132, 0.079, 0.047, 0.036",\
+			"0.201, 0.188, 0.167, 0.145, 0.090, 0.063, 0.037",\
+			"0.216, 0.200, 0.188, 0.160, 0.108, 0.081, 0.054",\
+			"0.219, 0.199, 0.189, 0.150, 0.111, 0.083, 0.049",\
+			"0.200, 0.183, 0.168, 0.144, 0.089, 0.058, 0.036"\
+			);
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.158, 0.143, 0.126, 0.098, 0.053, 0.019, 0.019",\
+			"0.167, 0.153, 0.135, 0.104, 0.057, 0.019, 0.019",\
+			"0.178, 0.165, 0.148, 0.116, 0.064, 0.019, 0.019",\
+			"0.192, 0.179, 0.157, 0.132, 0.064, 0.027, 0.019",\
+			"0.206, 0.191, 0.178, 0.144, 0.070, 0.038, 0.043",\
+			"0.211, 0.189, 0.179, 0.134, 0.081, 0.049, 0.019",\
+			"0.190, 0.173, 0.157, 0.129, 0.057, 0.019, 0.019"\
+			);
+                        }
+               }
+                internal_power(){
+                        when : "CENA";
+                        rise_power(S55NLLGDPH_X512Y8D16_BW_energy_template_sigslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.279, 0.279")
+                        }
+                        fall_power(S55NLLGDPH_X512Y8D16_BW_energy_template_sigslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.279, 0.279")
+                        }
+                }
+        }
+        bus(DA)   {
+                bus_type : S55NLLGDPH_X512Y8D16_BW_DATA;
+                memory_write() {
+                        address : AA;
+                        clocked_on : "CLKA";
+                }
+                direction : input;
+                capacitance : 0.002;
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.417, 0.430, 0.426, 0.453, 0.505, 0.534, 0.561",\
+			"0.406, 0.419, 0.417, 0.441, 0.497, 0.529, 0.556",\
+			"0.396, 0.409, 0.406, 0.430, 0.485, 0.515, 0.540",\
+			"0.396, 0.417, 0.421, 0.419, 0.481, 0.509, 0.532",\
+			"0.547, 0.519, 0.485, 0.416, 0.450, 0.484, 0.508",\
+			"0.719, 0.691, 0.657, 0.588, 0.456, 0.490, 0.517",\
+			"0.891, 0.863, 0.829, 0.760, 0.554, 0.515, 0.530"\
+			);
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.402, 0.416, 0.391, 0.415, 0.485, 0.556, 0.567",\
+			"0.391, 0.404, 0.391, 0.409, 0.472, 0.518, 0.573",\
+			"0.384, 0.395, 0.391, 0.399, 0.470, 0.505, 0.545",\
+			"0.379, 0.402, 0.391, 0.388, 0.466, 0.513, 0.547",\
+			"0.550, 0.522, 0.488, 0.419, 0.443, 0.491, 0.519",\
+			"0.722, 0.694, 0.660, 0.591, 0.446, 0.502, 0.542",\
+			"0.894, 0.866, 0.832, 0.763, 0.557, 0.518, 0.553"\
+			);
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKA;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.210, 0.196, 0.188, 0.188, 0.195, 0.201, 0.195",\
+			"0.219, 0.206, 0.190, 0.195, 0.195, 0.201, 0.201",\
+			"0.231, 0.219, 0.203, 0.195, 0.180, 0.201, 0.210",\
+			"0.244, 0.231, 0.212, 0.195, 0.188, 0.201, 0.210",\
+			"0.258, 0.244, 0.234, 0.203, 0.195, 0.201, 0.210",\
+			"0.260, 0.241, 0.232, 0.195, 0.201, 0.180, 0.210",\
+			"0.243, 0.224, 0.212, 0.196, 0.201, 0.188, 0.210"\
+			);
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.219, 0.205, 0.208, 0.208, 0.217, 0.227, 0.217",\
+			"0.229, 0.214, 0.208, 0.217, 0.217, 0.227, 0.227",\
+			"0.241, 0.227, 0.210, 0.217, 0.198, 0.227, 0.235",\
+			"0.253, 0.241, 0.219, 0.217, 0.208, 0.227, 0.235",\
+			"0.267, 0.253, 0.240, 0.217, 0.217, 0.227, 0.235",\
+			"0.270, 0.250, 0.240, 0.217, 0.227, 0.198, 0.235",\
+			"0.251, 0.233, 0.219, 0.217, 0.227, 0.208, 0.235"\
+			);
+                        }
+               }
+        }
+        pin(CLKB)   {
+		direction : input;
+		capacitance : 0.017;
+                clock : true;
+                max_transition : 1.000;
+                timing() {
+                        related_pin     : "CLKA" ;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_clk_setup_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972",\
+                         "4.972, 4.972, 4.972, 4.972, 4.972, 4.972, 4.972"\
+                        );
+                        }
+                 }
+
+                 min_pulse_width_high : 0.040 ;
+                 min_pulse_width_low  : 0.253 ;
+                 min_period           : 4.972 ;
+
+
+                internal_power(){
+                        when : "(!CENB & ! \
+                                (WENB) & !( \
+                                (BWENB[0]) & \
+                                (BWENB[1]) & \
+                                (BWENB[2]) & \
+                                (BWENB[3]) & \
+                                (BWENB[4]) & \
+                                (BWENB[5]) & \
+                                (BWENB[6]) & \
+                                (BWENB[7]) & \
+                                (BWENB[8]) & \
+                                (BWENB[9]) & \
+                                (BWENB[10]) & \
+                                (BWENB[11]) & \
+                                (BWENB[12]) & \
+                                (BWENB[13]) & \
+                                (BWENB[14]) & \
+                                (BWENB[15])) \
+                                ) \
+                                 ";
+                        rise_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("14.104, 14.104")
+                        }
+                        fall_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.000, 0.000")
+                        }
+                }
+                internal_power(){
+                        when : "(!CENB & \
+                                !( !(WENB) & !(\
+                                (BWENB[0]) & \
+                                (BWENB[1]) & \
+                                (BWENB[2]) & \
+                                (BWENB[3]) & \
+                                (BWENB[4]) & \
+                                (BWENB[5]) & \
+                                (BWENB[6]) & \
+                                (BWENB[7]) & \
+                                (BWENB[8]) & \
+                                (BWENB[9]) & \
+                                (BWENB[10]) & \
+                                (BWENB[11]) & \
+                                (BWENB[12]) & \
+                                (BWENB[13]) & \
+                                (BWENB[14]) & \
+                                (BWENB[15]))) \
+                                ) \
+                                 ";
+                        rise_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("11.087, 11.087")
+                        }
+                        fall_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.000, 0.000")
+                        }
+                }
+                internal_power(){
+                        when : "(CENB)";
+                        rise_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.019, 0.019")
+                        }
+                        fall_power(S55NLLGDPH_X512Y8D16_BW_energy_template_clkslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.000, 0.000")
+                        }
+                }
+        }
+        pin(CENB)   {
+                direction : input;
+                capacitance : 0.005;
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.241, 0.253, 0.267, 0.288, 0.327, 0.352, 0.376",\
+			"0.235, 0.247, 0.262, 0.282, 0.322, 0.351, 0.370",\
+			"0.232, 0.244, 0.258, 0.280, 0.321, 0.348, 0.368",\
+			"0.233, 0.245, 0.258, 0.279, 0.319, 0.342, 0.368",\
+			"0.253, 0.264, 0.278, 0.299, 0.342, 0.365, 0.380",\
+			"0.280, 0.289, 0.302, 0.324, 0.366, 0.392, 0.412",\
+			"0.308, 0.320, 0.334, 0.353, 0.393, 0.420, 0.442"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.298, 0.298, 0.308, 0.324, 0.357, 0.429, 0.493",\
+			"0.291, 0.291, 0.302, 0.317, 0.350, 0.430, 0.473",\
+			"0.298, 0.298, 0.309, 0.325, 0.352, 0.437, 0.493",\
+			"0.537, 0.325, 0.335, 0.352, 0.382, 0.461, 0.517",\
+			"0.564, 0.395, 0.405, 0.420, 0.450, 0.531, 0.584",\
+			"0.631, 0.448, 0.456, 0.470, 0.501, 0.578, 0.631",\
+			"0.683, 0.495, 0.504, 0.516, 0.546, 0.618, 0.679"\
+                        );
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181",\
+			"0.181, 0.181, 0.181, 0.181, 0.181, 0.181, 0.181"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182",\
+			"0.182, 0.182, 0.182, 0.182, 0.182, 0.182, 0.182"\
+                        );
+                        }
+               }
+        }
+
+        bus(BWENB){
+                bus_type : S55NLLGDPH_X512Y8D16_BW_WRITE;
+                direction : input;
+                capacitance : 0.002;
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.398, 0.411, 0.399, 0.423, 0.476, 0.512, 0.534",\
+			"0.387, 0.400, 0.389, 0.417, 0.463, 0.496, 0.527",\
+			"0.377, 0.390, 0.387, 0.405, 0.462, 0.488, 0.511",\
+			"0.377, 0.398, 0.393, 0.393, 0.451, 0.482, 0.503",\
+			"0.371, 0.387, 0.387, 0.377, 0.432, 0.464, 0.489",\
+			"0.377, 0.387, 0.387, 0.390, 0.438, 0.472, 0.498",\
+			"0.390, 0.387, 0.398, 0.403, 0.455, 0.498, 0.512"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.401, 0.415, 0.390, 0.422, 0.496, 0.542, 0.577",\
+			"0.390, 0.403, 0.390, 0.411, 0.488, 0.534, 0.571",\
+			"0.383, 0.394, 0.390, 0.400, 0.475, 0.522, 0.561",\
+			"0.377, 0.401, 0.390, 0.389, 0.470, 0.514, 0.549",\
+			"0.369, 0.390, 0.390, 0.383, 0.425, 0.490, 0.519",\
+			"0.375, 0.390, 0.390, 0.386, 0.443, 0.502, 0.538",\
+			"0.388, 0.390, 0.401, 0.399, 0.457, 0.487, 0.551"\
+                        );
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.209, 0.196, 0.188, 0.188, 0.195, 0.202, 0.195",\
+			"0.219, 0.205, 0.190, 0.195, 0.195, 0.202, 0.202",\
+			"0.231, 0.218, 0.203, 0.195, 0.180, 0.202, 0.211",\
+			"0.243, 0.232, 0.212, 0.195, 0.188, 0.202, 0.211",\
+			"0.258, 0.244, 0.233, 0.203, 0.195, 0.202, 0.211",\
+			"0.261, 0.241, 0.232, 0.195, 0.202, 0.180, 0.211",\
+			"0.242, 0.223, 0.212, 0.195, 0.202, 0.188, 0.211"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.219, 0.205, 0.208, 0.208, 0.217, 0.227, 0.217",\
+			"0.229, 0.215, 0.208, 0.217, 0.217, 0.227, 0.227",\
+			"0.241, 0.228, 0.210, 0.217, 0.199, 0.227, 0.235",\
+			"0.253, 0.241, 0.219, 0.217, 0.208, 0.227, 0.235",\
+			"0.268, 0.253, 0.240, 0.217, 0.217, 0.227, 0.235",\
+			"0.271, 0.250, 0.240, 0.217, 0.227, 0.199, 0.235",\
+			"0.252, 0.233, 0.220, 0.217, 0.227, 0.208, 0.235"\
+                        );
+                        }
+               }
+        }
+    pin(WENB){
+                
+                direction : input;
+                capacitance : 0.003;
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.480, 0.492, 0.485, 0.512, 0.564, 0.593, 0.622",\
+			"0.470, 0.481, 0.476, 0.500, 0.556, 0.588, 0.615",\
+			"0.465, 0.472, 0.470, 0.490, 0.544, 0.575, 0.600",\
+			"0.463, 0.480, 0.481, 0.478, 0.540, 0.568, 0.591",\
+			"0.454, 0.470, 0.470, 0.465, 0.515, 0.547, 0.572",\
+			"0.460, 0.470, 0.470, 0.474, 0.521, 0.551, 0.581",\
+			"0.473, 0.470, 0.480, 0.487, 0.543, 0.574, 0.595"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.476, 0.490, 0.474, 0.501, 0.571, 0.640, 0.653",\
+			"0.464, 0.478, 0.465, 0.495, 0.558, 0.605, 0.659",\
+			"0.458, 0.468, 0.464, 0.485, 0.556, 0.593, 0.624",\
+			"0.454, 0.476, 0.469, 0.474, 0.552, 0.598, 0.633",\
+			"0.445, 0.464, 0.464, 0.458, 0.529, 0.577, 0.602",\
+			"0.451, 0.464, 0.464, 0.471, 0.531, 0.588, 0.628",\
+			"0.464, 0.464, 0.476, 0.484, 0.557, 0.603, 0.637"\
+                        );
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.077, 0.062, 0.048, 0.021, 0.008, 0.009, 0.008",\
+			"0.086, 0.072, 0.057, 0.030, 0.008, 0.009, 0.009",\
+			"0.098, 0.085, 0.069, 0.043, 0.000, 0.009, 0.018",\
+			"0.110, 0.098, 0.079, 0.056, 0.003, 0.009, 0.018",\
+			"0.125, 0.110, 0.100, 0.071, 0.016, 0.009, 0.018",\
+			"0.128, 0.108, 0.100, 0.061, 0.020, 0.000, 0.018",\
+			"0.109, 0.093, 0.079, 0.056, 0.009, 0.003, 0.018"\
+                        );
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+			"0.085, 0.071, 0.054, 0.026, 0.026, 0.031, 0.026",\
+			"0.095, 0.080, 0.063, 0.030, 0.026, 0.031, 0.031",\
+			"0.106, 0.093, 0.075, 0.042, 0.008, 0.031, 0.040",\
+			"0.118, 0.107, 0.085, 0.057, 0.020, 0.031, 0.040",\
+			"0.133, 0.119, 0.105, 0.070, 0.026, 0.031, 0.040",\
+			"0.138, 0.117, 0.107, 0.061, 0.031, 0.008, 0.040",\
+			"0.117, 0.101, 0.085, 0.055, 0.031, 0.020, 0.040"\
+                        );
+                        }
+               }
+        }
+        bus(AB)   {
+                bus_type : S55NLLGDPH_X512Y8D16_BW_ADDRESS;
+                direction : input;
+                capacitance : 0.004;
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.687, 0.698, 0.677, 0.699, 0.757, 0.790, 0.820",\
+			"0.677, 0.687, 0.677, 0.688, 0.746, 0.781, 0.810",\
+			"0.674, 0.678, 0.677, 0.677, 0.735, 0.771, 0.800",\
+			"0.676, 0.687, 0.677, 0.674, 0.722, 0.755, 0.786",\
+			"0.668, 0.677, 0.677, 0.674, 0.700, 0.738, 0.766",\
+			"0.674, 0.677, 0.677, 0.674, 0.708, 0.745, 0.777",\
+			"0.688, 0.677, 0.687, 0.674, 0.728, 0.766, 0.798"\
+			);
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.688, 0.697, 0.697, 0.727, 0.803, 0.852, 0.894",\
+			"0.676, 0.686, 0.686, 0.716, 0.792, 0.843, 0.883",\
+			"0.665, 0.676, 0.676, 0.705, 0.782, 0.832, 0.874",\
+			"0.657, 0.688, 0.676, 0.690, 0.769, 0.819, 0.860",\
+			"0.675, 0.676, 0.676, 0.676, 0.752, 0.803, 0.843",\
+			"0.682, 0.676, 0.676, 0.670, 0.747, 0.799, 0.843",\
+			"0.696, 0.676, 0.688, 0.692, 0.770, 0.810, 0.853"\
+			);
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.167, 0.153, 0.136, 0.110, 0.054, 0.027, 0.015",\
+			"0.176, 0.162, 0.146, 0.119, 0.068, 0.039, 0.023",\
+			"0.188, 0.175, 0.157, 0.132, 0.079, 0.047, 0.036",\
+			"0.201, 0.188, 0.167, 0.145, 0.090, 0.063, 0.037",\
+			"0.216, 0.200, 0.188, 0.160, 0.108, 0.081, 0.054",\
+			"0.219, 0.199, 0.189, 0.150, 0.111, 0.083, 0.049",\
+			"0.200, 0.183, 0.168, 0.144, 0.089, 0.058, 0.036"\
+			);
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.158, 0.143, 0.126, 0.098, 0.053, 0.019, 0.019",\
+			"0.167, 0.153, 0.135, 0.104, 0.057, 0.019, 0.019",\
+			"0.178, 0.165, 0.148, 0.116, 0.064, 0.019, 0.019",\
+			"0.192, 0.179, 0.157, 0.132, 0.064, 0.027, 0.019",\
+			"0.206, 0.191, 0.178, 0.144, 0.070, 0.038, 0.043",\
+			"0.211, 0.189, 0.179, 0.134, 0.081, 0.049, 0.019",\
+			"0.190, 0.173, 0.157, 0.129, 0.057, 0.019, 0.019"\
+			);
+                        }
+               }
+                internal_power(){
+                        when : "CENB";
+                        rise_power(S55NLLGDPH_X512Y8D16_BW_energy_template_sigslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.279, 0.279")
+                        }
+                        fall_power(S55NLLGDPH_X512Y8D16_BW_energy_template_sigslew) {
+                        index_1 ("0.000, 1.000");
+                        values ("0.279, 0.279")
+                        }
+                }
+        }
+
+
+        bus(DB)   {
+                bus_type : S55NLLGDPH_X512Y8D16_BW_DATA;
+                memory_write() {
+                        address : AB;
+                        clocked_on : "CLKB";
+                }
+                direction : input;
+                capacitance : 0.002;
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : setup_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.417, 0.430, 0.426, 0.453, 0.505, 0.534, 0.561",\
+			"0.406, 0.419, 0.417, 0.441, 0.497, 0.529, 0.556",\
+			"0.396, 0.409, 0.406, 0.430, 0.485, 0.515, 0.540",\
+			"0.396, 0.417, 0.421, 0.419, 0.481, 0.509, 0.532",\
+			"0.547, 0.519, 0.485, 0.416, 0.450, 0.484, 0.508",\
+			"0.719, 0.691, 0.657, 0.588, 0.456, 0.490, 0.517",\
+			"0.891, 0.863, 0.829, 0.760, 0.554, 0.515, 0.530"\
+			);
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.402, 0.416, 0.391, 0.415, 0.485, 0.556, 0.567",\
+			"0.391, 0.404, 0.391, 0.409, 0.472, 0.518, 0.573",\
+			"0.384, 0.395, 0.391, 0.399, 0.470, 0.505, 0.545",\
+			"0.379, 0.402, 0.391, 0.388, 0.466, 0.513, 0.547",\
+			"0.550, 0.522, 0.488, 0.419, 0.443, 0.491, 0.519",\
+			"0.722, 0.694, 0.660, 0.591, 0.446, 0.502, 0.542",\
+			"0.894, 0.866, 0.832, 0.763, 0.557, 0.518, 0.553"\
+			);
+                        }
+                } 
+                timing() {
+                        related_pin     : CLKB;
+                        timing_type     : hold_rising ;
+                        rise_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.210, 0.196, 0.188, 0.188, 0.195, 0.201, 0.195",\
+			"0.219, 0.206, 0.190, 0.195, 0.195, 0.201, 0.201",\
+			"0.231, 0.219, 0.203, 0.195, 0.180, 0.201, 0.210",\
+			"0.244, 0.231, 0.212, 0.195, 0.188, 0.201, 0.210",\
+			"0.258, 0.244, 0.234, 0.203, 0.195, 0.201, 0.210",\
+			"0.260, 0.241, 0.232, 0.195, 0.201, 0.180, 0.210",\
+			"0.243, 0.224, 0.212, 0.196, 0.201, 0.188, 0.210"\
+			);
+                        }
+                        fall_constraint(S55NLLGDPH_X512Y8D16_BW_constraint_template) {
+                        index_1("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        index_2("0.010, 0.050, 0.100, 0.200, 0.500, 0.750, 1.000");
+                        values(\
+                        "0.219, 0.205, 0.208, 0.208, 0.217, 0.227, 0.217",\
+			"0.229, 0.214, 0.208, 0.217, 0.217, 0.227, 0.227",\
+			"0.241, 0.227, 0.210, 0.217, 0.198, 0.227, 0.235",\
+			"0.253, 0.241, 0.219, 0.217, 0.208, 0.227, 0.235",\
+			"0.267, 0.253, 0.240, 0.217, 0.217, 0.227, 0.235",\
+			"0.270, 0.250, 0.240, 0.217, 0.227, 0.198, 0.235",\
+			"0.251, 0.233, 0.219, 0.217, 0.227, 0.208, 0.235"\
+			);
+                        }
+               }
+        }
+
+        cell_leakage_power : 0.029510;
+}
+}

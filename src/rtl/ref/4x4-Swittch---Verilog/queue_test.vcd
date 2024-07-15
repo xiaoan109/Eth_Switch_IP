@@ -1,0 +1,145 @@
+$date
+	Sun May 16 17:41:21 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module queue_tb $end
+$var wire 33 ! rd_data [32:0] $end
+$var reg 1 " clk $end
+$var reg 1 # rd_en $end
+$var reg 1 $ rst $end
+$var reg 33 % wr_data [32:0] $end
+$var reg 1 & wr_en $end
+$scope module queue_instance $end
+$var wire 1 " clk $end
+$var wire 1 # rd_en $end
+$var wire 1 $ rst $end
+$var wire 33 ' wr_data [32:0] $end
+$var wire 1 & wr_en $end
+$var reg 33 ( rd_data [32:0] $end
+$var reg 7 ) rd_ptr [6:0] $end
+$var reg 7 * wr_ptr [6:0] $end
+$var integer 32 + i [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b10000000 +
+b1111111 *
+b1111111 )
+b0 (
+b11001 '
+1&
+b11001 %
+1$
+0#
+0"
+b0 !
+$end
+#15
+0$
+#20
+1#
+#25
+b1111110 *
+1"
+#30
+0#
+0&
+#50
+0"
+#70
+b1001110 %
+b1001110 '
+1&
+#75
+b1111101 *
+1"
+#80
+0&
+#100
+0"
+#125
+1"
+#150
+0"
+b1011100010 %
+b1011100010 '
+1#
+1&
+#175
+b1111100 *
+b1111110 )
+b11001 !
+b11001 (
+1"
+#180
+0#
+0&
+#190
+1#
+#200
+0"
+#225
+b1111101 )
+b1001110 !
+b1001110 (
+1"
+#230
+0#
+#250
+1#
+0"
+#275
+b1111100 )
+b1011100010 !
+b1011100010 (
+1"
+#280
+0#
+#300
+0"
+#320
+1#
+#325
+1"
+#330
+0#
+#350
+0"
+#375
+1"
+#400
+0"
+#425
+1"
+#450
+0"
+#475
+1"
+#500
+0"
+#525
+1"
+#550
+0"
+#575
+1"
+#600
+0"
+#625
+1"
+#650
+0"
+#675
+1"
+#700
+0"
+#725
+1"
+#730

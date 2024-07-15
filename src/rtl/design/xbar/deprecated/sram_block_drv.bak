@@ -1,0 +1,151 @@
+// +FHEADER =====================================================================
+// FilePath       : /Switch/src/rtl/design/sram_block_drv.v
+// Author         : wangxuanji 18364998790@163.com
+// CreateDate     : 24-03-29
+// LastEditors    : wangxuanji 18364998790@163.com
+// LastEditTime   : 24-04-14
+// Version        :
+// Description    : 
+//                  
+// 
+// Parameter       :
+//                  
+// 
+// IO Port         :
+//                  
+// 
+// Modification History
+//    Date   |   Author   |   Version   |   Change Description
+// ==============================================================================
+//  23-08-24 |     NJU    |     0.1     | Original Version
+//                  
+// 
+// -FHEADER =====================================================================
+module sram_block_drv #(
+  parameter Bits = 32,
+  parameter Paddr_width = 14,
+  parameter Vaddr_width = 12,
+  parameter Wen_Width = 32,
+  parameter Ben_width = 4,
+  parameter Trans_len = 16  // 64Byte/32bit = 16
+) (
+  input  wire                   iClk,
+  input  wire                   iRst_n,
+  input  wire                   iWDataVld,
+  input  wire [  Ben_width-1:0] iWByteEna,
+  input  wire [Vaddr_width-1:0] iWAddr,
+  input  wire [       Bits-1:0] iWData,
+  input  wire                   iRdataReq,
+  input  wire [Vaddr_width-1:0] iRAddr,
+  output wire [       Bits-1:0] oRData,
+  // optional
+  // output reg                    oWResp,
+  // output reg                    oRResp,
+  // TODO: A copy of the above ports can be added for full shared memory access
+  // SRAM interface
+  output reg                    oCEnA,
+  output reg                    oCEnB,
+  output reg                    oWEnA,
+  output reg                    oWEnB,
+  output reg  [  Wen_Width-1:0] oBWEnA,
+  output reg  [  Wen_Width-1:0] oBWEnB,
+  output reg  [Paddr_width-1:0] oAddrA,
+  output reg  [Paddr_width-1:0] oAddrB,
+  output reg  [       Bits-1:0] oWDataA,
+  output reg  [       Bits-1:0] oWDataB,
+  input  wire [       Bits-1:0] iRDataA,
+  input  wire [       Bits-1:0] iRDataB
+);
+  // data in -> calculate physical addr -> sram sigs
+  // port A wr only, port B rd only
+  reg [$clog2(Trans_len)-1:0] wCnt;
+  reg [$clog2(Trans_len)-1:0] rCnt;
+
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      wCnt <= 0;
+    end else if (wCnt == Trans_len - 1) begin
+      wCnt <= 0;
+    end else if (iWDataVld) begin
+      wCnt <= wCnt + 1;
+    end
+  end
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      rCnt <= 0;
+    end else if (rCnt == Trans_len - 1) begin
+      rCnt <= 0;
+    end else if (iRdataReq) begin
+      rCnt <= rCnt + 1;
+    end
+  end
+
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      oCEnA   <= 1'b1;
+      oWEnA   <= 1'b1;
+      oBWEnA  <= {Wen_Width{1'b1}};
+      oAddrA  <= {Paddr_width{1'b0}};
+      oWDataA <= {Bits{1'b0}};
+    end else if (iWDataVld) begin
+      oCEnA   <= 1'b0;
+      oWEnA   <= 1'b0;
+      oBWEnA  <= {{8{~iWByteEna[3]}}, {8{~iWByteEna[2]}}, {8{~iWByteEna[1]}}, {8{~iWByteEna[0]}}};
+      oAddrA  <= ((iWAddr & ~3) << 2) + wCnt;
+      oWDataA <= iWData;
+    end else begin
+      oCEnA   <= 1'b1;
+      oWEnA   <= 1'b1;
+      oBWEnA  <= {Wen_Width{1'b1}};
+      oAddrA  <= {Paddr_width{1'b0}};
+      oWDataA <= {Bits{1'b0}};
+    end
+  end
+
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      oCEnB   <= 1'b1;
+      oWEnB   <= 1'b1;
+      oBWEnB  <= {Wen_Width{1'b1}};
+      oAddrB  <= {Paddr_width{1'b0}};
+      oWDataB <= {Bits{1'b0}};
+    end else if (iRdataReq) begin
+      oCEnB   <= 1'b0;
+      oWEnB   <= 1'b1;
+      oBWEnB  <= {Wen_Width{1'b1}};
+      oAddrB  <= ((iRAddr & ~3) << 2) + rCnt;
+      oWDataB <= {Bits{1'b0}};
+    end else begin
+      oCEnB   <= 1'b1;
+      oWEnB   <= 1'b1;
+      oBWEnB  <= {Wen_Width{1'b1}};
+      oAddrB  <= {Paddr_width{1'b0}};
+      oWDataB <= {Bits{1'b0}};
+    end
+  end
+
+  // always @(posedge iClk or negedge iRst_n) begin
+  //   if (!iRst_n) begin
+  //     oWResp <= 1'b0;
+  //   end else if (wCnt == Trans_len - 1) begin
+  //     oWResp <= 1'b1;
+  //   end else begin
+  //     oWResp <= 1'b0;
+  //   end
+  // end
+
+  // always @(posedge iClk or negedge iRst_n) begin
+  //   if (!iRst_n) begin
+  //     oRResp <= 1'b0;
+  //   end else if (rCnt == Trans_len - 1) begin
+  //     oRResp <= 1'b1;
+  //   end else begin
+  //     oRResp <= 1'b0;
+  //   end
+  // end
+
+  assign oRData = iRDataB;
+
+
+
+endmodule

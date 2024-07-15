@@ -1,0 +1,147 @@
+
+//
+//      MBIST model for Daul Port SRAM  Compiler
+//
+//*******************************************************************************************************
+//XMC55_DPS:v1.0
+//
+//Instance Name:  dpram16x4096
+//Word Depth:     4096
+//Word Width:     16
+//ColMux:         8
+//Bit Write:      on
+//Test Mode:      off
+//Created Data:   3-29-2024 10:29
+//*******************************************************************************************************
+MemoryTemplate (dpram16x4096) {	
+	Algorithm : SmarchChkbvcd;
+	DataOutStage : None;
+	LogicalPorts : 2RW;
+	BitGrouping : 1;
+	MemoryType : SRAM;
+	MinHold : 0.5;
+	OperationSet : SyncWR;
+	SelectDuringWriteThru : Off;
+	ShadowRead : Off;
+	ShadowWrite : Off;
+    TransparentMode : None;
+	CellName : dpram16x4096;	
+	NumberOfWords : 4096;	
+	AddressCounter{	
+		Function (Address) {	
+			LogicalAddressMap{	
+				ColumnAddress[2:0] : Address[2:0];	
+				RowAddress[8] : Address[3];	
+				RowAddress[7:0] : Address[11:4];	
+			}	
+		}	
+		Function (RowAddress) {	
+			CountRange [0:511];	
+		}	
+		Function (ColumnAddress) {	
+			CountRange [0:7];	
+		}	
+	}	
+	PhysicalAddressMap{	
+				ColumnAddress[0] : c[0];	
+				ColumnAddress[1] : c[1];	
+				ColumnAddress[2] : c[2];	
+				RowAddress[0] : r[0];	
+				RowAddress[1] : r[1];	
+				RowAddress[2] : r[2];	
+				RowAddress[3] : r[3];	
+				RowAddress[4] : r[4];	
+				RowAddress[5] : r[5];	
+				RowAddress[6] : r[6];	
+				RowAddress[7] : r[7];	
+				RowAddress[8] : r[8];	
+	}	
+	PhysicalDataMap{	
+		Data[0] : d[0];	
+		Data[1] : d[1];	
+		Data[2] : d[2];	
+		Data[3] : d[3];	
+		Data[4] : d[4];	
+		Data[5] : d[5];	
+		Data[6] : d[6];	
+		Data[7] : d[7];	
+		Data[8] : d[8];	
+		Data[9] : d[9];	
+		Data[10] : d[10];	
+		Data[11] : d[11];	
+		Data[12] : d[12];	
+		Data[13] : d[13];	
+		Data[14] : d[14];	
+		Data[15] : d[15];	
+	}	
+	Port (AA[11:0]) {	
+		Function : Address;	
+		LogicalPort : A;	
+	}	
+	Port (DA[15:0]) {	
+		Function : Data;	
+		Direction : input;	
+		LogicalPort : A;	
+	}	
+	Port (BWENA[15:0]) {	
+		Function : GroupWriteEnable;	
+		BitsPerWriteEnable: 1;	
+		LogicalPort : A;	
+		Polarity : ActiveLow;	
+	}		
+	Port (QA[15:0]) {	
+		Function : Data;	
+		Direction : output;	
+		LogicalPort : A;	
+	}	
+	Port (CENA) {	
+		Function : Select;	
+		LogicalPort : A;	
+		Polarity : ActiveLow;	
+	}	
+	Port (WENA) {	
+		Function : WriteEnable;	
+		LogicalPort : A;	
+		Polarity : ActiveLow;	
+	}		
+	Port (CLKA) {	
+		Function : Clock;	
+		LogicalPort : A;	
+		Polarity : ActiveHigh;	
+	}	
+	Port (AB[11:0]) {	
+		Function : Address;	
+		LogicalPort : B;	
+	}	
+	Port (DB[15:0]) {	
+		Function : Data;	
+		Direction : input;	
+		LogicalPort : B;	
+	}	
+	Port (QB[15:0]) {	
+		Function : Data;	
+		Direction : output;	
+		LogicalPort : B;	
+	}		
+	Port (BWENB[15:0]) {	
+		Function : GroupWriteEnable;	
+		BitsPerWriteEnable: 1;	
+		LogicalPort : B;	
+		Polarity : ActiveLow;	
+	}	
+	Port (CENB) {	
+		Function : Select;	
+		LogicalPort : B;	
+		Polarity : ActiveLow;	
+	}	
+	Port (WENB) {	
+		Function : WriteEnable;	
+		LogicalPort : B;	
+		Polarity : ActiveLow;	
+	}		
+	Port (CLKB) {	
+		Function : Clock;	
+		LogicalPort : B;	
+		Polarity : ActiveHigh;	
+	}	
+}	

@@ -1,0 +1,6 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/shifttter.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module shifttt
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sources_1/new/stimulus_TOP_LEVEL.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module stimulus_for_Crossbar4
+INFO: [VRFC 10-2263] Analyzing Verilog file "D:/HDL/CrossbarSwitch_dim4/CrossbarSwitch_dim4.srcs/sim_1/new/test_for_stimulus.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module test_for_test

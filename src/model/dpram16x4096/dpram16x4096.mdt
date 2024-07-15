@@ -1,0 +1,427 @@
+
+//
+//      Fastscan model for Daul Port SRAM  Compiler
+//
+//*******************************************************************************************************
+//XMC55_DPS:v1.0
+//
+//Instance Name:  dpram16x4096
+//Word Depth:     4096
+//Word Width:     16
+//ColMux:         8
+//Bit Write:      on
+//Test Mode:      off
+//Created Data:   3-29-2024 10:29
+//*******************************************************************************************************
+model dpram16x4096_bitcell (CLKA, CLKB, WRITEA, WRITEB, READA, READB, AA, AB, DA, DB, XoutA, XoutB, QA, QB) (	
+	intern (AA_ram) (array = 11 : 0;)	
+	intern (AB_ram) (array = 11 : 0;)	
+	input (CLKA) ()	
+	input (CLKB) ( )	
+	input (WRITEA) ( )	
+	input (READA) ( )	
+	intern (READA_ram) ( )	
+	intern (READB_ram) ( )	
+	input (READB) ( )	
+	input (WRITEB) ( )	
+	input (AA) (array = 11 : 0;)	
+	input (AB) (array = 11 : 0;)	
+	input (DA) ( )	
+	input (DB) ( )	
+	input (XoutA) ( )	
+	input (XoutB) ( )	
+	output (QA, QB) (	
+		primitive = _tiex  mx_tiex ( mx );	
+		primitive = _mux  WRITEA_MUX ( WRITEA, mx, XoutA, WRITEA_ram );	
+		primitive = _mux  DA_mux ( DA, mx, XoutA, DA_ram );	
+		primitive = _mux  AA0_mux ( AA[0], mx, XoutA, AA_ram[0] );	
+		primitive = _mux  AB0_mux ( AB[0], mx, XoutB, AB_ram[0] );	
+		primitive = _mux  AA1_mux ( AA[1], mx, XoutA, AA_ram[1] );	
+		primitive = _mux  AB1_mux ( AB[1], mx, XoutB, AB_ram[1] );	
+		primitive = _mux  AA2_mux ( AA[2], mx, XoutA, AA_ram[2] );	
+		primitive = _mux  AB2_mux ( AB[2], mx, XoutB, AB_ram[2] );	
+		primitive = _mux  AA3_mux ( AA[3], mx, XoutA, AA_ram[3] );	
+		primitive = _mux  AB3_mux ( AB[3], mx, XoutB, AB_ram[3] );	
+		primitive = _mux  AA4_mux ( AA[4], mx, XoutA, AA_ram[4] );	
+		primitive = _mux  AB4_mux ( AB[4], mx, XoutB, AB_ram[4] );	
+		primitive = _mux  AA5_mux ( AA[5], mx, XoutA, AA_ram[5] );	
+		primitive = _mux  AB5_mux ( AB[5], mx, XoutB, AB_ram[5] );	
+		primitive = _mux  AA6_mux ( AA[6], mx, XoutA, AA_ram[6] );	
+		primitive = _mux  AB6_mux ( AB[6], mx, XoutB, AB_ram[6] );	
+		primitive = _mux  AA7_mux ( AA[7], mx, XoutA, AA_ram[7] );	
+		primitive = _mux  AB7_mux ( AB[7], mx, XoutB, AB_ram[7] );	
+		primitive = _mux  AA8_mux ( AA[8], mx, XoutA, AA_ram[8] );	
+		primitive = _mux  AB8_mux ( AB[8], mx, XoutB, AB_ram[8] );	
+		primitive = _mux  AA9_mux ( AA[9], mx, XoutA, AA_ram[9] );	
+		primitive = _mux  AB9_mux ( AB[9], mx, XoutB, AB_ram[9] );	
+		primitive = _mux  AA10_mux ( AA[10], mx, XoutA, AA_ram[10] );	
+		primitive = _mux  AB10_mux ( AB[10], mx, XoutB, AB_ram[10] );	
+		primitive = _mux  AA11_mux ( AA[11], mx, XoutA, AA_ram[11] );	
+		primitive = _mux  AB11_mux ( AB[11], mx, XoutB, AB_ram[11] );	
+		primitive = _mux  WRITEB_MUX ( WRITEB, mx, XoutB, WRITEB_ram );	
+		primitive = _mux  DB_mux ( DB, mx, XoutB, DB_ram );	
+		primitive = _mux  READA_MUX (READA, mx, XoutA, READA_ram);	
+		primitive = _mux  READB_MUX (READB, mx, XoutB, READB_ram);	
+			
+			
+		data_size = 1;	
+		address_size = 12;	
+		min_address = 0;	
+		max_address = 4095;	
+		edge_trigger = w;	
+		read_write_conflict = XW;	
+		// Verilog RAM has no Set or Reset pin :	
+		primitive = _cram mem ( , ,	
+             		// Following write port will Hold in-memory data when not writing.	
+             		_write { , , } (CLKB, WRITEB_ram, AB_ram, DB_ram),	
+             		// Following write port will Hold in-memory data when not writing.	
+             		_write { , , } (CLKA, WRITEA_ram, AA_ram, DA_ram),	
+             		// Following read port will Hold output data after reading.	
+             		_read { ,,,} ( , READB_ram, , AB_ram, QB),	
+             		// Following read port will Hold output data after reading.	
+             		_read { ,,,} ( , READA_ram, , AA_ram, QA)	
+		);	
+	)	
+)	
+	
+	
+model dpram16x4096 ( BWENA, BWENB, QA, QB, CLKA, CENA, WENA, AA, DA, CLKB, CENB, WENB, AB, DB ) (	
+	input (CLKA) ()	
+	input (CENA) ()	
+	input (WENA) ()	
+	input (AA) (array = 11 : 0; )	
+	input (DA) (array = 15 : 0; )	
+	input (CLKB) ()	
+	input (CENB) ()	
+	input (WENB) ()	
+	input (AB) (array = 11 : 0; )	
+	input (DB) (array = 15 : 0; )	
+	input (BWENA) (array = 15 : 0; )	
+	input (BWENB) (array = 15 : 0; )  	
+	
+	intern (BUS_AA) (array = 11 : 0; 	
+		primitive = _buf  bBUS_AA0 ( AA[0], BUS_AA[0]);	
+		primitive = _buf  bBUS_AA1 ( AA[1], BUS_AA[1]);	
+		primitive = _buf  bBUS_AA2 ( AA[2], BUS_AA[2]);	
+		primitive = _buf  bBUS_AA3 ( AA[3], BUS_AA[3]);	
+		primitive = _buf  bBUS_AA4 ( AA[4], BUS_AA[4]);	
+		primitive = _buf  bBUS_AA5 ( AA[5], BUS_AA[5]);	
+		primitive = _buf  bBUS_AA6 ( AA[6], BUS_AA[6]);	
+		primitive = _buf  bBUS_AA7 ( AA[7], BUS_AA[7]);	
+		primitive = _buf  bBUS_AA8 ( AA[8], BUS_AA[8]);	
+		primitive = _buf  bBUS_AA9 ( AA[9], BUS_AA[9]);	
+		primitive = _buf  bBUS_AA10 ( AA[10], BUS_AA[10]);	
+		primitive = _buf  bBUS_AA11 ( AA[11], BUS_AA[11]);	
+	)	
+		
+	intern (BUS_DA) (array = 15 : 0; 	
+		primitive = _buf  bBUS_DA0( DA[0], BUS_DA[0] );	
+		primitive = _buf  bBUS_DA1( DA[1], BUS_DA[1] );	
+		primitive = _buf  bBUS_DA2( DA[2], BUS_DA[2] );	
+		primitive = _buf  bBUS_DA3( DA[3], BUS_DA[3] );	
+		primitive = _buf  bBUS_DA4( DA[4], BUS_DA[4] );	
+		primitive = _buf  bBUS_DA5( DA[5], BUS_DA[5] );	
+		primitive = _buf  bBUS_DA6( DA[6], BUS_DA[6] );	
+		primitive = _buf  bBUS_DA7( DA[7], BUS_DA[7] );	
+		primitive = _buf  bBUS_DA8( DA[8], BUS_DA[8] );	
+		primitive = _buf  bBUS_DA9( DA[9], BUS_DA[9] );	
+		primitive = _buf  bBUS_DA10( DA[10], BUS_DA[10] );	
+		primitive = _buf  bBUS_DA11( DA[11], BUS_DA[11] );	
+		primitive = _buf  bBUS_DA12( DA[12], BUS_DA[12] );	
+		primitive = _buf  bBUS_DA13( DA[13], BUS_DA[13] );	
+		primitive = _buf  bBUS_DA14( DA[14], BUS_DA[14] );	
+		primitive = _buf  bBUS_DA15( DA[15], BUS_DA[15] );	
+	)	
+	
+	intern (BUS_BWENA) (array = 15 : 0; 	
+		primitive = _buf  bBUS_BWENA0( BWENA[0], BUS_BWENA[0] );	
+		primitive = _buf  bBUS_BWENA1( BWENA[1], BUS_BWENA[1] );	
+		primitive = _buf  bBUS_BWENA2( BWENA[2], BUS_BWENA[2] );	
+		primitive = _buf  bBUS_BWENA3( BWENA[3], BUS_BWENA[3] );	
+		primitive = _buf  bBUS_BWENA4( BWENA[4], BUS_BWENA[4] );	
+		primitive = _buf  bBUS_BWENA5( BWENA[5], BUS_BWENA[5] );	
+		primitive = _buf  bBUS_BWENA6( BWENA[6], BUS_BWENA[6] );	
+		primitive = _buf  bBUS_BWENA7( BWENA[7], BUS_BWENA[7] );	
+		primitive = _buf  bBUS_BWENA8( BWENA[8], BUS_BWENA[8] );	
+		primitive = _buf  bBUS_BWENA9( BWENA[9], BUS_BWENA[9] );	
+		primitive = _buf  bBUS_BWENA10( BWENA[10], BUS_BWENA[10] );	
+		primitive = _buf  bBUS_BWENA11( BWENA[11], BUS_BWENA[11] );	
+		primitive = _buf  bBUS_BWENA12( BWENA[12], BUS_BWENA[12] );	
+		primitive = _buf  bBUS_BWENA13( BWENA[13], BUS_BWENA[13] );	
+		primitive = _buf  bBUS_BWENA14( BWENA[14], BUS_BWENA[14] );	
+		primitive = _buf  bBUS_BWENA15( BWENA[15], BUS_BWENA[15] );	
+	)	
+			
+	intern (BUS_WENA) ( primitive = _buf  bBUS_WENA( WENA, BUS_WENA ); )	
+	
+	intern (SPLIT_BWENA) (array = 15 : 0 ;	
+		primitive = _or bSPLIT_BWENA0(BUS_WENA, BUS_BWENA[0], SPLIT_BWENA[0]);	
+		primitive = _or bSPLIT_BWENA1(BUS_WENA, BUS_BWENA[1], SPLIT_BWENA[1]);	
+		primitive = _or bSPLIT_BWENA2(BUS_WENA, BUS_BWENA[2], SPLIT_BWENA[2]);	
+		primitive = _or bSPLIT_BWENA3(BUS_WENA, BUS_BWENA[3], SPLIT_BWENA[3]);	
+		primitive = _or bSPLIT_BWENA4(BUS_WENA, BUS_BWENA[4], SPLIT_BWENA[4]);	
+		primitive = _or bSPLIT_BWENA5(BUS_WENA, BUS_BWENA[5], SPLIT_BWENA[5]);	
+		primitive = _or bSPLIT_BWENA6(BUS_WENA, BUS_BWENA[6], SPLIT_BWENA[6]);	
+		primitive = _or bSPLIT_BWENA7(BUS_WENA, BUS_BWENA[7], SPLIT_BWENA[7]);	
+		primitive = _or bSPLIT_BWENA8(BUS_WENA, BUS_BWENA[8], SPLIT_BWENA[8]);	
+		primitive = _or bSPLIT_BWENA9(BUS_WENA, BUS_BWENA[9], SPLIT_BWENA[9]);	
+		primitive = _or bSPLIT_BWENA10(BUS_WENA, BUS_BWENA[10], SPLIT_BWENA[10]);	
+		primitive = _or bSPLIT_BWENA11(BUS_WENA, BUS_BWENA[11], SPLIT_BWENA[11]);	
+		primitive = _or bSPLIT_BWENA12(BUS_WENA, BUS_BWENA[12], SPLIT_BWENA[12]);	
+		primitive = _or bSPLIT_BWENA13(BUS_WENA, BUS_BWENA[13], SPLIT_BWENA[13]);	
+		primitive = _or bSPLIT_BWENA14(BUS_WENA, BUS_BWENA[14], SPLIT_BWENA[14]);	
+		primitive = _or bSPLIT_BWENA15(BUS_WENA, BUS_BWENA[15], SPLIT_BWENA[15]);	
+	)	
+  	
+	intern (NOT_CENA) (primitive = _inv iNOT_CENA(BUS_CENA, NOT_CENA);)	
+	intern (NOT_WENA) (primitive = _inv iNOT_WENA(BUS_WENA, NOT_WENA);)	
+	
+	intern (NOT_SPLIT_BWENA) (array = 15 : 0;	
+		primitive = _inv iNOT_SPLIT_BWENA0(SPLIT_BWENA[0], NOT_SPLIT_BWENA[0]);	
+		primitive = _inv iNOT_SPLIT_BWENA1(SPLIT_BWENA[1], NOT_SPLIT_BWENA[1]);	
+		primitive = _inv iNOT_SPLIT_BWENA2(SPLIT_BWENA[2], NOT_SPLIT_BWENA[2]);	
+		primitive = _inv iNOT_SPLIT_BWENA3(SPLIT_BWENA[3], NOT_SPLIT_BWENA[3]);	
+		primitive = _inv iNOT_SPLIT_BWENA4(SPLIT_BWENA[4], NOT_SPLIT_BWENA[4]);	
+		primitive = _inv iNOT_SPLIT_BWENA5(SPLIT_BWENA[5], NOT_SPLIT_BWENA[5]);	
+		primitive = _inv iNOT_SPLIT_BWENA6(SPLIT_BWENA[6], NOT_SPLIT_BWENA[6]);	
+		primitive = _inv iNOT_SPLIT_BWENA7(SPLIT_BWENA[7], NOT_SPLIT_BWENA[7]);	
+		primitive = _inv iNOT_SPLIT_BWENA8(SPLIT_BWENA[8], NOT_SPLIT_BWENA[8]);	
+		primitive = _inv iNOT_SPLIT_BWENA9(SPLIT_BWENA[9], NOT_SPLIT_BWENA[9]);	
+		primitive = _inv iNOT_SPLIT_BWENA10(SPLIT_BWENA[10], NOT_SPLIT_BWENA[10]);	
+		primitive = _inv iNOT_SPLIT_BWENA11(SPLIT_BWENA[11], NOT_SPLIT_BWENA[11]);	
+		primitive = _inv iNOT_SPLIT_BWENA12(SPLIT_BWENA[12], NOT_SPLIT_BWENA[12]);	
+		primitive = _inv iNOT_SPLIT_BWENA13(SPLIT_BWENA[13], NOT_SPLIT_BWENA[13]);	
+		primitive = _inv iNOT_SPLIT_BWENA14(SPLIT_BWENA[14], NOT_SPLIT_BWENA[14]);	
+		primitive = _inv iNOT_SPLIT_BWENA15(SPLIT_BWENA[15], NOT_SPLIT_BWENA[15]);	
+	)	
+			
+	intern (WRITEA) (array = 15 : 0;	
+		primitive = _and aWRITEA0(NOT_SPLIT_BWENA[0], NOT_CENA, WRITEA[0]);	
+		primitive = _and aWRITEA1(NOT_SPLIT_BWENA[1], NOT_CENA, WRITEA[1]);	
+		primitive = _and aWRITEA2(NOT_SPLIT_BWENA[2], NOT_CENA, WRITEA[2]);	
+		primitive = _and aWRITEA3(NOT_SPLIT_BWENA[3], NOT_CENA, WRITEA[3]);	
+		primitive = _and aWRITEA4(NOT_SPLIT_BWENA[4], NOT_CENA, WRITEA[4]);	
+		primitive = _and aWRITEA5(NOT_SPLIT_BWENA[5], NOT_CENA, WRITEA[5]);	
+		primitive = _and aWRITEA6(NOT_SPLIT_BWENA[6], NOT_CENA, WRITEA[6]);	
+		primitive = _and aWRITEA7(NOT_SPLIT_BWENA[7], NOT_CENA, WRITEA[7]);	
+		primitive = _and aWRITEA8(NOT_SPLIT_BWENA[8], NOT_CENA, WRITEA[8]);	
+		primitive = _and aWRITEA9(NOT_SPLIT_BWENA[9], NOT_CENA, WRITEA[9]);	
+		primitive = _and aWRITEA10(NOT_SPLIT_BWENA[10], NOT_CENA, WRITEA[10]);	
+		primitive = _and aWRITEA11(NOT_SPLIT_BWENA[11], NOT_CENA, WRITEA[11]);	
+		primitive = _and aWRITEA12(NOT_SPLIT_BWENA[12], NOT_CENA, WRITEA[12]);	
+		primitive = _and aWRITEA13(NOT_SPLIT_BWENA[13], NOT_CENA, WRITEA[13]);	
+		primitive = _and aWRITEA14(NOT_SPLIT_BWENA[14], NOT_CENA, WRITEA[14]);	
+		primitive = _and aWRITEA15(NOT_SPLIT_BWENA[15], NOT_CENA, WRITEA[15]);	
+	)	
+		
+	intern (READA) (array = 15:0;	
+		primitive = _and aREADA0(NOT_CENA, SPLIT_BWENA[0], READA[0]);	
+		primitive = _and aREADA1(NOT_CENA, SPLIT_BWENA[1], READA[1]);	
+		primitive = _and aREADA2(NOT_CENA, SPLIT_BWENA[2], READA[2]);	
+		primitive = _and aREADA3(NOT_CENA, SPLIT_BWENA[3], READA[3]);	
+		primitive = _and aREADA4(NOT_CENA, SPLIT_BWENA[4], READA[4]);	
+		primitive = _and aREADA5(NOT_CENA, SPLIT_BWENA[5], READA[5]);	
+		primitive = _and aREADA6(NOT_CENA, SPLIT_BWENA[6], READA[6]);	
+		primitive = _and aREADA7(NOT_CENA, SPLIT_BWENA[7], READA[7]);	
+		primitive = _and aREADA8(NOT_CENA, SPLIT_BWENA[8], READA[8]);	
+		primitive = _and aREADA9(NOT_CENA, SPLIT_BWENA[9], READA[9]);	
+		primitive = _and aREADA10(NOT_CENA, SPLIT_BWENA[10], READA[10]);	
+		primitive = _and aREADA11(NOT_CENA, SPLIT_BWENA[11], READA[11]);	
+		primitive = _and aREADA12(NOT_CENA, SPLIT_BWENA[12], READA[12]);	
+		primitive = _and aREADA13(NOT_CENA, SPLIT_BWENA[13], READA[13]);	
+		primitive = _and aREADA14(NOT_CENA, SPLIT_BWENA[14], READA[14]);	
+		primitive = _and aREADA15(NOT_CENA, SPLIT_BWENA[15], READA[15]);	
+	)	
+   	
+	output (QA) (array = 15:0; 	
+		primitive = _mux mREAD_QA0(QA[0],  INT_QA[0], READA[0], QA[0]);	
+		primitive = _mux mREAD_QA1(QA[1],  INT_QA[1], READA[1], QA[1]);	
+		primitive = _mux mREAD_QA2(QA[2],  INT_QA[2], READA[2], QA[2]);	
+		primitive = _mux mREAD_QA3(QA[3],  INT_QA[3], READA[3], QA[3]);	
+		primitive = _mux mREAD_QA4(QA[4],  INT_QA[4], READA[4], QA[4]);	
+		primitive = _mux mREAD_QA5(QA[5],  INT_QA[5], READA[5], QA[5]);	
+		primitive = _mux mREAD_QA6(QA[6],  INT_QA[6], READA[6], QA[6]);	
+		primitive = _mux mREAD_QA7(QA[7],  INT_QA[7], READA[7], QA[7]);	
+		primitive = _mux mREAD_QA8(QA[8],  INT_QA[8], READA[8], QA[8]);	
+		primitive = _mux mREAD_QA9(QA[9],  INT_QA[9], READA[9], QA[9]);	
+		primitive = _mux mREAD_QA10(QA[10],  INT_QA[10], READA[10], QA[10]);	
+		primitive = _mux mREAD_QA11(QA[11],  INT_QA[11], READA[11], QA[11]);	
+		primitive = _mux mREAD_QA12(QA[12],  INT_QA[12], READA[12], QA[12]);	
+		primitive = _mux mREAD_QA13(QA[13],  INT_QA[13], READA[13], QA[13]);	
+		primitive = _mux mREAD_QA14(QA[14],  INT_QA[14], READA[14], QA[14]);	
+		primitive = _mux mREAD_QA15(QA[15],  INT_QA[15], READA[15], QA[15]);	
+	)	
+	
+	intern (BUS_AB) (array = 11 : 0; 	
+		primitive = _buf  bBUS_AB0 ( AB[0], BUS_AB[0]);	
+		primitive = _buf  bBUS_AB1 ( AB[1], BUS_AB[1]);	
+		primitive = _buf  bBUS_AB2 ( AB[2], BUS_AB[2]);	
+		primitive = _buf  bBUS_AB3 ( AB[3], BUS_AB[3]);	
+		primitive = _buf  bBUS_AB4 ( AB[4], BUS_AB[4]);	
+		primitive = _buf  bBUS_AB5 ( AB[5], BUS_AB[5]);	
+		primitive = _buf  bBUS_AB6 ( AB[6], BUS_AB[6]);	
+		primitive = _buf  bBUS_AB7 ( AB[7], BUS_AB[7]);	
+		primitive = _buf  bBUS_AB8 ( AB[8], BUS_AB[8]);	
+		primitive = _buf  bBUS_AB9 ( AB[9], BUS_AB[9]);	
+		primitive = _buf  bBUS_AB10 ( AB[10], BUS_AB[10]);	
+		primitive = _buf  bBUS_AB11 ( AB[11], BUS_AB[11]);	
+	)	
+	intern (BUS_DB) (array = 15 : 0; 	
+		primitive = _buf  bBUS_DB0( DB[0], BUS_DB[0] );	
+		primitive = _buf  bBUS_DB1( DB[1], BUS_DB[1] );	
+		primitive = _buf  bBUS_DB2( DB[2], BUS_DB[2] );	
+		primitive = _buf  bBUS_DB3( DB[3], BUS_DB[3] );	
+		primitive = _buf  bBUS_DB4( DB[4], BUS_DB[4] );	
+		primitive = _buf  bBUS_DB5( DB[5], BUS_DB[5] );	
+		primitive = _buf  bBUS_DB6( DB[6], BUS_DB[6] );	
+		primitive = _buf  bBUS_DB7( DB[7], BUS_DB[7] );	
+		primitive = _buf  bBUS_DB8( DB[8], BUS_DB[8] );	
+		primitive = _buf  bBUS_DB9( DB[9], BUS_DB[9] );	
+		primitive = _buf  bBUS_DB10( DB[10], BUS_DB[10] );	
+		primitive = _buf  bBUS_DB11( DB[11], BUS_DB[11] );	
+		primitive = _buf  bBUS_DB12( DB[12], BUS_DB[12] );	
+		primitive = _buf  bBUS_DB13( DB[13], BUS_DB[13] );	
+		primitive = _buf  bBUS_DB14( DB[14], BUS_DB[14] );	
+		primitive = _buf  bBUS_DB15( DB[15], BUS_DB[15] );	
+	)	
+	intern (BUS_BWENB) (array = 15 : 0; 	
+		primitive = _buf  bBUS_BWENB0( BWENB[0], BUS_BWENB[0] );	
+		primitive = _buf  bBUS_BWENB1( BWENB[1], BUS_BWENB[1] );	
+		primitive = _buf  bBUS_BWENB2( BWENB[2], BUS_BWENB[2] );	
+		primitive = _buf  bBUS_BWENB3( BWENB[3], BUS_BWENB[3] );	
+		primitive = _buf  bBUS_BWENB4( BWENB[4], BUS_BWENB[4] );	
+		primitive = _buf  bBUS_BWENB5( BWENB[5], BUS_BWENB[5] );	
+		primitive = _buf  bBUS_BWENB6( BWENB[6], BUS_BWENB[6] );	
+		primitive = _buf  bBUS_BWENB7( BWENB[7], BUS_BWENB[7] );	
+		primitive = _buf  bBUS_BWENB8( BWENB[8], BUS_BWENB[8] );	
+		primitive = _buf  bBUS_BWENB9( BWENB[9], BUS_BWENB[9] );	
+		primitive = _buf  bBUS_BWENB10( BWENB[10], BUS_BWENB[10] );	
+		primitive = _buf  bBUS_BWENB11( BWENB[11], BUS_BWENB[11] );	
+		primitive = _buf  bBUS_BWENB12( BWENB[12], BUS_BWENB[12] );	
+		primitive = _buf  bBUS_BWENB13( BWENB[13], BUS_BWENB[13] );	
+		primitive = _buf  bBUS_BWENB14( BWENB[14], BUS_BWENB[14] );	
+		primitive = _buf  bBUS_BWENB15( BWENB[15], BUS_BWENB[15] );	
+	)	
+	intern (BUS_WENB) ( primitive = _buf  bBUS_WENB( WENB, BUS_WENB ); )	
+	
+	intern (SPLIT_BWENB) (array = 15 : 0 ;	
+		primitive = _or bSPLIT_BWENB0(BUS_WENB, BUS_BWENB[0], SPLIT_BWENB[0]);	
+		primitive = _or bSPLIT_BWENB1(BUS_WENB, BUS_BWENB[1], SPLIT_BWENB[1]);	
+		primitive = _or bSPLIT_BWENB2(BUS_WENB, BUS_BWENB[2], SPLIT_BWENB[2]);	
+		primitive = _or bSPLIT_BWENB3(BUS_WENB, BUS_BWENB[3], SPLIT_BWENB[3]);	
+		primitive = _or bSPLIT_BWENB4(BUS_WENB, BUS_BWENB[4], SPLIT_BWENB[4]);	
+		primitive = _or bSPLIT_BWENB5(BUS_WENB, BUS_BWENB[5], SPLIT_BWENB[5]);	
+		primitive = _or bSPLIT_BWENB6(BUS_WENB, BUS_BWENB[6], SPLIT_BWENB[6]);	
+		primitive = _or bSPLIT_BWENB7(BUS_WENB, BUS_BWENB[7], SPLIT_BWENB[7]);	
+		primitive = _or bSPLIT_BWENB8(BUS_WENB, BUS_BWENB[8], SPLIT_BWENB[8]);	
+		primitive = _or bSPLIT_BWENB9(BUS_WENB, BUS_BWENB[9], SPLIT_BWENB[9]);	
+		primitive = _or bSPLIT_BWENB10(BUS_WENB, BUS_BWENB[10], SPLIT_BWENB[10]);	
+		primitive = _or bSPLIT_BWENB11(BUS_WENB, BUS_BWENB[11], SPLIT_BWENB[11]);	
+		primitive = _or bSPLIT_BWENB12(BUS_WENB, BUS_BWENB[12], SPLIT_BWENB[12]);	
+		primitive = _or bSPLIT_BWENB13(BUS_WENB, BUS_BWENB[13], SPLIT_BWENB[13]);	
+		primitive = _or bSPLIT_BWENB14(BUS_WENB, BUS_BWENB[14], SPLIT_BWENB[14]);	
+		primitive = _or bSPLIT_BWENB15(BUS_WENB, BUS_BWENB[15], SPLIT_BWENB[15]);	
+	)	
+			
+	intern (NOT_CENB) (primitive = _inv iNOT_CENB(BUS_CENB, NOT_CENB);)	
+	intern (NOT_WENB) (primitive = _inv iNOT_WENB(BUS_WENB, NOT_WENB);)	
+			
+	intern (NOT_SPLIT_BWENB) (array = 15 : 0;	
+		primitive = _inv iNOT_SPLIT_BWENB0(SPLIT_BWENB[0], NOT_SPLIT_BWENB[0]);	
+		primitive = _inv iNOT_SPLIT_BWENB1(SPLIT_BWENB[1], NOT_SPLIT_BWENB[1]);	
+		primitive = _inv iNOT_SPLIT_BWENB2(SPLIT_BWENB[2], NOT_SPLIT_BWENB[2]);	
+		primitive = _inv iNOT_SPLIT_BWENB3(SPLIT_BWENB[3], NOT_SPLIT_BWENB[3]);	
+		primitive = _inv iNOT_SPLIT_BWENB4(SPLIT_BWENB[4], NOT_SPLIT_BWENB[4]);	
+		primitive = _inv iNOT_SPLIT_BWENB5(SPLIT_BWENB[5], NOT_SPLIT_BWENB[5]);	
+		primitive = _inv iNOT_SPLIT_BWENB6(SPLIT_BWENB[6], NOT_SPLIT_BWENB[6]);	
+		primitive = _inv iNOT_SPLIT_BWENB7(SPLIT_BWENB[7], NOT_SPLIT_BWENB[7]);	
+		primitive = _inv iNOT_SPLIT_BWENB8(SPLIT_BWENB[8], NOT_SPLIT_BWENB[8]);	
+		primitive = _inv iNOT_SPLIT_BWENB9(SPLIT_BWENB[9], NOT_SPLIT_BWENB[9]);	
+		primitive = _inv iNOT_SPLIT_BWENB10(SPLIT_BWENB[10], NOT_SPLIT_BWENB[10]);	
+		primitive = _inv iNOT_SPLIT_BWENB11(SPLIT_BWENB[11], NOT_SPLIT_BWENB[11]);	
+		primitive = _inv iNOT_SPLIT_BWENB12(SPLIT_BWENB[12], NOT_SPLIT_BWENB[12]);	
+		primitive = _inv iNOT_SPLIT_BWENB13(SPLIT_BWENB[13], NOT_SPLIT_BWENB[13]);	
+		primitive = _inv iNOT_SPLIT_BWENB14(SPLIT_BWENB[14], NOT_SPLIT_BWENB[14]);	
+		primitive = _inv iNOT_SPLIT_BWENB15(SPLIT_BWENB[15], NOT_SPLIT_BWENB[15]);	
+	)	
+	
+	intern (WRITEB) (array = 15 : 0;	
+		primitive = _and aWRITEB0(NOT_SPLIT_BWENB[0], NOT_CENB, WRITEB[0]);	
+		primitive = _and aWRITEB1(NOT_SPLIT_BWENB[1], NOT_CENB, WRITEB[1]);	
+		primitive = _and aWRITEB2(NOT_SPLIT_BWENB[2], NOT_CENB, WRITEB[2]);	
+		primitive = _and aWRITEB3(NOT_SPLIT_BWENB[3], NOT_CENB, WRITEB[3]);	
+		primitive = _and aWRITEB4(NOT_SPLIT_BWENB[4], NOT_CENB, WRITEB[4]);	
+		primitive = _and aWRITEB5(NOT_SPLIT_BWENB[5], NOT_CENB, WRITEB[5]);	
+		primitive = _and aWRITEB6(NOT_SPLIT_BWENB[6], NOT_CENB, WRITEB[6]);	
+		primitive = _and aWRITEB7(NOT_SPLIT_BWENB[7], NOT_CENB, WRITEB[7]);	
+		primitive = _and aWRITEB8(NOT_SPLIT_BWENB[8], NOT_CENB, WRITEB[8]);	
+		primitive = _and aWRITEB9(NOT_SPLIT_BWENB[9], NOT_CENB, WRITEB[9]);	
+		primitive = _and aWRITEB10(NOT_SPLIT_BWENB[10], NOT_CENB, WRITEB[10]);	
+		primitive = _and aWRITEB11(NOT_SPLIT_BWENB[11], NOT_CENB, WRITEB[11]);	
+		primitive = _and aWRITEB12(NOT_SPLIT_BWENB[12], NOT_CENB, WRITEB[12]);	
+		primitive = _and aWRITEB13(NOT_SPLIT_BWENB[13], NOT_CENB, WRITEB[13]);	
+		primitive = _and aWRITEB14(NOT_SPLIT_BWENB[14], NOT_CENB, WRITEB[14]);	
+		primitive = _and aWRITEB15(NOT_SPLIT_BWENB[15], NOT_CENB, WRITEB[15]);	
+	)	
+		
+	intern (READB) (array = 15:0;	
+		primitive = _and aREADB0(NOT_CENB, SPLIT_BWENB[0], READB[0]);	
+		primitive = _and aREADB1(NOT_CENB, SPLIT_BWENB[1], READB[1]);	
+		primitive = _and aREADB2(NOT_CENB, SPLIT_BWENB[2], READB[2]);	
+		primitive = _and aREADB3(NOT_CENB, SPLIT_BWENB[3], READB[3]);	
+		primitive = _and aREADB4(NOT_CENB, SPLIT_BWENB[4], READB[4]);	
+		primitive = _and aREADB5(NOT_CENB, SPLIT_BWENB[5], READB[5]);	
+		primitive = _and aREADB6(NOT_CENB, SPLIT_BWENB[6], READB[6]);	
+		primitive = _and aREADB7(NOT_CENB, SPLIT_BWENB[7], READB[7]);	
+		primitive = _and aREADB8(NOT_CENB, SPLIT_BWENB[8], READB[8]);	
+		primitive = _and aREADB9(NOT_CENB, SPLIT_BWENB[9], READB[9]);	
+		primitive = _and aREADB10(NOT_CENB, SPLIT_BWENB[10], READB[10]);	
+		primitive = _and aREADB11(NOT_CENB, SPLIT_BWENB[11], READB[11]);	
+		primitive = _and aREADB12(NOT_CENB, SPLIT_BWENB[12], READB[12]);	
+		primitive = _and aREADB13(NOT_CENB, SPLIT_BWENB[13], READB[13]);	
+		primitive = _and aREADB14(NOT_CENB, SPLIT_BWENB[14], READB[14]);	
+		primitive = _and aREADB15(NOT_CENB, SPLIT_BWENB[15], READB[15]);	
+	)	
+  	
+	intern (XoutAiff) (primitive = _tie0  oXoutA ( XoutAiff );)	
+	intern (XoutBiff) (primitive = _tie0  oXoutB ( XoutBiff );)	
+	
+	intern (INT_QA, INT_QB) (array = 15 : 0;	
+		instance = dpram16x4096_bitcell mem0 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[0]), .WRITEB(WRITEB[0]), .READA(READA[0]), .READB(READB[0]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[0]), .DB(BUS_DB[0]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[0]), .QB(INT_QB[0]));	
+		instance = dpram16x4096_bitcell mem1 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[1]), .WRITEB(WRITEB[1]), .READA(READA[1]), .READB(READB[1]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[1]), .DB(BUS_DB[1]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[1]), .QB(INT_QB[1]));	
+		instance = dpram16x4096_bitcell mem2 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[2]), .WRITEB(WRITEB[2]), .READA(READA[2]), .READB(READB[2]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[2]), .DB(BUS_DB[2]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[2]), .QB(INT_QB[2]));	
+		instance = dpram16x4096_bitcell mem3 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[3]), .WRITEB(WRITEB[3]), .READA(READA[3]), .READB(READB[3]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[3]), .DB(BUS_DB[3]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[3]), .QB(INT_QB[3]));	
+		instance = dpram16x4096_bitcell mem4 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[4]), .WRITEB(WRITEB[4]), .READA(READA[4]), .READB(READB[4]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[4]), .DB(BUS_DB[4]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[4]), .QB(INT_QB[4]));	
+		instance = dpram16x4096_bitcell mem5 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[5]), .WRITEB(WRITEB[5]), .READA(READA[5]), .READB(READB[5]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[5]), .DB(BUS_DB[5]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[5]), .QB(INT_QB[5]));	
+		instance = dpram16x4096_bitcell mem6 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[6]), .WRITEB(WRITEB[6]), .READA(READA[6]), .READB(READB[6]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[6]), .DB(BUS_DB[6]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[6]), .QB(INT_QB[6]));	
+		instance = dpram16x4096_bitcell mem7 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[7]), .WRITEB(WRITEB[7]), .READA(READA[7]), .READB(READB[7]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[7]), .DB(BUS_DB[7]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[7]), .QB(INT_QB[7]));	
+		instance = dpram16x4096_bitcell mem8 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[8]), .WRITEB(WRITEB[8]), .READA(READA[8]), .READB(READB[8]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[8]), .DB(BUS_DB[8]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[8]), .QB(INT_QB[8]));	
+		instance = dpram16x4096_bitcell mem9 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[9]), .WRITEB(WRITEB[9]), .READA(READA[9]), .READB(READB[9]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[9]), .DB(BUS_DB[9]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[9]), .QB(INT_QB[9]));	
+		instance = dpram16x4096_bitcell mem10 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[10]), .WRITEB(WRITEB[10]), .READA(READA[10]), .READB(READB[10]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[10]), .DB(BUS_DB[10]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[10]), .QB(INT_QB[10]));	
+		instance = dpram16x4096_bitcell mem11 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[11]), .WRITEB(WRITEB[11]), .READA(READA[11]), .READB(READB[11]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[11]), .DB(BUS_DB[11]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[11]), .QB(INT_QB[11]));	
+		instance = dpram16x4096_bitcell mem12 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[12]), .WRITEB(WRITEB[12]), .READA(READA[12]), .READB(READB[12]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[12]), .DB(BUS_DB[12]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[12]), .QB(INT_QB[12]));	
+		instance = dpram16x4096_bitcell mem13 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[13]), .WRITEB(WRITEB[13]), .READA(READA[13]), .READB(READB[13]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[13]), .DB(BUS_DB[13]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[13]), .QB(INT_QB[13]));	
+		instance = dpram16x4096_bitcell mem14 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[14]), .WRITEB(WRITEB[14]), .READA(READA[14]), .READB(READB[14]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[14]), .DB(BUS_DB[14]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[14]), .QB(INT_QB[14]));	
+		instance = dpram16x4096_bitcell mem15 (.CLKA(CLKA), .CLKB(CLKB), .WRITEA(WRITEA[15]), .WRITEB(WRITEB[15]), .READA(READA[15]), .READB(READB[15]), .AA(BUS_AA), .AB(BUS_AB), .DA(BUS_DA[15]), .DB(BUS_DB[15]), .XoutA(XoutAiff), .XoutB(XoutBiff), .QA(INT_QA[15]), .QB(INT_QB[15]));	
+	)	
+			
+	
+	output (QB) (array = 15:0; 	
+		primitive = _mux mREAD_QB0(QB[0],  INT_QB[0], READB[0], QB[0]);	
+		primitive = _mux mREAD_QB1(QB[1],  INT_QB[1], READB[0], QB[1]);	
+		primitive = _mux mREAD_QB2(QB[2],  INT_QB[2], READB[0], QB[2]);	
+		primitive = _mux mREAD_QB3(QB[3],  INT_QB[3], READB[0], QB[3]);	
+		primitive = _mux mREAD_QB4(QB[4],  INT_QB[4], READB[0], QB[4]);	
+		primitive = _mux mREAD_QB5(QB[5],  INT_QB[5], READB[0], QB[5]);	
+		primitive = _mux mREAD_QB6(QB[6],  INT_QB[6], READB[0], QB[6]);	
+		primitive = _mux mREAD_QB7(QB[7],  INT_QB[7], READB[0], QB[7]);	
+		primitive = _mux mREAD_QB8(QB[8],  INT_QB[8], READB[0], QB[8]);	
+		primitive = _mux mREAD_QB9(QB[9],  INT_QB[9], READB[0], QB[9]);	
+		primitive = _mux mREAD_QB10(QB[10],  INT_QB[10], READB[0], QB[10]);	
+		primitive = _mux mREAD_QB11(QB[11],  INT_QB[11], READB[0], QB[11]);	
+		primitive = _mux mREAD_QB12(QB[12],  INT_QB[12], READB[0], QB[12]);	
+		primitive = _mux mREAD_QB13(QB[13],  INT_QB[13], READB[0], QB[13]);	
+		primitive = _mux mREAD_QB14(QB[14],  INT_QB[14], READB[0], QB[14]);	
+		primitive = _mux mREAD_QB15(QB[15],  INT_QB[15], READB[0], QB[15]);	
+	)	
+ )	

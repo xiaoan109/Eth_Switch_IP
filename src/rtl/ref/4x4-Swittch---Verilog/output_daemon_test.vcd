@@ -1,0 +1,112 @@
+$date
+	Mon May 17 21:11:31 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module output_daemon_tb $end
+$var wire 32 ! output_to_fifo [31:0] $end
+$var reg 1 " clk $end
+$var reg 33 # from_queue_1 [32:0] $end
+$var reg 33 $ from_queue_2 [32:0] $end
+$var reg 33 % from_queue_3 [32:0] $end
+$var reg 33 & from_queue_4 [32:0] $end
+$var reg 1 ' rst $end
+$scope module output_daemon_instance $end
+$var wire 33 ( NOBLOCKOBUF_FROM_1 [32:0] $end
+$var wire 33 ) NOBLOCKOBUF_FROM_2 [32:0] $end
+$var wire 33 * NOBLOCKOBUF_FROM_3 [32:0] $end
+$var wire 33 + NOBLOCKOBUF_FROM_4 [32:0] $end
+$var wire 1 " clk $end
+$var wire 1 ' rst $end
+$var reg 32 , OUTPUT_PORT [31:0] $end
+$var reg 4 - next_read_from_queue [1:4] $end
+$var reg 33 . pkt_word [32:0] $end
+$var reg 4 / read_from_queue [1:4] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx /
+b0 .
+b1000 -
+bx ,
+bx +
+bx *
+bx )
+b100000011000000000000010100000001 (
+1'
+bx &
+bx %
+bx $
+b100000011000000000000010100000001 #
+0"
+bx !
+$end
+#20
+0'
+#25
+b1000 /
+1"
+#50
+0"
+#70
+b100000 #
+b100000 (
+#75
+1"
+#100
+0"
+#120
+b1010 #
+b1010 (
+#125
+1"
+#150
+0"
+#170
+b111 #
+b111 (
+#175
+1"
+#200
+0"
+#220
+b10000000 #
+b10000000 (
+#225
+1"
+#250
+0"
+#270
+b11001000 #
+b11001000 (
+#275
+1"
+#300
+0"
+#325
+1"
+#350
+0"
+#375
+1"
+#400
+0"
+#425
+1"
+#450
+0"
+#475
+1"
+#500
+0"
+#525
+1"
+#550
+0"
+#570

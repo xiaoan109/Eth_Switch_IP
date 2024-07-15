@@ -1,0 +1,180 @@
+// +FHEADER =====================================================================
+// FilePath       : /Switch/src/tb/tb_sram_block_drv.v
+// Author         : wangxuanji 18364998790@163.com
+// CreateDate     : 24-04-01
+// LastEditors    : wangxuanji 18364998790@163.com
+// LastEditTime   : 24-04-16
+// Version        :
+// Description    : 
+//                  
+// 
+// Parameter       :
+//                  
+// 
+// IO Port         :
+//                  
+// 
+// Modification History
+//    Date   |   Author   |   Version   |   Change Description
+// ==============================================================================
+//  23-08-24 |     NJU    |     0.1     | Original Version
+//                  
+// 
+// -FHEADER =====================================================================
+`include "define.v"
+module tb_sram_block_drv ();
+  parameter Bits = 32;
+  parameter Paddr_width = 14;
+  parameter Vaddr_width = 12;
+  parameter Wen_Width = 32;
+  parameter Ben_width = 4;
+  parameter Trans_len = 16;
+  reg                    iClk;
+  reg                    iRst_n;
+  reg                    iWDataVld;
+  reg  [  Ben_width-1:0] iWByteEna;
+  reg  [Vaddr_width-1:0] iWAddr;
+  reg  [       Bits-1:0] iWData;
+  reg                    iRdataReq;
+  reg  [Vaddr_width-1:0] iRAddr;
+  wire [       Bits-1:0] oRData;
+  // wire                   oWResp;
+  // wire                   oRResp;
+  // SRAM interface
+  wire                   oCEnA;
+  wire                   oCEnB;
+  wire                   oWEnA;
+  wire                   oWEnB;
+  wire [  Wen_Width-1:0] oBWEnA;
+  wire [  Wen_Width-1:0] oBWEnB;
+  wire [Paddr_width-1:0] oAddrA;
+  wire [Paddr_width-1:0] oAddrB;
+  wire [       Bits-1:0] oWDataA;
+  wire [       Bits-1:0] oWDataB;
+  wire [       Bits-1:0] iRDataA;
+  wire [       Bits-1:0] iRDataB;
+
+  sram_block_drv U_sram_block_drv (
+    .iClk     (iClk),
+    .iRst_n   (iRst_n),
+    .iWDataVld(iWDataVld),
+    .iWByteEna(iWByteEna),
+    .iWAddr   (iWAddr),
+    .iWData   (iWData),
+    .iRdataReq(iRdataReq),
+    .iRAddr   (iRAddr),
+    .oRData   (oRData),
+    // .oWResp   (oWResp),
+    // .oRResp   (oRResp),
+    .oCEnA    (oCEnA),
+    .oCEnB    (oCEnB),
+    .oWEnA    (oWEnA),
+    .oWEnB    (oWEnB),
+    .oBWEnA   (oBWEnA),
+    .oBWEnB   (oBWEnB),
+    .oAddrA   (oAddrA),
+    .oAddrB   (oAddrB),
+    .oWDataA  (oWDataA),
+    .oWDataB  (oWDataB),
+    .iRDataA  (iRDataA),
+    .iRDataB  (iRDataB)
+  );
+
+  sram_wrapper U_sram_wrapper (
+    .iClkA  (iClk),
+    .iClkB  (iClk),
+    .iRst_n (iRst_n),
+    .iCEnA  (oCEnA),
+    .iCEnB  (oCEnB),
+    .iWEnA  (oWEnA),
+    .iWEnB  (oWEnB),
+    .iBWEnA (oBWEnA),
+    .iBWEnB (oBWEnB),
+    .iAddrA (oAddrA),
+    .iAddrB (oAddrB),
+    .iWDataA(oWDataA),
+    .iWDataB(oWDataB),
+    .oRDataA(iRDataA),
+    .oRDataB(iRDataB)
+  );
+
+  initial begin
+    $fsdbDumpfile("tb_sram_block_drv.fsdb");
+    $fsdbDumpvars(0, tb_sram_block_drv);
+    $fsdbDumpMDA();
+  end
+
+  initial begin
+    iClk = 1'b0;
+    forever #5 iClk = !iClk;
+  end
+
+  initial begin
+    iRst_n = 1'b0;
+    iWDataVld = 1'b0;
+    iWByteEna = 1'b0;
+    iWAddr = 0;
+    iWData = 0;
+    iRdataReq = 1'b0;
+    iRAddr = 0;
+    `DELAY(10, iClk)
+    iRst_n = 1'b1;
+    `DELAY(5, iClk)
+    WrMemBlock(0, 4'b1111, 0);
+    `DELAY(5, iClk)
+    RdMemBlock(0);
+    `DELAY(5, iClk)
+    WrMemBlock(0, 4'b1111, 4);
+    `DELAY(5, iClk)
+    RdMemBlock(5);
+    #100 $finish;
+  end
+
+  task WrMemBlock;
+    input random;
+    input [Ben_width-1:0] byteEna;
+    input [Vaddr_width-1:0] addr;
+    begin
+      if (random) begin
+        repeat (Trans_len) begin
+          iWDataVld = $random % 2;
+          iWByteEna = iWDataVld ? byteEna : 0;
+          iWAddr = iWDataVld ? addr : 0;
+          iWData = iWDataVld ? $random : 0;
+          `DELAY(1, iClk)
+        end
+        iWDataVld = 1'b0;
+        iWByteEna = 1'b0;
+        iWAddr = 0;
+        iWData = 0;
+      end else begin
+        repeat (Trans_len) begin
+          iWDataVld = 1'b1;
+          iWByteEna = byteEna;
+          iWAddr = addr;
+          iWData = $random;
+          `DELAY(1, iClk)
+        end
+        iWDataVld = 1'b0;
+        iWByteEna = 1'b0;
+        iWAddr = 0;
+        iWData = 0;
+      end
+    end
+  endtask
+
+  task RdMemBlock;
+    input [Vaddr_width-1:0] addr;
+    begin
+      repeat (Trans_len) begin
+        iRdataReq = 1'b1;
+        iRAddr = addr;
+        `DELAY(1, iClk)
+      end
+      iRdataReq = 1'b0;
+      iRAddr = 0;
+    end
+  endtask
+
+
+endmodule

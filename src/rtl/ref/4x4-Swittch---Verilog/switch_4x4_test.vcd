@@ -1,0 +1,1041 @@
+$date
+	Tue May 18 13:28:36 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module switch_4x4_tb $end
+$var reg 1 ! clk $end
+$var reg 32 " input_word_1 [31:0] $end
+$var reg 32 # input_word_2 [31:0] $end
+$var reg 32 $ input_word_3 [31:0] $end
+$var reg 32 % input_word_4 [31:0] $end
+$var reg 1 & rst $end
+$scope module switch_4x4_instance $end
+$var wire 1 ! clk $end
+$var wire 32 ' input_1 [31:0] $end
+$var wire 32 ( input_2 [31:0] $end
+$var wire 32 ) input_3 [31:0] $end
+$var wire 32 * input_4 [31:0] $end
+$var wire 1 & rst $end
+$var wire 1 + wr_en_4_4 $end
+$var wire 1 , wr_en_4_3 $end
+$var wire 1 - wr_en_4_2 $end
+$var wire 1 . wr_en_4_1 $end
+$var wire 1 / wr_en_3_4 $end
+$var wire 1 0 wr_en_3_3 $end
+$var wire 1 1 wr_en_3_2 $end
+$var wire 1 2 wr_en_3_1 $end
+$var wire 1 3 wr_en_2_4 $end
+$var wire 1 4 wr_en_2_3 $end
+$var wire 1 5 wr_en_2_2 $end
+$var wire 1 6 wr_en_2_1 $end
+$var wire 1 7 wr_en_1_4 $end
+$var wire 1 8 wr_en_1_3 $end
+$var wire 1 9 wr_en_1_2 $end
+$var wire 1 : wr_en_1_1 $end
+$var wire 1 ; rd_en_4_4 $end
+$var wire 1 < rd_en_4_3 $end
+$var wire 1 = rd_en_4_2 $end
+$var wire 1 > rd_en_4_1 $end
+$var wire 1 ? rd_en_3_4 $end
+$var wire 1 @ rd_en_3_3 $end
+$var wire 1 A rd_en_3_2 $end
+$var wire 1 B rd_en_3_1 $end
+$var wire 1 C rd_en_2_4 $end
+$var wire 1 D rd_en_2_3 $end
+$var wire 1 E rd_en_2_2 $end
+$var wire 1 F rd_en_2_1 $end
+$var wire 1 G rd_en_1_4 $end
+$var wire 1 H rd_en_1_3 $end
+$var wire 1 I rd_en_1_2 $end
+$var wire 1 J rd_en_1_1 $end
+$var wire 33 K queue_output_4_4 [32:0] $end
+$var wire 33 L queue_output_4_3 [32:0] $end
+$var wire 33 M queue_output_4_2 [32:0] $end
+$var wire 33 N queue_output_4_1 [32:0] $end
+$var wire 33 O queue_output_3_4 [32:0] $end
+$var wire 33 P queue_output_3_3 [32:0] $end
+$var wire 33 Q queue_output_3_2 [32:0] $end
+$var wire 33 R queue_output_3_1 [32:0] $end
+$var wire 33 S queue_output_2_4 [32:0] $end
+$var wire 33 T queue_output_2_3 [32:0] $end
+$var wire 33 U queue_output_2_2 [32:0] $end
+$var wire 33 V queue_output_2_1 [32:0] $end
+$var wire 33 W queue_output_1_4 [32:0] $end
+$var wire 33 X queue_output_1_3 [32:0] $end
+$var wire 33 Y queue_output_1_2 [32:0] $end
+$var wire 33 Z queue_output_1_1 [32:0] $end
+$var wire 33 [ input_queue_4_4 [32:0] $end
+$var wire 33 \ input_queue_4_3 [32:0] $end
+$var wire 33 ] input_queue_4_2 [32:0] $end
+$var wire 33 ^ input_queue_4_1 [32:0] $end
+$var wire 33 _ input_queue_3_4 [32:0] $end
+$var wire 33 ` input_queue_3_3 [32:0] $end
+$var wire 33 a input_queue_3_2 [32:0] $end
+$var wire 33 b input_queue_3_1 [32:0] $end
+$var wire 33 c input_queue_2_4 [32:0] $end
+$var wire 33 d input_queue_2_3 [32:0] $end
+$var wire 33 e input_queue_2_2 [32:0] $end
+$var wire 33 f input_queue_2_1 [32:0] $end
+$var wire 33 g input_queue_1_4 [32:0] $end
+$var wire 33 h input_queue_1_3 [32:0] $end
+$var wire 33 i input_queue_1_2 [32:0] $end
+$var wire 33 j input_queue_1_1 [32:0] $end
+$scope module input_daemon_1 $end
+$var wire 1 ! clk $end
+$var wire 32 k input_word [31:0] $end
+$var wire 1 & rst $end
+$var wire 8 l seq_id [7:0] $end
+$var wire 16 m pkt_length [15:0] $end
+$var wire 8 n dest_id [7:0] $end
+$var wire 33 o data_to_outport [32:0] $end
+$var reg 16 p count_down [15:0] $end
+$var reg 32 q current_input_word [31:0] $end
+$var reg 8 r last_dest_id [7:0] $end
+$var reg 1 s new_packet $end
+$var reg 16 t next_count_down [15:0] $end
+$var reg 8 u next_last_dest_id [7:0] $end
+$var reg 33 v to_output_buf_1 [32:0] $end
+$var reg 33 w to_output_buf_2 [32:0] $end
+$var reg 33 x to_output_buf_3 [32:0] $end
+$var reg 33 y to_output_buf_4 [32:0] $end
+$var reg 1 : wr_en_1 $end
+$var reg 1 9 wr_en_2 $end
+$var reg 1 8 wr_en_3 $end
+$var reg 1 7 wr_en_4 $end
+$upscope $end
+$scope module input_daemon_2 $end
+$var wire 1 ! clk $end
+$var wire 32 z input_word [31:0] $end
+$var wire 1 & rst $end
+$var wire 8 { seq_id [7:0] $end
+$var wire 16 | pkt_length [15:0] $end
+$var wire 8 } dest_id [7:0] $end
+$var wire 33 ~ data_to_outport [32:0] $end
+$var reg 16 !" count_down [15:0] $end
+$var reg 32 "" current_input_word [31:0] $end
+$var reg 8 #" last_dest_id [7:0] $end
+$var reg 1 $" new_packet $end
+$var reg 16 %" next_count_down [15:0] $end
+$var reg 8 &" next_last_dest_id [7:0] $end
+$var reg 33 '" to_output_buf_1 [32:0] $end
+$var reg 33 (" to_output_buf_2 [32:0] $end
+$var reg 33 )" to_output_buf_3 [32:0] $end
+$var reg 33 *" to_output_buf_4 [32:0] $end
+$var reg 1 6 wr_en_1 $end
+$var reg 1 5 wr_en_2 $end
+$var reg 1 4 wr_en_3 $end
+$var reg 1 3 wr_en_4 $end
+$upscope $end
+$scope module input_daemon_3 $end
+$var wire 1 ! clk $end
+$var wire 32 +" input_word [31:0] $end
+$var wire 1 & rst $end
+$var wire 8 ," seq_id [7:0] $end
+$var wire 16 -" pkt_length [15:0] $end
+$var wire 8 ." dest_id [7:0] $end
+$var wire 33 /" data_to_outport [32:0] $end
+$var reg 16 0" count_down [15:0] $end
+$var reg 32 1" current_input_word [31:0] $end
+$var reg 8 2" last_dest_id [7:0] $end
+$var reg 1 3" new_packet $end
+$var reg 16 4" next_count_down [15:0] $end
+$var reg 8 5" next_last_dest_id [7:0] $end
+$var reg 33 6" to_output_buf_1 [32:0] $end
+$var reg 33 7" to_output_buf_2 [32:0] $end
+$var reg 33 8" to_output_buf_3 [32:0] $end
+$var reg 33 9" to_output_buf_4 [32:0] $end
+$var reg 1 2 wr_en_1 $end
+$var reg 1 1 wr_en_2 $end
+$var reg 1 0 wr_en_3 $end
+$var reg 1 / wr_en_4 $end
+$upscope $end
+$scope module input_daemon_4 $end
+$var wire 1 ! clk $end
+$var wire 32 :" input_word [31:0] $end
+$var wire 1 & rst $end
+$var wire 8 ;" seq_id [7:0] $end
+$var wire 16 <" pkt_length [15:0] $end
+$var wire 8 =" dest_id [7:0] $end
+$var wire 33 >" data_to_outport [32:0] $end
+$var reg 16 ?" count_down [15:0] $end
+$var reg 32 @" current_input_word [31:0] $end
+$var reg 8 A" last_dest_id [7:0] $end
+$var reg 1 B" new_packet $end
+$var reg 16 C" next_count_down [15:0] $end
+$var reg 8 D" next_last_dest_id [7:0] $end
+$var reg 33 E" to_output_buf_1 [32:0] $end
+$var reg 33 F" to_output_buf_2 [32:0] $end
+$var reg 33 G" to_output_buf_3 [32:0] $end
+$var reg 33 H" to_output_buf_4 [32:0] $end
+$var reg 1 . wr_en_1 $end
+$var reg 1 - wr_en_2 $end
+$var reg 1 , wr_en_3 $end
+$var reg 1 + wr_en_4 $end
+$upscope $end
+$scope module output_daemon_1 $end
+$var wire 1 ! clk $end
+$var wire 1 & rst $end
+$var wire 16 I" pkt_length [15:0] $end
+$var wire 1 J" packet_is_valid $end
+$var wire 4 K" last_read_from_queue [1:4] $end
+$var wire 33 L" NOBLOCKOBUF_FROM_4 [32:0] $end
+$var wire 33 M" NOBLOCKOBUF_FROM_3 [32:0] $end
+$var wire 33 N" NOBLOCKOBUF_FROM_2 [32:0] $end
+$var wire 33 O" NOBLOCKOBUF_FROM_1 [32:0] $end
+$var reg 32 P" OUTPUT_PORT [31:0] $end
+$var reg 8 Q" down_counter [7:0] $end
+$var reg 8 R" next_down_counter [7:0] $end
+$var reg 33 S" pkt_word [32:0] $end
+$var reg 4 T" read_from_queue [1:4] $end
+$upscope $end
+$scope module output_daemon_2 $end
+$var wire 1 ! clk $end
+$var wire 1 & rst $end
+$var wire 16 U" pkt_length [15:0] $end
+$var wire 1 V" packet_is_valid $end
+$var wire 4 W" last_read_from_queue [1:4] $end
+$var wire 33 X" NOBLOCKOBUF_FROM_4 [32:0] $end
+$var wire 33 Y" NOBLOCKOBUF_FROM_3 [32:0] $end
+$var wire 33 Z" NOBLOCKOBUF_FROM_2 [32:0] $end
+$var wire 33 [" NOBLOCKOBUF_FROM_1 [32:0] $end
+$var reg 32 \" OUTPUT_PORT [31:0] $end
+$var reg 8 ]" down_counter [7:0] $end
+$var reg 8 ^" next_down_counter [7:0] $end
+$var reg 33 _" pkt_word [32:0] $end
+$var reg 4 `" read_from_queue [1:4] $end
+$upscope $end
+$scope module output_daemon_3 $end
+$var wire 1 ! clk $end
+$var wire 1 & rst $end
+$var wire 16 a" pkt_length [15:0] $end
+$var wire 1 b" packet_is_valid $end
+$var wire 4 c" last_read_from_queue [1:4] $end
+$var wire 33 d" NOBLOCKOBUF_FROM_4 [32:0] $end
+$var wire 33 e" NOBLOCKOBUF_FROM_3 [32:0] $end
+$var wire 33 f" NOBLOCKOBUF_FROM_2 [32:0] $end
+$var wire 33 g" NOBLOCKOBUF_FROM_1 [32:0] $end
+$var reg 32 h" OUTPUT_PORT [31:0] $end
+$var reg 8 i" down_counter [7:0] $end
+$var reg 8 j" next_down_counter [7:0] $end
+$var reg 33 k" pkt_word [32:0] $end
+$var reg 4 l" read_from_queue [1:4] $end
+$upscope $end
+$scope module output_daemon_4 $end
+$var wire 1 ! clk $end
+$var wire 1 & rst $end
+$var wire 16 m" pkt_length [15:0] $end
+$var wire 1 n" packet_is_valid $end
+$var wire 4 o" last_read_from_queue [1:4] $end
+$var wire 33 p" NOBLOCKOBUF_FROM_4 [32:0] $end
+$var wire 33 q" NOBLOCKOBUF_FROM_3 [32:0] $end
+$var wire 33 r" NOBLOCKOBUF_FROM_2 [32:0] $end
+$var wire 33 s" NOBLOCKOBUF_FROM_1 [32:0] $end
+$var reg 32 t" OUTPUT_PORT [31:0] $end
+$var reg 8 u" down_counter [7:0] $end
+$var reg 8 v" next_down_counter [7:0] $end
+$var reg 33 w" pkt_word [32:0] $end
+$var reg 4 x" read_from_queue [1:4] $end
+$upscope $end
+$scope module queue_1_1 $end
+$var wire 1 ! clk $end
+$var wire 1 J rd_en $end
+$var wire 1 & rst $end
+$var wire 33 y" wr_data [32:0] $end
+$var wire 1 : wr_en $end
+$var wire 33 z" rd_data [32:0] $end
+$var reg 7 {" rd_ptr [6:0] $end
+$var reg 7 |" wr_ptr [6:0] $end
+$var integer 32 }" i [31:0] $end
+$upscope $end
+$scope module queue_1_2 $end
+$var wire 1 ! clk $end
+$var wire 1 I rd_en $end
+$var wire 1 & rst $end
+$var wire 33 ~" wr_data [32:0] $end
+$var wire 1 9 wr_en $end
+$var wire 33 !# rd_data [32:0] $end
+$var reg 7 "# rd_ptr [6:0] $end
+$var reg 7 ## wr_ptr [6:0] $end
+$var integer 32 $# i [31:0] $end
+$upscope $end
+$scope module queue_1_3 $end
+$var wire 1 ! clk $end
+$var wire 1 H rd_en $end
+$var wire 1 & rst $end
+$var wire 33 %# wr_data [32:0] $end
+$var wire 1 8 wr_en $end
+$var wire 33 &# rd_data [32:0] $end
+$var reg 7 '# rd_ptr [6:0] $end
+$var reg 7 (# wr_ptr [6:0] $end
+$var integer 32 )# i [31:0] $end
+$upscope $end
+$scope module queue_1_4 $end
+$var wire 1 ! clk $end
+$var wire 1 G rd_en $end
+$var wire 1 & rst $end
+$var wire 33 *# wr_data [32:0] $end
+$var wire 1 7 wr_en $end
+$var wire 33 +# rd_data [32:0] $end
+$var reg 7 ,# rd_ptr [6:0] $end
+$var reg 7 -# wr_ptr [6:0] $end
+$var integer 32 .# i [31:0] $end
+$upscope $end
+$scope module queue_2_1 $end
+$var wire 1 ! clk $end
+$var wire 1 F rd_en $end
+$var wire 1 & rst $end
+$var wire 33 /# wr_data [32:0] $end
+$var wire 1 6 wr_en $end
+$var wire 33 0# rd_data [32:0] $end
+$var reg 7 1# rd_ptr [6:0] $end
+$var reg 7 2# wr_ptr [6:0] $end
+$var integer 32 3# i [31:0] $end
+$upscope $end
+$scope module queue_2_2 $end
+$var wire 1 ! clk $end
+$var wire 1 E rd_en $end
+$var wire 1 & rst $end
+$var wire 33 4# wr_data [32:0] $end
+$var wire 1 5 wr_en $end
+$var wire 33 5# rd_data [32:0] $end
+$var reg 7 6# rd_ptr [6:0] $end
+$var reg 7 7# wr_ptr [6:0] $end
+$var integer 32 8# i [31:0] $end
+$upscope $end
+$scope module queue_2_3 $end
+$var wire 1 ! clk $end
+$var wire 1 D rd_en $end
+$var wire 1 & rst $end
+$var wire 33 9# wr_data [32:0] $end
+$var wire 1 4 wr_en $end
+$var wire 33 :# rd_data [32:0] $end
+$var reg 7 ;# rd_ptr [6:0] $end
+$var reg 7 <# wr_ptr [6:0] $end
+$var integer 32 =# i [31:0] $end
+$upscope $end
+$scope module queue_2_4 $end
+$var wire 1 ! clk $end
+$var wire 1 C rd_en $end
+$var wire 1 & rst $end
+$var wire 33 ># wr_data [32:0] $end
+$var wire 1 3 wr_en $end
+$var wire 33 ?# rd_data [32:0] $end
+$var reg 7 @# rd_ptr [6:0] $end
+$var reg 7 A# wr_ptr [6:0] $end
+$var integer 32 B# i [31:0] $end
+$upscope $end
+$scope module queue_3_1 $end
+$var wire 1 ! clk $end
+$var wire 1 B rd_en $end
+$var wire 1 & rst $end
+$var wire 33 C# wr_data [32:0] $end
+$var wire 1 2 wr_en $end
+$var wire 33 D# rd_data [32:0] $end
+$var reg 7 E# rd_ptr [6:0] $end
+$var reg 7 F# wr_ptr [6:0] $end
+$var integer 32 G# i [31:0] $end
+$upscope $end
+$scope module queue_3_2 $end
+$var wire 1 ! clk $end
+$var wire 1 A rd_en $end
+$var wire 1 & rst $end
+$var wire 33 H# wr_data [32:0] $end
+$var wire 1 1 wr_en $end
+$var wire 33 I# rd_data [32:0] $end
+$var reg 7 J# rd_ptr [6:0] $end
+$var reg 7 K# wr_ptr [6:0] $end
+$var integer 32 L# i [31:0] $end
+$upscope $end
+$scope module queue_3_3 $end
+$var wire 1 ! clk $end
+$var wire 1 @ rd_en $end
+$var wire 1 & rst $end
+$var wire 33 M# wr_data [32:0] $end
+$var wire 1 0 wr_en $end
+$var wire 33 N# rd_data [32:0] $end
+$var reg 7 O# rd_ptr [6:0] $end
+$var reg 7 P# wr_ptr [6:0] $end
+$var integer 32 Q# i [31:0] $end
+$upscope $end
+$scope module queue_3_4 $end
+$var wire 1 ! clk $end
+$var wire 1 ? rd_en $end
+$var wire 1 & rst $end
+$var wire 33 R# wr_data [32:0] $end
+$var wire 1 / wr_en $end
+$var wire 33 S# rd_data [32:0] $end
+$var reg 7 T# rd_ptr [6:0] $end
+$var reg 7 U# wr_ptr [6:0] $end
+$var integer 32 V# i [31:0] $end
+$upscope $end
+$scope module queue_4_1 $end
+$var wire 1 ! clk $end
+$var wire 1 > rd_en $end
+$var wire 1 & rst $end
+$var wire 33 W# wr_data [32:0] $end
+$var wire 1 . wr_en $end
+$var wire 33 X# rd_data [32:0] $end
+$var reg 7 Y# rd_ptr [6:0] $end
+$var reg 7 Z# wr_ptr [6:0] $end
+$var integer 32 [# i [31:0] $end
+$upscope $end
+$scope module queue_4_2 $end
+$var wire 1 ! clk $end
+$var wire 1 = rd_en $end
+$var wire 1 & rst $end
+$var wire 33 \# wr_data [32:0] $end
+$var wire 1 - wr_en $end
+$var wire 33 ]# rd_data [32:0] $end
+$var reg 7 ^# rd_ptr [6:0] $end
+$var reg 7 _# wr_ptr [6:0] $end
+$var integer 32 `# i [31:0] $end
+$upscope $end
+$scope module queue_4_3 $end
+$var wire 1 ! clk $end
+$var wire 1 < rd_en $end
+$var wire 1 & rst $end
+$var wire 33 a# wr_data [32:0] $end
+$var wire 1 , wr_en $end
+$var wire 33 b# rd_data [32:0] $end
+$var reg 7 c# rd_ptr [6:0] $end
+$var reg 7 d# wr_ptr [6:0] $end
+$var integer 32 e# i [31:0] $end
+$upscope $end
+$scope module queue_4_4 $end
+$var wire 1 ! clk $end
+$var wire 1 ; rd_en $end
+$var wire 1 & rst $end
+$var wire 33 f# wr_data [32:0] $end
+$var wire 1 + wr_en $end
+$var wire 33 g# rd_data [32:0] $end
+$var reg 7 h# rd_ptr [6:0] $end
+$var reg 7 i# wr_ptr [6:0] $end
+$var integer 32 j# i [31:0] $end
+$upscope $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b10000000 j#
+b1111111 i#
+b1111111 h#
+b0 g#
+b0 f#
+b10000000 e#
+b1111111 d#
+b1111111 c#
+b0 b#
+b0 a#
+b10000000 `#
+b1111111 _#
+b1111111 ^#
+b0 ]#
+b0 \#
+b10000000 [#
+b1111111 Z#
+b1111111 Y#
+b0 X#
+b0 W#
+b10000000 V#
+b1111111 U#
+b1111111 T#
+b0 S#
+b0 R#
+b10000000 Q#
+b1111111 P#
+b1111111 O#
+b0 N#
+b0 M#
+b10000000 L#
+b1111111 K#
+b1111111 J#
+b0 I#
+b0 H#
+b10000000 G#
+b1111111 F#
+b1111111 E#
+b0 D#
+b0 C#
+b10000000 B#
+b1111111 A#
+b1111111 @#
+b0 ?#
+b0 >#
+b10000000 =#
+b1111111 <#
+b1111111 ;#
+b0 :#
+b0 9#
+b10000000 8#
+b1111111 7#
+b1111111 6#
+b0 5#
+b0 4#
+b10000000 3#
+b1111111 2#
+b1111111 1#
+b0 0#
+b0 /#
+b10000000 .#
+b1111111 -#
+b1111111 ,#
+b0 +#
+b0 *#
+b10000000 )#
+b1111111 (#
+b1111111 '#
+b0 &#
+b0 %#
+b10000000 $#
+b1111111 ##
+b1111111 "#
+b0 !#
+b0 ~"
+b10000000 }"
+b1111111 |"
+b1111111 {"
+b0 z"
+b0 y"
+b1000 x"
+b0 w"
+b0 v"
+b0 u"
+bx t"
+b0 s"
+b0 r"
+b0 q"
+b0 p"
+b1000 o"
+0n"
+b0 m"
+b1000 l"
+b0 k"
+b0 j"
+b0 i"
+bx h"
+b0 g"
+b0 f"
+b0 e"
+b0 d"
+b1000 c"
+0b"
+b0 a"
+b1000 `"
+b0 _"
+b0 ^"
+b0 ]"
+bx \"
+b0 ["
+b0 Z"
+b0 Y"
+b0 X"
+b1000 W"
+0V"
+b0 U"
+b1000 T"
+b0 S"
+b0 R"
+b0 Q"
+bx P"
+b0 O"
+b0 N"
+b0 M"
+b0 L"
+b1000 K"
+0J"
+b0 I"
+b0 H"
+b0 G"
+b0 F"
+b0 E"
+b0 D"
+b1111111111111111 C"
+1B"
+b0 A"
+b0 @"
+b0 ?"
+b100000000000000000000000000000000 >"
+b0 ="
+b0 <"
+b0 ;"
+bx :"
+b0 9"
+b0 8"
+b0 7"
+b0 6"
+b0 5"
+b1111111111111111 4"
+13"
+b0 2"
+b0 1"
+b0 0"
+b100000000000000000000000000000000 /"
+b0 ."
+b0 -"
+b0 ,"
+bx +"
+b0 *"
+b0 )"
+b0 ("
+b0 '"
+b0 &"
+b1111111111111111 %"
+1$"
+b0 #"
+b0 ""
+b0 !"
+b100000000000000000000000000000000 ~
+b0 }
+b0 |
+b0 {
+bx z
+b0 y
+b0 x
+b0 w
+b0 v
+b0 u
+b1111111111111111 t
+1s
+b0 r
+b0 q
+b0 p
+b100000000000000000000000000000000 o
+b0 n
+b0 m
+b0 l
+bx k
+b0 j
+b0 i
+b0 h
+b0 g
+b0 f
+b0 e
+b0 d
+b0 c
+b0 b
+b0 a
+b0 `
+b0 _
+b0 ^
+b0 ]
+b0 \
+b0 [
+b0 Z
+b0 Y
+b0 X
+b0 W
+b0 V
+b0 U
+b0 T
+b0 S
+b0 R
+b0 Q
+b0 P
+b0 O
+b0 N
+b0 M
+b0 L
+b0 K
+1J
+1I
+1H
+1G
+0F
+0E
+0D
+0C
+0B
+0A
+0@
+0?
+0>
+0=
+0<
+0;
+0:
+09
+08
+07
+06
+05
+04
+03
+02
+01
+00
+0/
+0.
+0-
+0,
+0+
+bx *
+bx )
+bx (
+bx '
+1&
+bx %
+bx $
+bx #
+bx "
+0!
+$end
+#20
+b11000000000000010100000001 "
+b11000000000000010100000001 '
+b11000000000000010100000001 k
+0&
+#25
+b11 u
+b100 t
+bx &"
+bx %"
+bx 5"
+bx 4"
+bx D"
+bx C"
+b11 n
+b101 m
+b1 l
+bx }
+bx |
+bx {
+bx ."
+bx -"
+bx ,"
+bx ="
+bx <"
+bx ;"
+b100000011000000000000010100000001 o
+b11000000000000010100000001 q
+b1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx ~
+bx ""
+b1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx /"
+bx 1"
+b1xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx >"
+bx @"
+b0 P"
+b0 \"
+b0 h"
+b0 t"
+1!
+#50
+18
+0!
+#70
+b100000 "
+b100000 '
+b100000 k
+#75
+0s
+b11 u
+b100 t
+b0 n
+b0 m
+b100000 l
+08
+b100000000000000000000000000100000 o
+b100000 q
+b100000011000000000000010100000001 h
+b100000011000000000000010100000001 x
+b100000011000000000000010100000001 %#
+b11 r
+b100 p
+b1111110 (#
+1!
+#100
+18
+0!
+#120
+b1010 "
+b1010 '
+b1010 k
+#125
+b101 j"
+1b"
+b101 a"
+b1010 l
+b100000011000000000000010100000001 k"
+08
+b100000000000000000000000000001010 o
+b1010 q
+b100000000000000000000000000100000 h
+b100000000000000000000000000100000 x
+b100000000000000000000000000100000 %#
+b100000011000000000000010100000001 X
+b100000011000000000000010100000001 g"
+b100000011000000000000010100000001 &#
+b1111101 (#
+b1111110 '#
+1!
+#150
+18
+0!
+#170
+b111 "
+b111 '
+b111 k
+#175
+b100 j"
+b0 a"
+b111 l
+b100000000000000000000000000100000 k"
+b11000000000000010100000001 h"
+b101 i"
+08
+b100000000000000000000000000000111 o
+b111 q
+b100000000000000000000000000001010 h
+b100000000000000000000000000001010 x
+b100000000000000000000000000001010 %#
+b100000000000000000000000000100000 X
+b100000000000000000000000000100000 g"
+b100000000000000000000000000100000 &#
+b1111100 (#
+b1111101 '#
+1!
+#200
+18
+0!
+#220
+b10000000 "
+b10000000 '
+b10000000 k
+#225
+b11 j"
+b10000000 l
+b100000000000000000000000000001010 k"
+08
+b100000000000000000000000010000000 o
+b10000000 q
+b100000000000000000000000000000111 h
+b100000000000000000000000000000111 x
+b100000000000000000000000000000111 %#
+b100000 h"
+b100 i"
+b100000000000000000000000000001010 X
+b100000000000000000000000000001010 g"
+b100000000000000000000000000001010 &#
+b1111011 (#
+b1111100 '#
+1!
+#250
+18
+0!
+#270
+b11001000 "
+b11001000 '
+b11001000 k
+#275
+b10 j"
+b11001000 l
+b100000000000000000000000000000111 k"
+b1010 h"
+b11 i"
+08
+b100000000000000000000000011001000 o
+b11001000 q
+b100000000000000000000000010000000 h
+b100000000000000000000000010000000 x
+b100000000000000000000000010000000 %#
+b100000000000000000000000000000111 X
+b100000000000000000000000000000111 g"
+b100000000000000000000000000000111 &#
+b1111010 (#
+b1111011 '#
+1!
+#300
+18
+0!
+#320
+b1000000000000001100000010 #
+b1000000000000001100000010 (
+b1000000000000001100000010 z
+b0 "
+b0 '
+b0 k
+#325
+b1 j"
+b1 &"
+b10 %"
+b0 l
+b1 }
+b11 |
+b10 {
+b100000000000000000000000010000000 k"
+08
+b100000000000000000000000000000000 o
+b0 q
+b100000000000000000000000011001000 h
+b100000000000000000000000011001000 x
+b100000000000000000000000011001000 %#
+b100000001000000000000001100000010 ~
+b1000000000000001100000010 ""
+b111 h"
+b10 i"
+b100000000000000000000000010000000 X
+b100000000000000000000000010000000 g"
+b100000000000000000000000010000000 &#
+b1111001 (#
+b1111010 '#
+1!
+#350
+16
+0!
+#370
+b1110111 #
+b1110111 (
+b1110111 z
+#375
+b1 j"
+0$"
+b1 &"
+b10 %"
+0b"
+b0 }
+b0 |
+b1110111 {
+b0 k"
+b10000000 h"
+b1 i"
+06
+b100000000000000000000000001110111 ~
+b1110111 ""
+b100000001000000000000001100000010 f
+b100000001000000000000001100000010 '"
+b100000001000000000000001100000010 /#
+b1 #"
+b10 !"
+b0 h
+b0 x
+b0 %#
+b0 X
+b0 g"
+b0 &#
+b1111110 2#
+b1111001 '#
+1!
+#400
+16
+0!
+#420
+b1001110 #
+b1001110 (
+b1001110 z
+#425
+b1001110 {
+06
+b100000000000000000000000001001110 ~
+b1001110 ""
+b100000000000000000000000001110111 f
+b100000000000000000000000001110111 '"
+b100000000000000000000000001110111 /#
+b0 h"
+b1111101 2#
+1!
+#450
+16
+0!
+#470
+b101011 #
+b101011 (
+b101011 z
+#475
+b101011 {
+06
+b100000000000000000000000000101011 ~
+b101011 ""
+b100000000000000000000000001001110 f
+b100000000000000000000000001001110 '"
+b100000000000000000000000001001110 /#
+b1111100 2#
+1!
+#500
+16
+0!
+#525
+06
+b100000000000000000000000000101011 f
+b100000000000000000000000000101011 '"
+b100000000000000000000000000101011 /#
+b1111011 2#
+1!
+#550
+16
+0!
+#575
+06
+b1111010 2#
+1!
+#600
+16
+0!
+#625
+06
+b1111001 2#
+1!
+#650
+16
+0!
+#675
+06
+b1111000 2#
+1!
+#700
+16
+0!
+#725
+06
+b1110111 2#
+1!
+#750
+16
+0!
+#775
+06
+b1110110 2#
+1!
+#800
+16
+0!
+#825
+06
+b1110101 2#
+1!
+#850
+16
+0!
+#875
+06
+b1110100 2#
+1!
+#900
+16
+0!
+#925
+06
+b1110011 2#
+1!
+#950
+16
+0!
+#975
+06
+b1110010 2#
+1!
+#1000
+16
+0!
+#1025
+06
+b1110001 2#
+1!
+#1050
+16
+0!
+#1070
