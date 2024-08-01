@@ -3,7 +3,7 @@
 
 // Emits a pulse when one or more bits in the input word change.
 
-`default_nettype none
+//`default_nettype none
 
 module Word_Change_Detector #(
   parameter WORD_WIDTH = 0

@@ -17,7 +17,7 @@
 // Modification History
 //    Date   |   Author   |   Version   |   Change Description
 // ==============================================================================
-//  23-08-24 |     NJU    |     0.1     | Original Version
+//  23-08-24 |     CICC2060    |     0.1     | Original Version
 //                  
 // 
 // -FHEADER =====================================================================
@@ -47,9 +47,9 @@ THE SOFTWARE.
 
 // Language: Verilog 2001
 
-`resetall
-`timescale 1ns / 1ps
-`default_nettype none
+// `resetall
+// `timescale 1ns / 1ps
+// `default_nettype none
 
 /*
  * AXI4-Stream register

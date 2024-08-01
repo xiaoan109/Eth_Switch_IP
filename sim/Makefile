@@ -3,6 +3,8 @@ DUT=
 PART=
 SV_ENABLE=
 SEED=
+COVERAGE=
+LSF_MACHINE ?= lucktree208
 HOSTNAME    :=$(shell hostname)
 REPO_ROOT	:=$(shell pwd)/..
 SIM_DIR		:=$(REPO_ROOT)/sim
@@ -24,6 +26,14 @@ SIM_TOOL	:= 	vcs
 WAV_TOOL	:=	verdi
 FILELIST 	:= 	$(SIM_DIR)/filelist.f
 DPIC_FILES	:=	$(wildcard $(C_PATH)/*.c $(C_PATH)/*.cpp)
+
+ifneq ($(HOSTNAME), localhost.localdomain)
+ifneq ($(HOSTNAME),login)
+BSUB_OPTION := bsub -I -m $(LSF_MACHINE)
+else
+BSUB_OPTION := bsub -I
+endif
+endif
 
 ifeq ($(SIM_TOOL),vcs)
 SIM_OPTION	:=	-j16 +v2k +vcs+loopdetect -q +race=all +lint=all,noSVA-NSVU,noVCDE,noUI,noSVA-CE,noSVA-DIU  -debug_access+all -full64 -timescale=1ns/10ps
@@ -54,6 +64,10 @@ SIM_EXEC  	:= $(RUN_DIR)/simv +ntb_random_seed=$(SEED) +fsdb+functions
 endif
 endif
 
+ifeq ($(COVERAGE),1)
+SIM_OPTION += -cm line+cond+fsm+tgl+branch -cm_cond allops+anywidth+event
+SIM_EXEC   += -cm line+cond+fsm+tgl+branch
+endif
 
 
 
@@ -101,20 +115,26 @@ compile.flg: $(FILELIST)
 ifneq ($(SV_ENABLE),)
 	$(warning "Warning: Enable SystemVerilog!! Race Check will be disabled!!")
 endif
-	cd $(RUN_DIR); $(SIM_TOOL) $(SIM_OPTION) $(SIM_VSRC) $(SIM_INC) $(SIM_CSRC) |$ tee $(SIM_DIR)/$(DUT)_compile.log; cd $(SIM_DIR);
+	cd $(RUN_DIR); $(BSUB_OPTION) $(SIM_TOOL) $(SIM_OPTION) $(SIM_VSRC) $(SIM_INC) $(SIM_CSRC) |$ tee $(SIM_DIR)/$(DUT)_compile.log; cd $(SIM_DIR);
 	touch $(SIM_DIR)/compile.flg
 
 compile: compile.flg
 
 run: compile
-	cd $(RUN_DIR); $(SIM_EXEC) +DUMPWAVE=$(DUMPWAVE) +DUMPMDA=$(DUMPMDA) +TESTNAME=$(TESTNAME) +SIM_TOOL=$(SIM_TOOL) |$ tee $(SIM_DIR)/$(DUT)_run.log
+	cd $(RUN_DIR); $(BSUB_OPTION) $(SIM_EXEC) +DUMPWAVE=$(DUMPWAVE) +DUMPMDA=$(DUMPMDA) +TESTNAME=$(TESTNAME) +SIM_TOOL=$(SIM_TOOL) |$ tee $(SIM_DIR)/$(DUT)_run.log
 
 wave:
-	$(WAV_TOOL) $(WAV_OPTIONS) $(WAV_VSRC) $(WAV_INC) $(WAV_FILE) &
+	$(BSUB_OPTION) $(WAV_TOOL) $(WAV_OPTIONS) $(WAV_VSRC) $(WAV_INC) $(WAV_FILE) &
+
+coverage:
+	$(BSUB_OPTION) $(WAV_TOOL) -cov -covdir $(RUN_DIR)/simv.vdb/ &
 
 clean:
 	cd $(SIM_DIR); find * | grep -v -e 'Makefile' -e '.*.sh' | xargs rm -r;
 
+help:
+	@cat ex_sim.sh
 
 
-.PHONY: clean run wave compile filelist
+
+.PHONY: clean run wave compile filelist coverage help

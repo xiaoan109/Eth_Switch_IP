@@ -21,6 +21,7 @@ do
   # 检查输出中是否包含 "Fatal"
   if echo "$output" | grep -q "Fatal"; then
     echo "检测到 'Fatal'，停止执行"
+    echo "完成了 $i 次"
     exit 1
   fi
 done

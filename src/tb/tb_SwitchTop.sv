@@ -17,7 +17,7 @@
 // Modification History
 //    Date   |   Author   |   Version   |   Change Description
 // ==============================================================================
-//  23-08-24 |     NJU    |     0.1     | Original Version
+//  23-08-24 |     CICC2060    |     0.1     | Original Version
 //                  
 // 
 // -FHEADER =====================================================================
@@ -348,7 +348,7 @@ module tb_SwitchTop ();
       //for better verification
       `DELAY(delay, iClk);
       iWrVld[inPort]  = 1'b1;
-      iWrData[inPort] = {11'b0, prio, rLen, destPort, inPort};
+      iWrData[inPort] = {11'b0, rLen, prio, destPort, inPort};
       @(posedge iClk);
       while (oFull[inPort] || oAlmostFull[inPort>>2]) @(posedge iClk);
       #1;
@@ -736,13 +736,13 @@ module tb_SwitchTop ();
         bit idle;
         if (portSel[j]) begin
           $display("wait for Port[%2d] receive pkg, exp: %d", j, pkgNum);
-          CHECKIDLE(j, 200, idle);
+          CHECKIDLE(j, 2000, idle);
           wait (debugSum[j] == pkgNum);
         end
       join_none
     end
     wait fork;
-    #2 $display("wait fork finished");
+    #1 $display("@%t, wait fork finished", $time);
   endtask
 
 

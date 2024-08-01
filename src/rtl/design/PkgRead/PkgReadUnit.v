@@ -80,7 +80,6 @@ module PkgReadUnit #(
 
   //--------------------------计数器--------------------------------//
   reg [4:0] rBlockCnt;  //block计数器
-  // reg [3:0] rDataCnt;  //数据计数器
   reg [3:0] rDataRcvCnt;  //数据请求计数器
   reg [4:0] rBlockNum;  //完整的block数目(不包括最后一个不完整的block)
 
@@ -95,18 +94,6 @@ module PkgReadUnit #(
   end
 
 
-  // always @(posedge iClk or negedge iRst_n) begin
-  //   if (!iRst_n) begin
-  //     rDataCnt <= 0;
-  //   end else if (oWrrVld & iWrrRdy) begin
-  //     if (oWrrDataLast) begin  //rDataCnt == 15，说明一个block的数据已经发完 ,rDataCnt == 15, plus 1 = 0
-  //       rDataCnt <= 0;
-  //     end else begin  //与WRR握手成功，数据计数加1
-  //       rDataCnt <= rDataCnt + 1;
-  //     end
-  //   end
-  // end
-
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
       rDataRcvCnt <= 0;
@@ -118,28 +105,37 @@ module PkgReadUnit #(
   end
 
   //--------------------------MMU data read--------------------------------//
-  reg  [DATA_WIDTH - 1:0] rData;  //数据寄存器
-  reg                     rDataVld;
-  wire                    wDataRdy;
+  reg  [DATA_WIDTH-1:0] rData;  //数据寄存器
+  reg                   rDataVld;
+  wire                  wDataRdy;
+  reg                   rInDataVld;  //iData有效
+  reg  [DATA_WIDTH-1:0] rDataBuf;
+  reg                   rDataBufVld;
+  reg                   rHskBuf;
+  wire [DATA_WIDTH-1:0] wDataMux;
 
-  reg  [            23:0] rPkgFirAddr_r2;
-  reg  [             1:0] rPkgFirAddrVld_r2;
-
-  reg                     rInDataVld;  //iData有效
-
-  //PkgFirAddr buffer,延迟两个周期为了因为mmu需求提前两个周期给req信号
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
-      rPkgFirAddr_r2    <= 0;
-      rPkgFirAddrVld_r2 <= 0;
-    end else if (oPkgFirAddrRdy & (iPkgDrop == 0)) begin
-      rPkgFirAddr_r2    <= {rPkgFirAddr_r2[ADDR_LENTH - 1:0],iPkgFirAddr};
-      rPkgFirAddrVld_r2 <= {rPkgFirAddrVld_r2[0],iPkgFirAddrVld};
-    end else begin  //以为寄存器有了数据之后，就不会再有新的数据进来，所以补0移位
-      rPkgFirAddr_r2    <= {rPkgFirAddr_r2[ADDR_LENTH - 1:0],12'b0};
-      rPkgFirAddrVld_r2 <= {rPkgFirAddrVld_r2[0],1'b0};
+      rHskBuf <= 0;
+    end else begin
+      rHskBuf <= oBlockAddrVld & iMmuRdy;
     end
   end
+
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      rDataBuf <= 0;
+      rDataBufVld <= 0;
+    end else if (rHskBuf & rInDataVld & !wDataRdy) begin
+      rDataBuf <= iData;
+      rDataBufVld <= 1;
+    end else if (rInDataVld & wDataRdy) begin
+      rDataBuf <= 0;
+      rDataBufVld <= 0;
+    end
+  end
+
+  assign wDataMux = rDataBufVld ? rDataBuf : iData;
 
   //对MMU的读请求保持整个包的传输过程中有效
   always @(posedge iClk or negedge iRst_n) begin
@@ -168,13 +164,13 @@ module PkgReadUnit #(
         rCurAddr    <= rCurAddr;
         rCurAddrVld <= rCurAddrVld;
       end
-    end else if (rPkgFirAddrVld_r2[1]) begin
-      rCurAddr    <= rPkgFirAddr_r2[23:12];
+    end else if (iPkgFirAddrVld & !iPkgDrop) begin
+      rCurAddr    <= iPkgFirAddr;
       rCurAddrVld <= 1;
     end
   end
 
-  assign oPkgFirAddrRdy = (rPkgFirAddrVld_r2 == 0) & !oMmuReadReq;
+  assign oPkgFirAddrRdy = !oMmuReadReq;
   assign oBlockAddr = rCurAddr;
   assign oBlockAddrVld = rBlockCnt == rBlockNum ? rBlockNum == 0 ? 0 : (!rInDataVld | wDataRdy) & (oLNxtAddrReq == 0) & !wPkgReadEnd : rCurAddrVld & (!rInDataVld | wDataRdy);
 
@@ -218,7 +214,8 @@ module PkgReadUnit #(
       rData <= 0;
       rDataVld <= 0;
     end else if (rInDataVld & wDataRdy) begin  //与MMU握手成功将数据存入寄存器
-      rData <= iData;
+      // rData <= iData;
+      rData <= wDataMux;
       rDataVld <= 1;
     end else if (rDataVld & iWrrRdy) begin  //寄存器有数据但是MMU没来数据而后级需要数据则置零
       rData <= 0;
@@ -272,7 +269,7 @@ module PkgReadUnit #(
       oLNxtAddrReq <= 0;
     end else if (oLNxtAddrReq & iLdataVld) begin  //握手成功，请求信号拉低
       oLNxtAddrReq <= 0;
-    end else if (rPkgFirAddrVld_r2[1] | (oBlockAddrVld & iMmuRdy & rDataRcvCnt == 15 & wWordNum != 0)) begin
+    end else if (iPkgFirAddrVld | (oBlockAddrVld & iMmuRdy & rDataRcvCnt == 15 & wWordNum != 0)) begin
       oLNxtAddrReq <= 1;
     end else begin
       oLNxtAddrReq <= oLNxtAddrReq;

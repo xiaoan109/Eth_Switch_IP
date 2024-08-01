@@ -2,8 +2,8 @@
 // FilePath       : /Switch/src/rtl/design/xbar/axis_switch/priority_encoder.v
 // Author         : wangxuanji 18364998790@163.com
 // CreateDate     : 24-05-07
-// LastEditors    : wangxuanji 18364998790@163.com
-// LastEditTime   : 24-05-07
+// LastEditors    : zhouziheng ziheng.zhou.1999@qq.com
+// LastEditTime   : 24-07-24
 // Version        :
 // Description    : 
 //                  
@@ -17,7 +17,7 @@
 // Modification History
 //    Date   |   Author   |   Version   |   Change Description
 // ==============================================================================
-//  23-08-24 |     NJU    |     0.1     | Original Version
+//  23-08-24 |     CICC2060    |     0.1     | Original Version
 //                  
 // 
 // -FHEADER =====================================================================
@@ -47,9 +47,9 @@ THE SOFTWARE.
 
 // Language: Verilog 2001
 
-`resetall
-`timescale 1ns / 1ps
-`default_nettype none
+// `resetall
+// `timescale 1ns / 1ps
+// `default_nettype none
 
 /*
  * Priority encoder module

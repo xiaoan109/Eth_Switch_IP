@@ -1,9 +1,9 @@
 // +FHEADER =====================================================================
-// FilePath       : /Switch/src/model/behav_model/RAM_True_Dual_Port.v
+// FilePath       : /prj/Switch/Switch/src/model/behav_model/RAM_True_Dual_Port.v
 // Author         : wangxuanji 18364998790@163.com
 // CreateDate     : 24-04-01
-// LastEditors    : wangxuanji 18364998790@163.com
-// LastEditTime   : 24-05-09
+// LastEditors    : liuyanlong 2283670208@qq.com
+// LastEditTime   : 24-07-25
 // Version        :
 // Description    : http://fpgacpu.ca/fpga/RAM_True_Dual_Port.html
 //                  
@@ -17,7 +17,7 @@
 // Modification History
 //    Date   |   Author   |   Version   |   Change Description
 // ==============================================================================
-//  23-08-24 |     NJU    |     0.1     | Original Version
+//  23-08-24 |         |     0.1     | Original Version
 //                  
 // 
 // -FHEADER =====================================================================

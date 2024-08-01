@@ -10,7 +10,7 @@
 // of unknown length into a one-shot event (e.g.: updating a register only
 // once when a signal changes for an unknown time). 
 
-`default_nettype none
+//`default_nettype none
 
 module Pulse_Generator (
   input  wire clock,

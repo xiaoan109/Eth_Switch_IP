@@ -36,7 +36,7 @@
 
 // Let's begin with the usual front matter:
 
-`default_nettype none
+//`default_nettype none
 
 module Register #(
   parameter WORD_WIDTH  = 0,

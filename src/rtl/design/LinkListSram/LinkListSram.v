@@ -61,25 +61,25 @@ module LinkListSram #(
   input  wire [ADDR_LENTH - 1:0] iLaddr2,
   input  wire                    iLNxtAddrReq2,
 
-  output   wire    [ADDR_LENTH - 1:0]   oLdata3,
-  output   wire                         oLdataVld3,
-  input    wire    [ADDR_LENTH - 1:0]   iLaddr3,
-  input    wire                         iLNxtAddrReq3,
+  output wire [ADDR_LENTH - 1:0] oLdata3,
+  output wire                    oLdataVld3,
+  input  wire [ADDR_LENTH - 1:0] iLaddr3,
+  input  wire                    iLNxtAddrReq3,
 
   //drop chnnel
-  input   wire     [ADDR_LENTH - 1:0]   iDropAddr,
-  input   wire                          iDropAddrVld,
-  output  reg      [ADDR_LENTH - 1:0]   oDropData,
-  output  reg                           oDropDataVld
+  input  wire [ADDR_LENTH - 1:0] iDropAddr,
+  input  wire                    iDropAddrVld,
+  output reg  [ADDR_LENTH - 1:0] oDropData,
+  output reg                     oDropDataVld
 
 );
 
-//---------------------Sram 写入---------------------------------------、、
-wire [3:0]                wRecFifoDataVld,wFifoRen,wWriteLaddrVld;
-wire [2*ADDR_LENTH - 1:0] wRecFifoData[3:0];
-wire [ADDR_LENTH - 1:0]   wWriteLdata[3:0],wWriteLaddr[3:0];
-reg  [ADDR_LENTH - 1:0]   wWriteData,wWriteAddress;
-reg                       wWriteVld;
+  //---------------------Sram 写入---------------------------------------、、
+  wire [3:0] wRecFifoDataVld, wFifoRen, wWriteLaddrVld;
+  wire [2*ADDR_LENTH - 1:0] wRecFifoData[3:0];
+  wire [ADDR_LENTH - 1:0] wWriteLdata[3:0], wWriteLaddr[3:0];
+  reg [ADDR_LENTH - 1:0] wWriteData, wWriteAddress;
+  reg        wWriteVld;
 
   wire [3:0] wEmpty;
 
@@ -107,9 +107,11 @@ reg                       wWriteVld;
   generate
     //4个通道接4个深度为2的fifo防止包尾Block只有一个周期就读完了，
     //而下一个包回收的地址下一周期就到来，而覆盖掉了上一个包的地址（因为需要4个周期才能接收完4个通道）
+    //TODO: FIFO_DEPTH? 2 or 3?
+    //2 -> full ?
     for (i = 0; i < 4; i = i + 1) begin : Fifo_gen
       Fifo #(
-        .FIFO_DEPTH(2),
+        .FIFO_DEPTH(3),
         .DATA_WIDTH(2 * ADDR_LENTH)
       ) Fifo_u0 (
         .iClk(iClk),
@@ -215,14 +217,14 @@ reg                       wWriteVld;
   assign oLdata3    = wLdata[4*ADDR_LENTH-1:3*ADDR_LENTH];
   assign oLdataVld3 = wLdataVld[3];
 
-always@(*)begin
-  if(iDropAddrVld) rReqChnnel = 6;                        //丢包通道
-  else if(iLNxtAddrReq0 & !wLdataVld[0]) rReqChnnel = 0;
-  else if(iLNxtAddrReq1 & !wLdataVld[1]) rReqChnnel = 1;
-  else if(iLNxtAddrReq2 & !wLdataVld[2]) rReqChnnel = 2;
-  else if(iLNxtAddrReq3 & !wLdataVld[3]) rReqChnnel = 3;
-  else rReqChnnel = 5;                                    //防止与其他通道冲突 
-end
+  always @(*) begin
+    if (iDropAddrVld) rReqChnnel = 6;  //丢包通道
+    else if (iLNxtAddrReq0 & !wLdataVld[0]) rReqChnnel = 0;
+    else if (iLNxtAddrReq1 & !wLdataVld[1]) rReqChnnel = 1;
+    else if (iLNxtAddrReq2 & !wLdataVld[2]) rReqChnnel = 2;
+    else if (iLNxtAddrReq3 & !wLdataVld[3]) rReqChnnel = 3;
+    else rReqChnnel = 5;  //防止与其他通道冲突 
+  end
 
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
@@ -230,42 +232,42 @@ end
     end else begin
       rRdOutChnnel <= rReqChnnel;
     end
-end
-
-//------------------------丢包通道------------------------//
-
-always@(*)begin
-  if(rRdOutChnnel == 6) begin
-    oDropData    <= wReadData;
-    oDropDataVld <= 1;
-  end else begin
-    oDropData    <= 0;
-    oDropDataVld <= 0;
   end
-end
 
-//------------------------LinkListDpram---------------------------//
+  //------------------------丢包通道------------------------//
 
-wire                      wCenA,wCenB;
-wire [ADDR_LENTH - 1 : 0] wReadAddr;
+  always @(*) begin
+    if (rRdOutChnnel == 6) begin
+      oDropData    <= wReadData;
+      oDropDataVld <= 1;
+    end else begin
+      oDropData    <= 0;
+      oDropDataVld <= 0;
+    end
+  end
+
+  //------------------------LinkListDpram---------------------------//
+
+  wire wCenA, wCenB;
+  wire [ADDR_LENTH - 1 : 0] wReadAddr;
 
 `ifndef FPGA
-S55NLLGDPH_X512Y8D12_BW LinkListSram_U0 (
-    .QA         (              ), //A口写入B口读出
-    .QB         (wReadData     ), 
-    .CLKA       (iClk          ), 
-    .CLKB       (iClk          ), 
-    .CENA       (!wCenA        ), //0是激活
-    .CENB       (!wCenB        ), 
-    .WENA       (1'b0          ), //0是写
-    .BWENA      (12'b0         ),
-    .WENB       (1'b1          ), 
-    .BWENB      (12'b0         ),
-    .AA         (wWriteAddress ), 
-    .DA         (wWriteData    ),   
-    .AB         (wReadAddr     ), 
-    .DB         (              )
-);
+  S55NLLGDPH_X512Y8D12_BW LinkListSram_U0 (
+    .QA   (),               //A口写入B口读出
+    .QB   (wReadData),
+    .CLKA (iClk),
+    .CLKB (iClk),
+    .CENA (!wCenA),         //0是激活
+    .CENB (!wCenB),
+    .WENA (1'b0),           //0是写
+    .BWENA(12'b0),
+    .WENB (1'b1),
+    .BWENB(12'b0),
+    .AA   (wWriteAddress),
+    .DA   (wWriteData),
+    .AB   (wReadAddr),
+    .DB   ()
+  );
 `else
   RAM_Simple_Dual_Port_Dual_Clock #(
     .WORD_WIDTH   (ADDR_LENTH),
@@ -287,8 +289,8 @@ S55NLLGDPH_X512Y8D12_BW LinkListSram_U0 (
   );
 `endif
 
-assign wReadAddr = iDropAddrVld ? iDropAddr : wReadAddress;
-assign wCenA = wWriteVld;
-assign wCenB = wReadEn | iDropAddrVld;
+  assign wReadAddr = iDropAddrVld ? iDropAddr : wReadAddress;
+  assign wCenA = wWriteVld;
+  assign wCenB = wReadEn | iDropAddrVld;
 
 endmodule
