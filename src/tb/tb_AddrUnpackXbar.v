@@ -53,23 +53,23 @@ module tb_AddrUnpackXbar ();
   wire                      wEptyAddrRcvRdy[3:0];
   //wrr
   reg                       iWrrRdy        [3:0];
-  wire [               2:0] oPkgPri        [3:0];
-  wire [               3:0] oPkgDstPort    [3:0];
-  wire [              11:0] oPkgFirAddr    [3:0];  //包首地址
-  wire [               3:0] oPkgLen        [3:0];
-  wire                      oPkgTagVld     [3:0];
+  wire [               2:0] oPktPri        [3:0];
+  wire [               3:0] oPktDstPort    [3:0];
+  wire [              11:0] oPktFirAddr    [3:0];  //包首地址
+  wire [               3:0] oPktLen        [3:0];
+  wire                      oPktTagVld     [3:0];
   //Lsram
   reg                       iLWriteRdy     [3:0];
   wire [              11:0] oLdata         [3:0];
   wire [              31:0] oLaddr         [3:0];  //link list addr
   wire                      oLaddrVld      [3:0];
   //MMU
-  wire                      iPkgDataRdy    [3:0];  //mmu
-  wire [              31:0] oPkgData       [3:0];
-  wire                      oPkgDataVld    [3:0];
-  wire [              11:0] oPkgAddr       [3:0];
-  wire                      oPkgAddrVld    [3:0];
-  wire                      oPkgWrLast     [3:0];
+  wire                      iPktDataRdy    [3:0];  //mmu
+  wire [              31:0] oPktData       [3:0];
+  wire                      oPktDataVld    [3:0];
+  wire [              11:0] oPktAddr       [3:0];
+  wire                      oPktAddrVld    [3:0];
+  wire                      oPktWrLast     [3:0];
   //Xbar
   // wire           iMst0WrReq;
   // wire           iMst0WrValid;
@@ -251,21 +251,21 @@ module tb_AddrUnpackXbar ();
         .iEptyAddrVld   (wEptyAddrVld[i]),
         .oEptyAddrRcvRdy(wEptyAddrRcvRdy[i]),
         .iWrrRdy        (iWrrRdy[i]),
-        .oPkgPri        (oPkgPri[i]),
-        .oPkgDstPort    (oPkgDstPort[i]),
-        .oPkgFirAddr    (oPkgFirAddr[i]),
-        .oPkgLen        (oPkgLen[i]),
-        .oPkgTagVld     (oPkgTagVld[i]),
+        .oPktPri        (oPktPri[i]),
+        .oPktDstPort    (oPktDstPort[i]),
+        .oPktFirAddr    (oPktFirAddr[i]),
+        .oPktLen        (oPktLen[i]),
+        .oPktTagVld     (oPktTagVld[i]),
         .iLWriteRdy     (iLWriteRdy[i]),
         .oLdata         (oLdata[i]),
         .oLaddr         (oLaddr[i]),
         .oLaddrVld      (oLaddrVld[i]),
-        .iPkgDataRdy    (iPkgDataRdy[i]),
-        .oPkgData       (oPkgData[i]),
-        .oPkgDataVld    (oPkgDataVld[i]),
-        .oPkgAddr       (oPkgAddr[i]),
-        .oPkgAddrVld    (oPkgAddrVld[i]),
-        .oPkgWrLast     (oPkgWrLast[i])
+        .iPktDataRdy    (iPktDataRdy[i]),
+        .oPktData       (oPktData[i]),
+        .oPktDataVld    (oPktDataVld[i]),
+        .oPktAddr       (oPktAddr[i]),
+        .oPktAddrVld    (oPktAddrVld[i]),
+        .oPktWrLast     (oPktWrLast[i])
       );
     end
   endgenerate
@@ -310,34 +310,34 @@ module tb_AddrUnpackXbar ();
   ) U_interconnect_4x4 (
     .iClk        (iClk),
     .iRst_n      (iRst_n),
-    .iMst0WrReq  (oPkgAddrVld[0]),
-    .iMst0WrValid(oPkgDataVld[0]),
-    .iMst0WrAddr (oPkgAddr[0]),
+    .iMst0WrReq  (oPktAddrVld[0]),
+    .iMst0WrValid(oPktDataVld[0]),
+    .iMst0WrAddr (oPktAddr[0]),
     .iMst0WrSel  ({SW{1'b1}}),
-    .iMst0WrLast (oPkgWrLast[0]),
-    .iMst0WrData (oPkgData[0]),
-    .oMst0WrReady(iPkgDataRdy[0]),
-    .iMst1WrReq  (oPkgAddrVld[1]),
-    .iMst1WrValid(oPkgDataVld[1]),
-    .iMst1WrAddr (oPkgAddr[1]),
+    .iMst0WrLast (oPktWrLast[0]),
+    .iMst0WrData (oPktData[0]),
+    .oMst0WrReady(iPktDataRdy[0]),
+    .iMst1WrReq  (oPktAddrVld[1]),
+    .iMst1WrValid(oPktDataVld[1]),
+    .iMst1WrAddr (oPktAddr[1]),
     .iMst1WrSel  ({SW{1'b1}}),
-    .iMst1WrLast (oPkgWrLast[1]),
-    .iMst1WrData (oPkgData[1]),
-    .oMst1WrReady(iPkgDataRdy[1]),
-    .iMst2WrReq  (oPkgAddrVld[2]),
-    .iMst2WrValid(oPkgDataVld[2]),
-    .iMst2WrAddr (oPkgAddr[2]),
+    .iMst1WrLast (oPktWrLast[1]),
+    .iMst1WrData (oPktData[1]),
+    .oMst1WrReady(iPktDataRdy[1]),
+    .iMst2WrReq  (oPktAddrVld[2]),
+    .iMst2WrValid(oPktDataVld[2]),
+    .iMst2WrAddr (oPktAddr[2]),
     .iMst2WrSel  ({SW{1'b1}}),
-    .iMst2WrLast (oPkgWrLast[2]),
-    .iMst2WrData (oPkgData[2]),
-    .oMst2WrReady(iPkgDataRdy[2]),
-    .iMst3WrReq  (oPkgAddrVld[3]),
-    .iMst3WrValid(oPkgDataVld[3]),
-    .iMst3WrAddr (oPkgAddr[3]),
+    .iMst2WrLast (oPktWrLast[2]),
+    .iMst2WrData (oPktData[2]),
+    .oMst2WrReady(iPktDataRdy[2]),
+    .iMst3WrReq  (oPktAddrVld[3]),
+    .iMst3WrValid(oPktDataVld[3]),
+    .iMst3WrAddr (oPktAddr[3]),
     .iMst3WrSel  ({SW{1'b1}}),
-    .iMst3WrLast (oPkgWrLast[3]),
-    .iMst3WrData (oPkgData[3]),
-    .oMst3WrReady(iPkgDataRdy[3]),
+    .iMst3WrLast (oPktWrLast[3]),
+    .iMst3WrData (oPktData[3]),
+    .oMst3WrReady(iPktDataRdy[3]),
     .iMst0RdReq  (iMst0RdReq),
     .iMst0RdValid(iMst0RdValid),
     .iMst0RdAddr (iMst0RdAddr),
@@ -665,7 +665,7 @@ module tb_AddrUnpackXbar ();
 
 
 
-  reg [10:0] rPkgLen[3:0];  // 64-1024
+  reg [10:0] rPktLen[3:0];  // 64-1024
   reg [4:0] rBlockLen[3:0];  // 1-17
   integer m;
   initial begin
@@ -680,15 +680,15 @@ module tb_AddrUnpackXbar ();
     end
     `DELAY(10, iClk)
     iRst_n = 1'b1;
-    rPkgLen[0] = 64 + {$random($get_initial_random_seed)} % (1025 - 64);
-    // rPkgLen = 128;
-    rBlockLen[0] = (rPkgLen[0] + 63 + 4) >> 6;
-    rPkgLen[1] = 64 + {$random($get_initial_random_seed + 1)} % (1025 - 64);
-    rBlockLen[1] = (rPkgLen[1] + 63 + 4) >> 6;
-    rPkgLen[2] = 64 + {$random($get_initial_random_seed + 2)} % (1025 - 64);
-    rBlockLen[2] = (rPkgLen[2] + 63 + 4) >> 6;
-    rPkgLen[3] = 64 + {$random($get_initial_random_seed + 3)} % (1025 - 64);
-    rBlockLen[3] = (rPkgLen[3] + 63 + 4) >> 6;
+    rPktLen[0] = 64 + {$random($get_initial_random_seed)} % (1025 - 64);
+    // rPktLen = 128;
+    rBlockLen[0] = (rPktLen[0] + 63 + 4) >> 6;
+    rPktLen[1] = 64 + {$random($get_initial_random_seed + 1)} % (1025 - 64);
+    rBlockLen[1] = (rPktLen[1] + 63 + 4) >> 6;
+    rPktLen[2] = 64 + {$random($get_initial_random_seed + 2)} % (1025 - 64);
+    rBlockLen[2] = (rPktLen[2] + 63 + 4) >> 6;
+    rPktLen[3] = 64 + {$random($get_initial_random_seed + 3)} % (1025 - 64);
+    rBlockLen[3] = (rPktLen[3] + 63 + 4) >> 6;
     fork
       INITADDR(0);
       INITADDR(1);
@@ -699,10 +699,10 @@ module tb_AddrUnpackXbar ();
       begin
         `DELAY(5, iClk)
         fork
-          PKGSEND(0, 0, 0, rPkgLen[0], 0);
-          PKGSEND(1, 0, 0, rPkgLen[1], 0);
-          PKGSEND(2, 0, 0, rPkgLen[2], 0);
-          PKGSEND(3, 0, 0, rPkgLen[3], 0);
+          PKTSEND(0, 0, 0, rPktLen[0], 0);
+          PKTSEND(1, 0, 0, rPktLen[1], 0);
+          PKTSEND(2, 0, 0, rPktLen[2], 0);
+          PKTSEND(3, 0, 0, rPktLen[3], 0);
         join
       end
       // begin
@@ -741,15 +741,15 @@ module tb_AddrUnpackXbar ();
     #10000 $finish;
   end
 
-  task automatic PKGSEND;
+  task automatic PKTSEND;
     input [1:0] inPort;  // 0-3
     input [2:0] prio;  // 0-7
     input [3:0] destPort;  // 0-15
-    input [10:0] pkgLen;  //Byte :64-1024
+    input [10:0] pktLen;  //Byte :64-1024
     input integer delay;  //random delay
     reg [9:0] rLen;
     begin
-      rLen = pkgLen - 1;
+      rLen = pktLen - 1;
       //Sop
       iWrSop[inPort] = 1'b1;
       `DELAY(1, iClk)
@@ -761,7 +761,7 @@ module tb_AddrUnpackXbar ();
       `DELAY(1, iClk)
       iWrVld[inPort] = 1'b0;
       //Data frame
-      repeat (pkgLen >> 2) begin
+      repeat (pktLen >> 2) begin
         `DELAY(delay, iClk)
         iWrVld[inPort]  = 1'b1;
         iWrData[inPort] = $random;
@@ -771,12 +771,12 @@ module tb_AddrUnpackXbar ();
         iWrVld[inPort] = 1'b0;
       end
       iWrData[inPort] = 32'bx;
-      if (pkgLen[1:0]) begin
+      if (pktLen[1:0]) begin
         `DELAY(delay, iClk)
         iWrVld[inPort] = 1'b1;
         iWrData[inPort][31:24] = 8'b0;
-        iWrData[inPort][23:16] = pkgLen[1:0] > 2 ? $random : 8'b0;
-        iWrData[inPort][15:8] = pkgLen[1:0] > 1 ? $random : 8'b0;
+        iWrData[inPort][23:16] = pktLen[1:0] > 2 ? $random : 8'b0;
+        iWrData[inPort][15:8] = pktLen[1:0] > 1 ? $random : 8'b0;
         iWrData[inPort][7:0] = $random;
         @(posedge iClk);
         while (!oWrRdy[inPort]) @(posedge iClk);
@@ -838,9 +838,9 @@ module tb_AddrUnpackXbar ();
   //     repeat (max_cyc) begin
   //       `DELAY(1, iClk)
   //       if (rdm_on) begin
-  //         iPkgDataRdy[inPort] = $random;
+  //         iPktDataRdy[inPort] = $random;
   //       end else begin
-  //         iPkgDataRdy[inPort] = ready_on;
+  //         iPktDataRdy[inPort] = ready_on;
   //       end
   //     end
   //   end

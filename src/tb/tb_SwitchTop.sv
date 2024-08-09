@@ -22,7 +22,11 @@
 // 
 // -FHEADER =====================================================================
 `include "define.v"
+`include "SwitchTop_intf.sv"
+
 module tb_SwitchTop ();
+
+  import SwitchTop_pkg::*;
 
   localparam PRI_DEPTH = 64;
   localparam WRR_WEIGHT_NUM = 8;
@@ -44,6 +48,59 @@ module tb_SwitchTop ();
   bit [                     3:0] iWrrWeightIdx;
   bit                            iWrrWeightLoad;
 
+  wrPortIntf wrPort[16] (
+    .iClk  (iClk),
+    .iRst_n(iRst_n)
+  );
+
+  generate
+    for (genvar i = 0; i < 16; i = i + 1) begin
+      assign wrPort[i].sramAlmostFull = oAlmostFull[i>>2];
+    end
+  endgenerate
+
+  rdPortIntf rdPort[16] (
+    .iClk  (iClk),
+    .iRst_n(iRst_n)
+  );
+
+  wrrCfgIntf #(
+    .WRR_WEIGHT_NUM(WRR_WEIGHT_NUM)
+  ) wrrCfg (
+    .iClk  (iClk),
+    .iRst_n(iRst_n)
+  );
+
+  pktDropIntf pktDrop[16] (
+    .iClk  (iClk),
+    .iRst_n(iRst_n)
+  );
+
+
+  generate
+    for (genvar i = 0; i < 16; i = i + 1) begin : bind_drop
+      assign pktDrop[i].vld = DUT.U_RdScheTopWrapper.intRdCmd[i].Vld;
+      assign pktDrop[i].rdy = DUT.U_RdScheTopWrapper.intRdCmd[i].Rdy;
+      assign pktDrop[i].drop = DUT.U_RdScheTopWrapper.intRdCmd[i].Pld[0];
+      assign pktDrop[i].srcPort = i;
+      assign pktDrop[i].dstPort = DUT.U_RdScheTopWrapper.rdCmdDstPort[i];
+    end
+  endgenerate
+
+  fifoUsageIntf fifoUsage[16] (
+    .iClk  (iClk),
+    .iRst_n(iRst_n)
+  );
+
+  generate
+    for (genvar i = 0; i < 16; i = i + 1) begin : bind_fifoUsage
+      for (genvar j = 0; j < 8; j = j + 1) begin : bind_num
+        assign fifoUsage[i].num[j] = DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[j].U_PRIFIFO.oUsage;
+      end
+    end
+  endgenerate
+
+
 
   SwitchTop #(
     .PRI_DEPTH     (PRI_DEPTH),
@@ -52,197 +109,197 @@ module tb_SwitchTop ();
     .iClk          (iClk),
     .iRst_n        (iRst_n),
     // Wr Ports
-    .iWrSop0       (iWrSop[0]),
-    .iWrEop0       (iWrEop[0]),
-    .iWrVld0       (iWrVld[0]),
-    .iWrData0      (iWrData[0]),
-    .iWrSop1       (iWrSop[1]),
-    .iWrEop1       (iWrEop[1]),
-    .iWrVld1       (iWrVld[1]),
-    .iWrData1      (iWrData[1]),
-    .iWrSop2       (iWrSop[2]),
-    .iWrEop2       (iWrEop[2]),
-    .iWrVld2       (iWrVld[2]),
-    .iWrData2      (iWrData[2]),
-    .iWrSop3       (iWrSop[3]),
-    .iWrEop3       (iWrEop[3]),
-    .iWrVld3       (iWrVld[3]),
-    .iWrData3      (iWrData[3]),
-    .iWrSop4       (iWrSop[4]),
-    .iWrEop4       (iWrEop[4]),
-    .iWrVld4       (iWrVld[4]),
-    .iWrData4      (iWrData[4]),
-    .iWrSop5       (iWrSop[5]),
-    .iWrEop5       (iWrEop[5]),
-    .iWrVld5       (iWrVld[5]),
-    .iWrData5      (iWrData[5]),
-    .iWrSop6       (iWrSop[6]),
-    .iWrEop6       (iWrEop[6]),
-    .iWrVld6       (iWrVld[6]),
-    .iWrData6      (iWrData[6]),
-    .iWrSop7       (iWrSop[7]),
-    .iWrEop7       (iWrEop[7]),
-    .iWrVld7       (iWrVld[7]),
-    .iWrData7      (iWrData[7]),
-    .iWrSop8       (iWrSop[8]),
-    .iWrEop8       (iWrEop[8]),
-    .iWrVld8       (iWrVld[8]),
-    .iWrData8      (iWrData[8]),
-    .iWrSop9       (iWrSop[9]),
-    .iWrEop9       (iWrEop[9]),
-    .iWrVld9       (iWrVld[9]),
-    .iWrData9      (iWrData[9]),
-    .iWrSop10      (iWrSop[10]),
-    .iWrEop10      (iWrEop[10]),
-    .iWrVld10      (iWrVld[10]),
-    .iWrData10     (iWrData[10]),
-    .iWrSop11      (iWrSop[11]),
-    .iWrEop11      (iWrEop[11]),
-    .iWrVld11      (iWrVld[11]),
-    .iWrData11     (iWrData[11]),
-    .iWrSop12      (iWrSop[12]),
-    .iWrEop12      (iWrEop[12]),
-    .iWrVld12      (iWrVld[12]),
-    .iWrData12     (iWrData[12]),
-    .iWrSop13      (iWrSop[13]),
-    .iWrEop13      (iWrEop[13]),
-    .iWrVld13      (iWrVld[13]),
-    .iWrData13     (iWrData[13]),
-    .iWrSop14      (iWrSop[14]),
-    .iWrEop14      (iWrEop[14]),
-    .iWrVld14      (iWrVld[14]),
-    .iWrData14     (iWrData[14]),
-    .iWrSop15      (iWrSop[15]),
-    .iWrEop15      (iWrEop[15]),
-    .iWrVld15      (iWrVld[15]),
-    .iWrData15     (iWrData[15]),
-    .oFull0        (oFull[0]),          //Port 0-15 write fifo full
-    .oFull1        (oFull[1]),
-    .oFull2        (oFull[2]),
-    .oFull3        (oFull[3]),
-    .oFull4        (oFull[4]),
-    .oFull5        (oFull[5]),
-    .oFull6        (oFull[6]),
-    .oFull7        (oFull[7]),
-    .oFull8        (oFull[8]),
-    .oFull9        (oFull[9]),
-    .oFull10       (oFull[10]),
-    .oFull11       (oFull[11]),
-    .oFull12       (oFull[12]),
-    .oFull13       (oFull[13]),
-    .oFull14       (oFull[14]),
-    .oFull15       (oFull[15]),
-    .oAlmostFull0  (oAlmostFull[0]),    //inside group 0, shared memory full
-    .oAlmostFull1  (oAlmostFull[1]),    //inside group 1, shared memory full
-    .oAlmostFull2  (oAlmostFull[2]),    //inside group 2, shared memory full
-    .oAlmostFull3  (oAlmostFull[3]),    //inside group 3, shared memory full
+    .iWrSop0       (wrPort[0].wrSop),
+    .iWrEop0       (wrPort[0].wrEop),
+    .iWrVld0       (wrPort[0].wrVld),
+    .iWrData0      (wrPort[0].wrData),
+    .iWrSop1       (wrPort[1].wrSop),
+    .iWrEop1       (wrPort[1].wrEop),
+    .iWrVld1       (wrPort[1].wrVld),
+    .iWrData1      (wrPort[1].wrData),
+    .iWrSop2       (wrPort[2].wrSop),
+    .iWrEop2       (wrPort[2].wrEop),
+    .iWrVld2       (wrPort[2].wrVld),
+    .iWrData2      (wrPort[2].wrData),
+    .iWrSop3       (wrPort[3].wrSop),
+    .iWrEop3       (wrPort[3].wrEop),
+    .iWrVld3       (wrPort[3].wrVld),
+    .iWrData3      (wrPort[3].wrData),
+    .iWrSop4       (wrPort[4].wrSop),
+    .iWrEop4       (wrPort[4].wrEop),
+    .iWrVld4       (wrPort[4].wrVld),
+    .iWrData4      (wrPort[4].wrData),
+    .iWrSop5       (wrPort[5].wrSop),
+    .iWrEop5       (wrPort[5].wrEop),
+    .iWrVld5       (wrPort[5].wrVld),
+    .iWrData5      (wrPort[5].wrData),
+    .iWrSop6       (wrPort[6].wrSop),
+    .iWrEop6       (wrPort[6].wrEop),
+    .iWrVld6       (wrPort[6].wrVld),
+    .iWrData6      (wrPort[6].wrData),
+    .iWrSop7       (wrPort[7].wrSop),
+    .iWrEop7       (wrPort[7].wrEop),
+    .iWrVld7       (wrPort[7].wrVld),
+    .iWrData7      (wrPort[7].wrData),
+    .iWrSop8       (wrPort[8].wrSop),
+    .iWrEop8       (wrPort[8].wrEop),
+    .iWrVld8       (wrPort[8].wrVld),
+    .iWrData8      (wrPort[8].wrData),
+    .iWrSop9       (wrPort[9].wrSop),
+    .iWrEop9       (wrPort[9].wrEop),
+    .iWrVld9       (wrPort[9].wrVld),
+    .iWrData9      (wrPort[9].wrData),
+    .iWrSop10      (wrPort[10].wrSop),
+    .iWrEop10      (wrPort[10].wrEop),
+    .iWrVld10      (wrPort[10].wrVld),
+    .iWrData10     (wrPort[10].wrData),
+    .iWrSop11      (wrPort[11].wrSop),
+    .iWrEop11      (wrPort[11].wrEop),
+    .iWrVld11      (wrPort[11].wrVld),
+    .iWrData11     (wrPort[11].wrData),
+    .iWrSop12      (wrPort[12].wrSop),
+    .iWrEop12      (wrPort[12].wrEop),
+    .iWrVld12      (wrPort[12].wrVld),
+    .iWrData12     (wrPort[12].wrData),
+    .iWrSop13      (wrPort[13].wrSop),
+    .iWrEop13      (wrPort[13].wrEop),
+    .iWrVld13      (wrPort[13].wrVld),
+    .iWrData13     (wrPort[13].wrData),
+    .iWrSop14      (wrPort[14].wrSop),
+    .iWrEop14      (wrPort[14].wrEop),
+    .iWrVld14      (wrPort[14].wrVld),
+    .iWrData14     (wrPort[14].wrData),
+    .iWrSop15      (wrPort[15].wrSop),
+    .iWrEop15      (wrPort[15].wrEop),
+    .iWrVld15      (wrPort[15].wrVld),
+    .iWrData15     (wrPort[15].wrData),
+    .oFull0        (wrPort[0].fifoFull),      //Port 0-15 write fifo full
+    .oFull1        (wrPort[1].fifoFull),
+    .oFull2        (wrPort[2].fifoFull),
+    .oFull3        (wrPort[3].fifoFull),
+    .oFull4        (wrPort[4].fifoFull),
+    .oFull5        (wrPort[5].fifoFull),
+    .oFull6        (wrPort[6].fifoFull),
+    .oFull7        (wrPort[7].fifoFull),
+    .oFull8        (wrPort[8].fifoFull),
+    .oFull9        (wrPort[9].fifoFull),
+    .oFull10       (wrPort[10].fifoFull),
+    .oFull11       (wrPort[11].fifoFull),
+    .oFull12       (wrPort[12].fifoFull),
+    .oFull13       (wrPort[13].fifoFull),
+    .oFull14       (wrPort[14].fifoFull),
+    .oFull15       (wrPort[15].fifoFull),
+    .oAlmostFull0  (oAlmostFull[0]),          //inside group 0, shared memory full
+    .oAlmostFull1  (oAlmostFull[1]),          //inside group 1, shared memory full
+    .oAlmostFull2  (oAlmostFull[2]),          //inside group 2, shared memory full
+    .oAlmostFull3  (oAlmostFull[3]),          //inside group 3, shared memory full
     // Rd Ports
-    .iReady0       (iReady[0]),
-    .iReady1       (iReady[1]),
-    .iReady2       (iReady[2]),
-    .iReady3       (iReady[3]),
-    .iReady4       (iReady[4]),
-    .iReady5       (iReady[5]),
-    .iReady6       (iReady[6]),
-    .iReady7       (iReady[7]),
-    .iReady8       (iReady[8]),
-    .iReady9       (iReady[9]),
-    .iReady10      (iReady[10]),
-    .iReady11      (iReady[11]),
-    .iReady12      (iReady[12]),
-    .iReady13      (iReady[13]),
-    .iReady14      (iReady[14]),
-    .iReady15      (iReady[15]),
-    .oRdSop0       (oRdSop[0]),
-    .oRdEop0       (oRdEop[0]),
-    .oRdVld0       (oRdVld[0]),
-    .oRdData0      (oRdData[0]),
-    .oErr0         (oErr[0]),
-    .oRdSop1       (oRdSop[1]),
-    .oRdEop1       (oRdEop[1]),
-    .oRdVld1       (oRdVld[1]),
-    .oRdData1      (oRdData[1]),
-    .oErr1         (oErr[1]),
-    .oRdSop2       (oRdSop[2]),
-    .oRdEop2       (oRdEop[2]),
-    .oRdVld2       (oRdVld[2]),
-    .oRdData2      (oRdData[2]),
-    .oErr2         (oErr[2]),
-    .oRdSop3       (oRdSop[3]),
-    .oRdEop3       (oRdEop[3]),
-    .oRdVld3       (oRdVld[3]),
-    .oRdData3      (oRdData[3]),
-    .oErr3         (oErr[3]),
-    .oRdSop4       (oRdSop[4]),
-    .oRdEop4       (oRdEop[4]),
-    .oRdVld4       (oRdVld[4]),
-    .oRdData4      (oRdData[4]),
-    .oErr4         (oErr[4]),
-    .oRdSop5       (oRdSop[5]),
-    .oRdEop5       (oRdEop[5]),
-    .oRdVld5       (oRdVld[5]),
-    .oRdData5      (oRdData[5]),
-    .oErr5         (oErr[5]),
-    .oRdSop6       (oRdSop[6]),
-    .oRdEop6       (oRdEop[6]),
-    .oRdVld6       (oRdVld[6]),
-    .oRdData6      (oRdData[6]),
-    .oErr6         (oErr[6]),
-    .oRdSop7       (oRdSop[7]),
-    .oRdEop7       (oRdEop[7]),
-    .oRdVld7       (oRdVld[7]),
-    .oRdData7      (oRdData[7]),
-    .oErr7         (oErr[7]),
-    .oRdSop8       (oRdSop[8]),
-    .oRdEop8       (oRdEop[8]),
-    .oRdVld8       (oRdVld[8]),
-    .oRdData8      (oRdData[8]),
-    .oErr8         (oErr[8]),
-    .oRdSop9       (oRdSop[9]),
-    .oRdEop9       (oRdEop[9]),
-    .oRdVld9       (oRdVld[9]),
-    .oRdData9      (oRdData[9]),
-    .oErr9         (oErr[9]),
-    .oRdSop10      (oRdSop[10]),
-    .oRdEop10      (oRdEop[10]),
-    .oRdVld10      (oRdVld[10]),
-    .oRdData10     (oRdData[10]),
-    .oErr10        (oErr[10]),
-    .oRdSop11      (oRdSop[11]),
-    .oRdEop11      (oRdEop[11]),
-    .oRdVld11      (oRdVld[11]),
-    .oRdData11     (oRdData[11]),
-    .oErr11        (oErr[11]),
-    .oRdSop12      (oRdSop[12]),
-    .oRdEop12      (oRdEop[12]),
-    .oRdVld12      (oRdVld[12]),
-    .oRdData12     (oRdData[12]),
-    .oErr12        (oErr[12]),
-    .oRdSop13      (oRdSop[13]),
-    .oRdEop13      (oRdEop[13]),
-    .oRdVld13      (oRdVld[13]),
-    .oRdData13     (oRdData[13]),
-    .oErr13        (oErr[13]),
-    .oRdSop14      (oRdSop[14]),
-    .oRdEop14      (oRdEop[14]),
-    .oRdVld14      (oRdVld[14]),
-    .oRdData14     (oRdData[14]),
-    .oErr14        (oErr[14]),
-    .oRdSop15      (oRdSop[15]),
-    .oRdEop15      (oRdEop[15]),
-    .oRdVld15      (oRdVld[15]),
-    .oRdData15     (oRdData[15]),
-    .oErr15        (oErr[15]),
-    .iWrrWeightPld0(iWrrWeightPld[0]),
-    .iWrrWeightPld1(iWrrWeightPld[1]),
-    .iWrrWeightPld2(iWrrWeightPld[2]),
-    .iWrrWeightPld3(iWrrWeightPld[3]),
-    .iWrrWeightPld4(iWrrWeightPld[4]),
-    .iWrrWeightPld5(iWrrWeightPld[5]),
-    .iWrrWeightPld6(iWrrWeightPld[6]),
-    .iWrrWeightPld7(iWrrWeightPld[7]),
-    .iWrrWeightIdx (iWrrWeightIdx),
-    .iWrrWeightLoad(iWrrWeightLoad)
+    .iReady0       (rdPort[0].ready),
+    .iReady1       (rdPort[1].ready),
+    .iReady2       (rdPort[2].ready),
+    .iReady3       (rdPort[3].ready),
+    .iReady4       (rdPort[4].ready),
+    .iReady5       (rdPort[5].ready),
+    .iReady6       (rdPort[6].ready),
+    .iReady7       (rdPort[7].ready),
+    .iReady8       (rdPort[8].ready),
+    .iReady9       (rdPort[9].ready),
+    .iReady10      (rdPort[10].ready),
+    .iReady11      (rdPort[11].ready),
+    .iReady12      (rdPort[12].ready),
+    .iReady13      (rdPort[13].ready),
+    .iReady14      (rdPort[14].ready),
+    .iReady15      (rdPort[15].ready),
+    .oRdSop0       (rdPort[0].rdSop),
+    .oRdEop0       (rdPort[0].rdEop),
+    .oRdVld0       (rdPort[0].rdVld),
+    .oRdData0      (rdPort[0].rdData),
+    .oErr0         (rdPort[0].err),
+    .oRdSop1       (rdPort[1].rdSop),
+    .oRdEop1       (rdPort[1].rdEop),
+    .oRdVld1       (rdPort[1].rdVld),
+    .oRdData1      (rdPort[1].rdData),
+    .oErr1         (rdPort[1].err),
+    .oRdSop2       (rdPort[2].rdSop),
+    .oRdEop2       (rdPort[2].rdEop),
+    .oRdVld2       (rdPort[2].rdVld),
+    .oRdData2      (rdPort[2].rdData),
+    .oErr2         (rdPort[2].err),
+    .oRdSop3       (rdPort[3].rdSop),
+    .oRdEop3       (rdPort[3].rdEop),
+    .oRdVld3       (rdPort[3].rdVld),
+    .oRdData3      (rdPort[3].rdData),
+    .oErr3         (rdPort[3].err),
+    .oRdSop4       (rdPort[4].rdSop),
+    .oRdEop4       (rdPort[4].rdEop),
+    .oRdVld4       (rdPort[4].rdVld),
+    .oRdData4      (rdPort[4].rdData),
+    .oErr4         (rdPort[4].err),
+    .oRdSop5       (rdPort[5].rdSop),
+    .oRdEop5       (rdPort[5].rdEop),
+    .oRdVld5       (rdPort[5].rdVld),
+    .oRdData5      (rdPort[5].rdData),
+    .oErr5         (rdPort[5].err),
+    .oRdSop6       (rdPort[6].rdSop),
+    .oRdEop6       (rdPort[6].rdEop),
+    .oRdVld6       (rdPort[6].rdVld),
+    .oRdData6      (rdPort[6].rdData),
+    .oErr6         (rdPort[6].err),
+    .oRdSop7       (rdPort[7].rdSop),
+    .oRdEop7       (rdPort[7].rdEop),
+    .oRdVld7       (rdPort[7].rdVld),
+    .oRdData7      (rdPort[7].rdData),
+    .oErr7         (rdPort[7].err),
+    .oRdSop8       (rdPort[8].rdSop),
+    .oRdEop8       (rdPort[8].rdEop),
+    .oRdVld8       (rdPort[8].rdVld),
+    .oRdData8      (rdPort[8].rdData),
+    .oErr8         (rdPort[8].err),
+    .oRdSop9       (rdPort[9].rdSop),
+    .oRdEop9       (rdPort[9].rdEop),
+    .oRdVld9       (rdPort[9].rdVld),
+    .oRdData9      (rdPort[9].rdData),
+    .oErr9         (rdPort[9].err),
+    .oRdSop10      (rdPort[10].rdSop),
+    .oRdEop10      (rdPort[10].rdEop),
+    .oRdVld10      (rdPort[10].rdVld),
+    .oRdData10     (rdPort[10].rdData),
+    .oErr10        (rdPort[10].err),
+    .oRdSop11      (rdPort[11].rdSop),
+    .oRdEop11      (rdPort[11].rdEop),
+    .oRdVld11      (rdPort[11].rdVld),
+    .oRdData11     (rdPort[11].rdData),
+    .oErr11        (rdPort[11].err),
+    .oRdSop12      (rdPort[12].rdSop),
+    .oRdEop12      (rdPort[12].rdEop),
+    .oRdVld12      (rdPort[12].rdVld),
+    .oRdData12     (rdPort[12].rdData),
+    .oErr12        (rdPort[12].err),
+    .oRdSop13      (rdPort[13].rdSop),
+    .oRdEop13      (rdPort[13].rdEop),
+    .oRdVld13      (rdPort[13].rdVld),
+    .oRdData13     (rdPort[13].rdData),
+    .oErr13        (rdPort[13].err),
+    .oRdSop14      (rdPort[14].rdSop),
+    .oRdEop14      (rdPort[14].rdEop),
+    .oRdVld14      (rdPort[14].rdVld),
+    .oRdData14     (rdPort[14].rdData),
+    .oErr14        (rdPort[14].err),
+    .oRdSop15      (rdPort[15].rdSop),
+    .oRdEop15      (rdPort[15].rdEop),
+    .oRdVld15      (rdPort[15].rdVld),
+    .oRdData15     (rdPort[15].rdData),
+    .oErr15        (rdPort[15].err),
+    .iWrrWeightPld0(wrrCfg.wrrWeightPld[0]),
+    .iWrrWeightPld1(wrrCfg.wrrWeightPld[1]),
+    .iWrrWeightPld2(wrrCfg.wrrWeightPld[2]),
+    .iWrrWeightPld3(wrrCfg.wrrWeightPld[3]),
+    .iWrrWeightPld4(wrrCfg.wrrWeightPld[4]),
+    .iWrrWeightPld5(wrrCfg.wrrWeightPld[5]),
+    .iWrrWeightPld6(wrrCfg.wrrWeightPld[6]),
+    .iWrrWeightPld7(wrrCfg.wrrWeightPld[7]),
+    .iWrrWeightIdx (wrrCfg.wrrWeightIdx),
+    .iWrrWeightLoad(wrrCfg.wrrWeightLoad)
   );
 
 
@@ -273,587 +330,43 @@ module tb_SwitchTop ();
     end
   endtask
 
-
-  int pkgCnt[15:0][15:0];
-  int dropCnt[15:0][15:0];
-  byte pkgStore[15:0];
-  int errCnt;
-  bit [15:0] waitSop = 16'hffff;
-  bit [15:0] waitEop;
-  bit [15:0] waitData;  //first data frame
-  bit [3:0] srcPort[15:0];
-  int debugSum[15:0];
-  bit debug;
-  event done;
-
+  root_test root_test_h;
+  s2s_test s2s_test_h;
+  m2s_test m2s_test_h;
+  random_test random_test_h;
+  sram_full_test sram_full_test_h;
+  root_test tests[string];
+  string name;
   initial begin
-    repeat (2000000) @(posedge iClk);
-    INFOPRINT();
-    timeOutInfo();
-    $fatal;
-  end
-
-
-
-  bit [10:0] rPkgLen  [15:0];  // 64-1024
-  bit [ 4:0] rBlockLen[15:0];  // 1-17
-  bit [ 2:0] rPri;
-  bit [ 3:0] rDstPort;
-  bit [ 3:0] rSrcPort;
-  initial begin
-    for (int m = 0; m < 16; m = m + 1) begin
-      iWrSop[m]  = 1'b0;
-      iWrEop[m]  = 1'b0;
-      iWrVld[m]  = 1'b0;
-      iWrData[m] = 32'bx;
-      iReady[m]  = 1'b1;
-    end
-    for (int m = 0; m < 16; m = m + 1) begin
-      rPkgLen[m]   = $urandom_range(64, 1024);
-      // rPkgLen[m]   = 124;
-      rBlockLen[m] = (rPkgLen[m] + 63 + 4) >> 6;
-    end
-    RESET();
+    root_test_h = new();
+    s2s_test_h = new();
+    m2s_test_h = new();
+    random_test_h = new();
+    sram_full_test_h = new();
+    tests["ROOTTEST"] = root_test_h;
+    tests["S2STEST"] = s2s_test_h;
+    tests["M2STEST"] = m2s_test_h;
+    tests["RANDOMTEST"] = random_test_h;
+    tests["SRAMFULLTEST"] = sram_full_test_h;
 
     fork
-      ERRCAPTURE(100);
-      RECEIVEPKG();
-      RUNTEST();
+      RESET();
+      begin
+        if ($value$plusargs("TESTNAME=%s", name)) begin
+          if (tests.exists(name)) begin
+            tests[name].set_interface(wrPort, rdPort, pktDrop, fifoUsage, wrrCfg);
+            tests[name].run();
+          end else begin
+            $fatal($sformatf("[ERRTEST], test name %s is invalid, please specify a valid name!",
+                             name));
+          end
+        end else begin
+          $display(
+            "NO runtime optiont +TESTNAME=xxx is configured, and run default test root_test");
+          tests["ROOTTEST"].set_interface(wrPort, rdPort, pktDrop, fifoUsage, wrrCfg);
+          tests["ROOTTEST"].run();
+        end
+      end
     join
   end
-
-  task automatic PKGSEND;
-    input [3:0] inPort;  // 0-15
-    input [2:0] prio;  // 0-7
-    input [3:0] destPort;  // 0-15
-    input [10:0] pkgLen;  //Byte :64-1024
-    input int delay;  //random delay
-    bit [9:0] rLen;
-    begin
-      rLen = pkgLen - 1;
-      //Sop
-      iWrSop[inPort] = 1'b1;
-      `DELAY(1, iClk)
-      iWrSop[inPort] = 1'b0;
-      //Ctrl frame
-      `DELAY(delay, iClk)
-      iWrVld[inPort]  = 1'b1;
-      iWrData[inPort] = {15'b0, rLen, prio, destPort};
-      @(posedge iClk);
-      while (oFull[inPort] || oAlmostFull[inPort>>2]) @(posedge iClk);
-      #1;
-      iWrVld[inPort] = 1'b0;
-      //Data frame
-      //Use first data frame to indicate some info
-      //for better verification
-      `DELAY(delay, iClk);
-      iWrVld[inPort]  = 1'b1;
-      iWrData[inPort] = {11'b0, rLen, prio, destPort, inPort};
-      @(posedge iClk);
-      while (oFull[inPort] || oAlmostFull[inPort>>2]) @(posedge iClk);
-      #1;
-      iWrVld[inPort] = 1'b0;
-      //repeat (pkgLen >> 2) begin
-      repeat ((pkgLen >> 2) - 1) begin
-        `DELAY(delay, iClk)
-        iWrVld[inPort]  = 1'b1;
-        iWrData[inPort] = $urandom;
-        @(posedge iClk);
-        while (oFull[inPort] || oAlmostFull[inPort>>2]) @(posedge iClk);
-        #1;
-        iWrVld[inPort] = 1'b0;
-      end
-      iWrData[inPort] = 32'bx;
-      if (pkgLen[1:0]) begin
-        `DELAY(delay, iClk)
-        iWrVld[inPort] = 1'b1;
-        iWrData[inPort][31:24] = 8'b0;
-        iWrData[inPort][23:16] = pkgLen[1:0] > 2 ? $urandom : 8'b0;
-        iWrData[inPort][15:8] = pkgLen[1:0] > 1 ? $urandom : 8'b0;
-        iWrData[inPort][7:0] = $urandom;
-        @(posedge iClk);
-        while (oFull[inPort] || oAlmostFull[inPort>>2]) @(posedge iClk);
-        #1;
-        iWrVld[inPort] = 1'b0;
-      end
-      iWrData[inPort] = 32'bx;
-      //Eop
-      iWrEop[inPort]  = 1'b1;
-      `DELAY(1, iClk)
-      iWrEop[inPort] = 1'b0;
-      ->done;
-    end
-  endtask
-
-  task INITWRR;
-    input [3:0] weightPld0;
-    input [3:0] weightPld1;
-    input [3:0] weightPld2;
-    input [3:0] weightPld3;
-    input [3:0] weightPld4;
-    input [3:0] weightPld5;
-    input [3:0] weightPld6;
-    input [3:0] weightPld7;
-    begin
-      iWrrWeightPld[0] = weightPld0;
-      iWrrWeightPld[1] = weightPld1;
-      iWrrWeightPld[2] = weightPld2;
-      iWrrWeightPld[3] = weightPld3;
-      iWrrWeightPld[4] = weightPld4;
-      iWrrWeightPld[5] = weightPld5;
-      iWrrWeightPld[6] = weightPld6;
-      iWrrWeightPld[7] = weightPld7;
-      iWrrWeightIdx = 0;
-      iWrrWeightLoad = 0;
-      repeat (16) begin
-        iWrrWeightLoad = 1;
-        `DELAY(1, iClk)
-        iWrrWeightLoad = 0;
-        iWrrWeightIdx  = iWrrWeightIdx + 1;
-        `DELAY(1, iClk)
-      end
-    end
-  endtask
-
-  // Single port to single port
-  task S2STEST;
-    int pkgNum;
-    begin
-      $display("-----------------Start single port to single port transfer test:-----------------");
-      rDstPort = 0;
-      repeat (16) begin
-        rPri   = 0;
-        pkgNum = $urandom_range(1, 100);
-        for (int i = 0; i < 16; i = i + 1) begin
-          $display("Port[%2d] sends %d pkg to Port[%2d]", i, pkgNum, 4'(i + rDstPort));
-        end
-        INITWRR(8, 8, 8, 8, 8, 8, 8, 8);
-        repeat (pkgNum) begin
-          fork
-            PKGSEND(0, rPri, rDstPort + 0, rPkgLen[0], 0);
-            PKGSEND(1, rPri, rDstPort + 1, rPkgLen[1], 0);
-            PKGSEND(2, rPri, rDstPort + 2, rPkgLen[2], 0);
-            PKGSEND(3, rPri, rDstPort + 3, rPkgLen[3], 0);
-            PKGSEND(4, rPri, rDstPort + 4, rPkgLen[4], 0);
-            PKGSEND(5, rPri, rDstPort + 5, rPkgLen[5], 0);
-            PKGSEND(6, rPri, rDstPort + 6, rPkgLen[6], 0);
-            PKGSEND(7, rPri, rDstPort + 7, rPkgLen[7], 0);
-            PKGSEND(8, rPri, rDstPort + 8, rPkgLen[8], 0);
-            PKGSEND(9, rPri, rDstPort + 9, rPkgLen[9], 0);
-            PKGSEND(10, rPri, rDstPort + 10, rPkgLen[10], 0);
-            PKGSEND(11, rPri, rDstPort + 11, rPkgLen[11], 0);
-            PKGSEND(12, rPri, rDstPort + 12, rPkgLen[12], 0);
-            PKGSEND(13, rPri, rDstPort + 13, rPkgLen[13], 0);
-            PKGSEND(14, rPri, rDstPort + 14, rPkgLen[14], 0);
-            PKGSEND(15, rPri, rDstPort + 15, rPkgLen[15], 0);
-          join
-          rPri = rPri + 1;
-        end
-        CHECKSEND(pkgNum, 16'hffff);  //TODO: what if we send pkg w/o check send status?
-        CHECKCRC();
-        rDstPort = rDstPort + 1;
-      end
-    end
-  endtask
-
-  // Multi port to single port
-  task M2STEST;
-    int pkgNum;
-    begin
-      $display("-----------------Start multi port to single port transfer test:-----------------");
-      rDstPort = 0;
-      repeat (16) begin
-        rPri   = 0;
-        pkgNum = $urandom_range(1, 50);
-        for (int i = 0; i < 16; i = i + 1) begin
-          $display("Port[%2d] sends %d pkg to Port[%2d]", i, pkgNum, rDstPort);
-        end
-        INITWRR(8, 8, 8, 8, 8, 8, 8, 8);
-        // INITWRR(15, 15, 15, 15, 15, 15, 15, 15);
-        // wait (pkgStore[rDstPort-1] == 0);
-        repeat (pkgNum) begin
-          fork
-            PKGSEND(0, rPri, rDstPort, rPkgLen[0], 0);
-            PKGSEND(1, rPri, rDstPort, rPkgLen[1], 0);
-            PKGSEND(2, rPri, rDstPort, rPkgLen[2], 0);
-            PKGSEND(3, rPri, rDstPort, rPkgLen[3], 0);
-            PKGSEND(4, rPri, rDstPort, rPkgLen[4], 0);
-            PKGSEND(5, rPri, rDstPort, rPkgLen[5], 0);
-            PKGSEND(6, rPri, rDstPort, rPkgLen[6], 0);
-            PKGSEND(7, rPri, rDstPort, rPkgLen[7], 0);
-            PKGSEND(8, rPri, rDstPort, rPkgLen[8], 0);
-            PKGSEND(9, rPri, rDstPort, rPkgLen[9], 0);
-            PKGSEND(10, rPri, rDstPort, rPkgLen[10], 0);
-            PKGSEND(11, rPri, rDstPort, rPkgLen[11], 0);
-            PKGSEND(12, rPri, rDstPort, rPkgLen[12], 0);
-            PKGSEND(13, rPri, rDstPort, rPkgLen[13], 0);
-            PKGSEND(14, rPri, rDstPort, rPkgLen[14], 0);
-            PKGSEND(15, rPri, rDstPort, rPkgLen[15], 0);
-          join
-          rPri = rPri + 1;
-        end
-        CHECKSEND(pkgNum * 16, 1 << rDstPort);  //TODO: due to pkg drop, pkgNum uncertain
-        CHECKCRC();
-        rDstPort = rDstPort + 1;
-      end
-    end
-  endtask
-
-  // Single port to multi port
-  task S2MTEST;
-    int pkgNum;
-    begin
-      $display("-----------------Start single port to multi port transfer test:-----------------");
-      rSrcPort = 0;
-      repeat (16) begin
-        pkgNum = $urandom_range(1, 50);
-        for (int i = 0; i < 16; i = i + 1) begin
-          $display("Port[%2d] sends %d pkg to Port[%2d]", rSrcPort, pkgNum, i);
-        end
-        INITWRR(8, 8, 8, 8, 8, 8, 8, 8);
-
-        for (int i = 0; i < 16; i = i + 1) begin  // TODO:  more complex situation: 1pkg per port
-          rPri = 0;
-          repeat (pkgNum) begin
-            PKGSEND(rSrcPort, rPri, i, rPkgLen[i], 0);
-            `DELAY(10, iClk)
-            rPri = rPri + 1;
-          end
-          CHECKSEND(pkgNum, 1 << i);
-        end
-        // CHECKSEND(pkgNum, 16'hffff);
-        CHECKCRC();
-        rSrcPort = rSrcPort + 1;
-      end
-    end
-  endtask
-
-
-  // SRAM Full Test
-  task SRAMFULLTEST;
-    // int byteCnt;
-    // int sendCnt;
-    begin
-      $display("-----------------Start sram full test:-----------------");
-      for (int i = 0; i < 4; i = i + 1) begin
-        $display("Bank %d test start", i);
-        $display("Deassert ready 0-15");
-        iReady = 0;
-        rPri   = 0;
-        // byteCnt = 0;
-        // sendCnt = 0;
-        INITWRR(8, 8, 8, 8, 8, 8, 8, 8);
-        fork
-          begin
-            forever begin
-              rSrcPort = $urandom_range(i * 4, i * 4 + 3);
-              PKGSEND(rSrcPort, rPri, rDstPort, rPkgLen[rSrcPort], 0);
-              if (&rPri) begin
-                rDstPort = rDstPort + 1;
-              end
-              rPri = rPri + 1;
-              `DELAY(1, iClk)
-            end
-          end
-          begin
-            wait (oAlmostFull[i]);
-            $display("Assert ready 0-15");
-            iReady = 16'hffff;
-            @(done);
-          end
-          // begin
-          //   forever begin
-          //     @(done);
-          //     byteCnt = byteCnt + rPkgLen[rSrcPort];
-          //     sendCnt = sendCnt + 1;
-          //   end
-          // end
-        join_any
-        disable fork;
-        $display("SRAM Bank %d Almost Full Received!", i);
-        // $display("Total Pkg Send: %d", sendCnt);
-        // $display("Total Bytes Send: %d", byteCnt);
-        RESET();
-      end
-      CHECKCRC();
-    end
-  endtask
-
-  task RUNTEST;
-    begin
-      string testname;
-      if ($value$plusargs("TESTNAME=%s", testname)) begin
-        if (testname == "S2STEST") begin
-          S2STEST();
-        end else if (testname == "M2STEST") begin
-          M2STEST();
-        end else if (testname == "S2MTEST") begin
-          S2MTEST();
-        end else if (testname == "SRAMFULLTEST") begin
-          SRAMFULLTEST();
-        end else begin
-          $display("Error: TESTNAME must be S2STEST/M2STEST/S2MTEST/SRAMFULLTEST");
-        end
-      end else begin
-        $display("WARNING: No TESTNAME");
-      end
-      $finish;
-    end
-  endtask
-
-  task ERRCAPTURE;
-    input int maxErr;
-    begin
-      forever
-      @(posedge iClk) begin
-        for (int i = 0; i < 16; i = i + 1) begin
-          if (oErr[i]) begin
-            errCnt <= errCnt + 1;
-            $display("Port[%2d] Data Check Error, total error: %d", i, errCnt + 1);
-            if (errCnt == maxErr - 1) begin
-              failInfo();
-              $fatal("Crc Check Error Count MAX: %d, EXIT!", maxErr);
-            end
-          end
-        end
-      end
-    end
-  endtask
-
-
-
-  task RECEIVEPKG;
-    begin
-      forever
-      @(posedge iClk) begin
-        for (int i = 0; i < 16; i = i + 1) begin
-          if (!iRst_n) begin
-            waitSop[i]  <= 1;
-            waitEop[i]  <= 0;
-            waitData[i] <= 0;
-            for (int j = 0; j < 16; j = j + 1) begin
-              pkgCnt[i][j] <= 0;
-            end
-            srcPort[i] <= 0;
-          end else if (waitSop[i] && oRdSop[i]) begin
-            waitSop[i]  <= 0;
-            waitEop[i]  <= 0;
-            waitData[i] <= 1;
-            for (int j = 0; j < 16; j = j + 1) begin
-              pkgCnt[i][j] <= pkgCnt[i][j];
-            end
-            srcPort[i] <= srcPort[i];
-          end else if (waitData[i] && oRdVld[i]) begin
-            waitSop[i]  <= 0;
-            waitEop[i]  <= 1;
-            waitData[i] <= 0;
-            for (int j = 0; j < 16; j = j + 1) begin
-              pkgCnt[i][j] <= pkgCnt[i][j];
-            end
-            srcPort[i] <= oRdData[i][3:0];
-          end else if (waitEop[i] && oRdEop[i]) begin
-            waitSop[i]  <= 1;
-            waitEop[i]  <= 0;
-            waitData[i] <= 0;
-            for (int j = 0; j < 16; j = j + 1) begin
-              pkgCnt[i][j] <= pkgCnt[i][j];
-            end
-            pkgCnt[i][srcPort[i]] <= pkgCnt[i][srcPort[i]] + 1;
-            srcPort[i] <= srcPort[i];
-            // $display("Port[%2d] Receive 1 Package From Port[%2d]", i, srcPort[i]);
-          end
-        end
-      end
-    end
-  endtask
-
-  generate
-    for (genvar i = 0; i < 16; i = i + 1) begin : gen_drop
-      always @(posedge iClk or negedge iRst_n) begin
-        if (!iRst_n) begin
-          for (int j = 0; j < 16; j = j + 1) begin
-            dropCnt[i][j] <= 0;
-          end
-        end else if (DUT.U_RdScheTopWrapper.intRdCmd[i].Vld && DUT.U_RdScheTopWrapper.intRdCmd[i].Pld[0]) begin
-          dropCnt[DUT.U_RdScheTopWrapper.rdCmdDstPort[i]][i] <= dropCnt[DUT.U_RdScheTopWrapper.rdCmdDstPort[i]][i] + 1;
-        end
-      end
-    end
-  endgenerate
-
-
-
-
-
-  generate
-    for (genvar i = 0; i < 16; i = i + 1) begin
-      always @(*) begin
-        pkgStore[i] = DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[0].U_PRIFIFO.oUsage 
-        + DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[1].U_PRIFIFO.oUsage
-        + DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[2].U_PRIFIFO.oUsage
-        + DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[3].U_PRIFIFO.oUsage
-        + DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[4].U_PRIFIFO.oUsage
-        + DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[5].U_PRIFIFO.oUsage
-        + DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[6].U_PRIFIFO.oUsage
-        + DUT.U_RdScheTopWrapper.U_RD_SCHE_TOP_SV.U_RDCTRLTOP16.genblk1[i].U_RD_CHN.GEN_PRI_FIFO[7].U_PRIFIFO.oUsage;
-      end
-      always @(*) begin
-        debugSum[i] = pkgCnt[i].sum() + dropCnt[i].sum() + pkgStore[i];
-      end
-    end
-  endgenerate
-
-  task automatic CHECKIDLE;
-    input [3:0] port;
-    input int idleCycles;
-    output idlePulse;
-    int cnt;
-    begin
-      fork
-        forever
-        @(posedge iClk) begin
-          if (!oRdVld[port]) begin
-            cnt = cnt + 1;
-          end else begin
-            cnt = 0;
-          end
-        end
-        begin
-          wait (cnt == idleCycles);
-          idlePulse = 1;
-          $display("@%t, Port[%2d] idle detected!", $time, port);
-        end
-      join_any
-    end
-  endtask
-
-  task CHECKSEND;
-    input int pkgNum;
-    input [15:0] portSel;
-    for (int i = 0; i < 16; i = i + 1) begin
-      fork
-        automatic int j = i;
-        bit idle;
-        if (portSel[j]) begin
-          $display("wait for Port[%2d] receive pkg, exp: %d", j, pkgNum);
-          CHECKIDLE(j, 2000, idle);
-          wait (debugSum[j] == pkgNum);
-        end
-      join_none
-    end
-    wait fork;
-    #1 $display("@%t, wait fork finished", $time);
-  endtask
-
-
-
-  task CHECKCRC;
-    begin
-      INFOPRINT();
-      for (int i = 0; i < 16; i = i + 1) begin
-        for (int j = 0; j < 16; j = j + 1) begin
-          pkgCnt[i][j]  <= 0;
-          dropCnt[i][j] <= 0;
-        end
-      end
-    end
-    if (errCnt == 0) begin
-      passInfo();
-    end else begin
-      failInfo();
-      $fatal;
-    end
-  endtask
-
-
-  task INFOPRINT;
-    begin
-      // debug = 1;
-      for (int i = 0; i < 16; i = i + 1) begin
-        $display("Port[%2d] Receive %d Package", i, pkgCnt[i].sum());
-        if (debug) begin
-          if (pkgCnt[i].sum()) begin
-            $display("Details: ");
-            for (int j = 0; j < 16; j = j + 1) begin
-              $display("From Port[%2d]: %d", j, pkgCnt[i][j]);
-            end
-          end
-        end
-      end
-      for (int i = 0; i < 16; i = i + 1) begin
-        $display("Port[%2d] Drop %d Package", i, dropCnt[i].sum());
-        if (debug) begin
-          if (dropCnt[i].sum()) begin
-            $display("Details: ");
-            for (int j = 0; j < 16; j = j + 1) begin
-              $display("From Port[%2d]: %d", j, dropCnt[i][j]);
-            end
-          end
-        end
-      end
-      // Unsupported in VCS 2020
-      // $display("Total Drop Pkg: %d", dropCnt.sum());
-      for (int i = 0; i < 16; i = i + 1) begin
-        if (pkgCnt[i].sum() + dropCnt[i].sum()) begin
-          $display("Port[%2d] Receive & Drop %d Package", i, pkgCnt[i].sum() + dropCnt[i].sum());
-          if (debug) begin
-            $display("Details: ");
-            for (int j = 0; j < 16; j = j + 1) begin
-              $display("Port[%2d] Send & Drop %d Package to Port[%2d]", j,
-                       pkgCnt[i][j] + dropCnt[i][j], i);
-            end
-          end
-        end
-      end
-      for (int i = 0; i < 16; i = i + 1) begin
-        if (pkgStore[i]) begin
-          $display("Port[%2d] pkg store in tag fifo and outbuf: %d", i, pkgStore[i]);
-        end
-      end
-    end
-  endtask
-
-  task passInfo;
-    begin
-      $display("~~~~~~~~~~~~~~~~ TEST_PASS ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~ #####     ##     ####    #### ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~ #    #   #  #   #       #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~ #    #  #    #   ####    #### ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~ #####   ######       #       #~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~ #       #    #  #    #  #    #~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~ #       #    #   ####    #### ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    end
-  endtask
-
-  task failInfo;
-    begin
-      $display("~~~~~~~~~~~~~~~~ TEST_FAIL ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~######    ##       #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#        #  #      #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#####   #    #     #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#       ######     #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#       #    #     #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#       #    #     #    ######~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    end
-  endtask
-
-  task timeOutInfo;
-    begin
-      $display("~~~~~~~~~~~~~~~~ TIME_OUT ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~######    ##       #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#        #  #      #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#####   #    #     #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#       ######     #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#       #    #     #    #     ~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~#       #    #     #    ######~~~~~~~~~~~~~~~~");
-      $display("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-    end
-  endtask
-
-
 endmodule

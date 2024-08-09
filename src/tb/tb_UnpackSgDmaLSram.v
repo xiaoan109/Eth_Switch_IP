@@ -52,26 +52,26 @@ module tb_UnpackSgDmaLSram ();
   wire           wEptyAddrRcvRdy[3:0];
   //wrr
   reg            iWrrRdy        [3:0];
-  wire [    2:0] oPkgPri        [3:0];
-  wire [    3:0] oPkgDstPort    [3:0];
-  wire [   11:0] oPkgFirAddr    [3:0];  //包首地址
-  wire [    3:0] oPkgLen        [3:0];
-  wire           oPkgTagVld     [3:0];
+  wire [    2:0] oPktPri        [3:0];
+  wire [    3:0] oPktDstPort    [3:0];
+  wire [   11:0] oPktFirAddr    [3:0];  //包首地址
+  wire [    3:0] oPktLen        [3:0];
+  wire           oPktTagVld     [3:0];
   //Lsram
   reg            iLWriteRdy     [3:0];
   wire [   11:0] wLdata         [3:0];
   wire [   11:0] wLaddr         [3:0];  //link list addr
   wire           wLaddrVld      [3:0];
   //MMU
-  wire           iPkgDataRdy    [3:0];  //mmu
-  wire [   31:0] oPkgData       [3:0];
-  wire           oPkgDataVld    [3:0];
-  wire [   11:0] oPkgAddr       [3:0];
-  wire           oPkgAddrVld    [3:0];
-  wire           oPkgWrLast     [3:0];
+  wire           iPktDataRdy    [3:0];  //mmu
+  wire [   31:0] oPktData       [3:0];
+  wire           oPktDataVld    [3:0];
+  wire [   11:0] oPktAddr       [3:0];
+  wire           oPktAddrVld    [3:0];
+  wire           oPktWrLast     [3:0];
   //FIFO
   wire [    3:0] oFifoFull;
-  //PkgRead
+  //PktRead
   reg  [   11:0] iReadAddr      [3:0];
   reg  [    3:0] iReadAddrReq;
   //Xbar
@@ -251,21 +251,21 @@ module tb_UnpackSgDmaLSram ();
     .iEptyAddrVld({wEptyAddrVld[3], wEptyAddrVld[2], wEptyAddrVld[1], wEptyAddrVld[0]}),
     .oEptyAddrRcvRdy({wEptyAddrRcvRdy[3], wEptyAddrRcvRdy[2], wEptyAddrRcvRdy[1], wEptyAddrRcvRdy[0]}),
     .iWrrRdy({iWrrRdy[3], iWrrRdy[2], iWrrRdy[1], iWrrRdy[0]}),
-    .oPkgPri({oPkgPri[3], oPkgPri[2], oPkgPri[1], oPkgPri[0]}),
-    .oPkgDstPort({oPkgDstPort[3], oPkgDstPort[2], oPkgDstPort[1], oPkgDstPort[0]}),
-    .oPkgFirAddr({oPkgFirAddr[3], oPkgFirAddr[2], oPkgFirAddr[1], oPkgFirAddr[0]}),
-    .oPkgLen({oPkgLen[3], oPkgLen[2], oPkgLen[1], oPkgLen[0]}),
-    .oPkgTagVld({oPkgTagVld[3], oPkgTagVld[2], oPkgTagVld[1], oPkgTagVld[0]}),
+    .oPktPri({oPktPri[3], oPktPri[2], oPktPri[1], oPktPri[0]}),
+    .oPktDstPort({oPktDstPort[3], oPktDstPort[2], oPktDstPort[1], oPktDstPort[0]}),
+    .oPktFirAddr({oPktFirAddr[3], oPktFirAddr[2], oPktFirAddr[1], oPktFirAddr[0]}),
+    .oPktLen({oPktLen[3], oPktLen[2], oPktLen[1], oPktLen[0]}),
+    .oPktTagVld({oPktTagVld[3], oPktTagVld[2], oPktTagVld[1], oPktTagVld[0]}),
     .iLWriteRdy({iLWriteRdy[3], iLWriteRdy[2], iLWriteRdy[1], iLWriteRdy[0]}),
     .oLdata({wLdata[3], wLdata[2], wLdata[1], wLdata[0]}),
     .oLaddr({wLaddr[3], wLaddr[2], wLaddr[1], wLaddr[0]}),
     .oLaddrVld({wLaddrVld[3], wLaddrVld[2], wLaddrVld[1], wLaddrVld[0]}),
-    .iMmuRdy({iPkgDataRdy[3], iPkgDataRdy[2], iPkgDataRdy[1], iPkgDataRdy[0]}),
-    .oPkgData({oPkgData[3], oPkgData[2], oPkgData[1], oPkgData[0]}),
-    .oPkgDataVld({oPkgDataVld[3], oPkgDataVld[2], oPkgDataVld[1], oPkgDataVld[0]}),
-    .oPkgAddr({oPkgAddr[3], oPkgAddr[2], oPkgAddr[1], oPkgAddr[0]}),
-    .oPkgAddrVld({oPkgAddrVld[3], oPkgAddrVld[2], oPkgAddrVld[1], oPkgAddrVld[0]}),
-    .oPkgWrLast({oPkgWrLast[3], oPkgWrLast[2], oPkgWrLast[1], oPkgWrLast[0]}),
+    .iMmuRdy({iPktDataRdy[3], iPktDataRdy[2], iPktDataRdy[1], iPktDataRdy[0]}),
+    .oPktData({oPktData[3], oPktData[2], oPktData[1], oPktData[0]}),
+    .oPktDataVld({oPktDataVld[3], oPktDataVld[2], oPktDataVld[1], oPktDataVld[0]}),
+    .oPktAddr({oPktAddr[3], oPktAddr[2], oPktAddr[1], oPktAddr[0]}),
+    .oPktAddrVld({oPktAddrVld[3], oPktAddrVld[2], oPktAddrVld[1], oPktAddrVld[0]}),
+    .oPktWrLast({oPktWrLast[3], oPktWrLast[2], oPktWrLast[1], oPktWrLast[0]}),
     .oFifoFull({oFifoFull[3], oFifoFull[2], oFifoFull[1], oFifoFull[0]})
   );
 
@@ -287,7 +287,7 @@ module tb_UnpackSgDmaLSram ();
     .iWriteLdata3   (wLdata[3]),
     .iWriteLaddr3   (wLaddr[3]),
     .iWriteLaddrVld3(wLaddrVld[3]),
-    //PkgRead
+    //PktRead
     .oLdata0        (),
     .oLdataVld0     (),
     .iLaddr0        (iReadAddr[0]),
@@ -348,34 +348,34 @@ module tb_UnpackSgDmaLSram ();
   ) U_interconnect_4x4 (
     .iClk        (iClk),
     .iRst_n      (iRst_n),
-    .iMst0WrReq  (oPkgAddrVld[0]),
-    .iMst0WrValid(oPkgDataVld[0]),
-    .iMst0WrAddr (oPkgAddr[0]),
+    .iMst0WrReq  (oPktAddrVld[0]),
+    .iMst0WrValid(oPktDataVld[0]),
+    .iMst0WrAddr (oPktAddr[0]),
     .iMst0WrSel  ({SW{1'b1}}),
-    .iMst0WrLast (oPkgWrLast[0]),
-    .iMst0WrData (oPkgData[0]),
-    .oMst0WrReady(iPkgDataRdy[0]),
-    .iMst1WrReq  (oPkgAddrVld[1]),
-    .iMst1WrValid(oPkgDataVld[1]),
-    .iMst1WrAddr (oPkgAddr[1]),
+    .iMst0WrLast (oPktWrLast[0]),
+    .iMst0WrData (oPktData[0]),
+    .oMst0WrReady(iPktDataRdy[0]),
+    .iMst1WrReq  (oPktAddrVld[1]),
+    .iMst1WrValid(oPktDataVld[1]),
+    .iMst1WrAddr (oPktAddr[1]),
     .iMst1WrSel  ({SW{1'b1}}),
-    .iMst1WrLast (oPkgWrLast[1]),
-    .iMst1WrData (oPkgData[1]),
-    .oMst1WrReady(iPkgDataRdy[1]),
-    .iMst2WrReq  (oPkgAddrVld[2]),
-    .iMst2WrValid(oPkgDataVld[2]),
-    .iMst2WrAddr (oPkgAddr[2]),
+    .iMst1WrLast (oPktWrLast[1]),
+    .iMst1WrData (oPktData[1]),
+    .oMst1WrReady(iPktDataRdy[1]),
+    .iMst2WrReq  (oPktAddrVld[2]),
+    .iMst2WrValid(oPktDataVld[2]),
+    .iMst2WrAddr (oPktAddr[2]),
     .iMst2WrSel  ({SW{1'b1}}),
-    .iMst2WrLast (oPkgWrLast[2]),
-    .iMst2WrData (oPkgData[2]),
-    .oMst2WrReady(iPkgDataRdy[2]),
-    .iMst3WrReq  (oPkgAddrVld[3]),
-    .iMst3WrValid(oPkgDataVld[3]),
-    .iMst3WrAddr (oPkgAddr[3]),
+    .iMst2WrLast (oPktWrLast[2]),
+    .iMst2WrData (oPktData[2]),
+    .oMst2WrReady(iPktDataRdy[2]),
+    .iMst3WrReq  (oPktAddrVld[3]),
+    .iMst3WrValid(oPktDataVld[3]),
+    .iMst3WrAddr (oPktAddr[3]),
     .iMst3WrSel  ({SW{1'b1}}),
-    .iMst3WrLast (oPkgWrLast[3]),
-    .iMst3WrData (oPkgData[3]),
-    .oMst3WrReady(iPkgDataRdy[3]),
+    .iMst3WrLast (oPktWrLast[3]),
+    .iMst3WrData (oPktData[3]),
+    .oMst3WrReady(iPktDataRdy[3]),
     .iMst0RdReq  (iMst0RdReq),
     .iMst0RdValid(iMst0RdValid),
     .iMst0RdAddr (iMst0RdAddr),
@@ -703,7 +703,7 @@ module tb_UnpackSgDmaLSram ();
 
 
 
-  reg [10:0] rPkgLen[3:0];  // 64-1024
+  reg [10:0] rPktLen[3:0];  // 64-1024
   reg [4:0] rBlockLen[3:0];  // 1-17
   integer m;
   initial begin
@@ -720,18 +720,18 @@ module tb_UnpackSgDmaLSram ();
     end
     `DELAY(10, iClk)
     iRst_n = 1'b1;
-    rPkgLen[0] = 64;
-    rPkgLen[1] = 64;
-    rPkgLen[2] = 64;
-    rPkgLen[3] = 64;
-    // rPkgLen[0] = 64 + {$random($get_initial_random_seed)} % (1025 - 64);
-    rBlockLen[0] = (rPkgLen[0] + 63 + 4) >> 6;
-    // rPkgLen[1] = 64 + {$random($get_initial_random_seed + 1)} % (1025 - 64);
-    rBlockLen[1] = (rPkgLen[1] + 63 + 4) >> 6;
-    // rPkgLen[2] = 64 + {$random($get_initial_random_seed + 2)} % (1025 - 64);
-    rBlockLen[2] = (rPkgLen[2] + 63 + 4) >> 6;
-    // rPkgLen[3] = 64 + {$random($get_initial_random_seed + 3)} % (1025 - 64);
-    rBlockLen[3] = (rPkgLen[3] + 63 + 4) >> 6;
+    rPktLen[0] = 64;
+    rPktLen[1] = 64;
+    rPktLen[2] = 64;
+    rPktLen[3] = 64;
+    // rPktLen[0] = 64 + {$random($get_initial_random_seed)} % (1025 - 64);
+    rBlockLen[0] = (rPktLen[0] + 63 + 4) >> 6;
+    // rPktLen[1] = 64 + {$random($get_initial_random_seed + 1)} % (1025 - 64);
+    rBlockLen[1] = (rPktLen[1] + 63 + 4) >> 6;
+    // rPktLen[2] = 64 + {$random($get_initial_random_seed + 2)} % (1025 - 64);
+    rBlockLen[2] = (rPktLen[2] + 63 + 4) >> 6;
+    // rPktLen[3] = 64 + {$random($get_initial_random_seed + 3)} % (1025 - 64);
+    rBlockLen[3] = (rPktLen[3] + 63 + 4) >> 6;
 
 
     INITADDR(0);
@@ -744,10 +744,10 @@ module tb_UnpackSgDmaLSram ();
         `DELAY(20, iClk)
         repeat (512)
         fork
-          PKGSEND(0, 0, 0, rPkgLen[0], 0);
-          PKGSEND(1, 0, 0, rPkgLen[1], 0);
-          PKGSEND(2, 0, 0, rPkgLen[2], 0);
-          PKGSEND(3, 0, 0, rPkgLen[3], 0);
+          PKTSEND(0, 0, 0, rPktLen[0], 0);
+          PKTSEND(1, 0, 0, rPktLen[1], 0);
+          PKTSEND(2, 0, 0, rPktLen[2], 0);
+          PKTSEND(3, 0, 0, rPktLen[3], 0);
         join
       end
       // begin
@@ -792,15 +792,15 @@ module tb_UnpackSgDmaLSram ();
     #10000 $finish;
   end
 
-  task automatic PKGSEND;
+  task automatic PKTSEND;
     input [1:0] inPort;  // 0-3
     input [2:0] prio;  // 0-7
     input [3:0] destPort;  // 0-15
-    input [10:0] pkgLen;  //Byte :64-1024
+    input [10:0] pktLen;  //Byte :64-1024
     input integer delay;  //random delay
     reg [9:0] rLen;
     begin
-      rLen = pkgLen - 1;
+      rLen = pktLen - 1;
       //Sop
       iWrSop[inPort] = 1'b1;
       `DELAY(1, iClk)
@@ -812,7 +812,7 @@ module tb_UnpackSgDmaLSram ();
       `DELAY(1, iClk)
       iWrVld[inPort] = 1'b0;
       //Data frame
-      repeat (pkgLen >> 2) begin
+      repeat (pktLen >> 2) begin
         `DELAY(delay, iClk)
         iWrVld[inPort]  = 1'b1;
         iWrData[inPort] = $random;
@@ -822,12 +822,12 @@ module tb_UnpackSgDmaLSram ();
         iWrVld[inPort] = 1'b0;
       end
       iWrData[inPort] = 32'bx;
-      if (pkgLen[1:0]) begin
+      if (pktLen[1:0]) begin
         `DELAY(delay, iClk)
         iWrVld[inPort] = 1'b1;
         iWrData[inPort][31:24] = 8'b0;
-        iWrData[inPort][23:16] = pkgLen[1:0] > 2 ? $random : 8'b0;
-        iWrData[inPort][15:8] = pkgLen[1:0] > 1 ? $random : 8'b0;
+        iWrData[inPort][23:16] = pktLen[1:0] > 2 ? $random : 8'b0;
+        iWrData[inPort][15:8] = pktLen[1:0] > 1 ? $random : 8'b0;
         iWrData[inPort][7:0] = $random;
         @(posedge iClk);
         while (oFifoFull[inPort]) @(posedge iClk);
@@ -900,9 +900,9 @@ module tb_UnpackSgDmaLSram ();
   //     repeat (max_cyc) begin
   //       `DELAY(1, iClk)
   //       if (rdm_on) begin
-  //         iPkgDataRdy[inPort] = $random;
+  //         iPktDataRdy[inPort] = $random;
   //       end else begin
-  //         iPkgDataRdy[inPort] = ready_on;
+  //         iPktDataRdy[inPort] = ready_on;
   //       end
   //     end
   //   end

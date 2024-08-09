@@ -68,21 +68,21 @@ module tb_CrcDataSend;
     `DELAY(10, iClk)
     iRst_n = 1'b1;
     `DELAY(10, iClk)
-    PKGSEND(0, 0, 64, 0);
-    PKGSEND(0, 0, 128, 1);
+    PKTSEND(0, 0, 64, 0);
+    PKTSEND(0, 0, 128, 1);
 
     #1000 $finish;
   end
 
 
-  task automatic PKGSEND;
+  task automatic PKTSEND;
     input [2:0] prio;  // 0-7
     input [3:0] destPort;  // 0-15
-    input [10:0] pkgLen;  //Byte :64-1024
+    input [10:0] pktLen;  //Byte :64-1024
     input integer delay;  //random delay
     reg [9:0] rLen;
     begin
-      rLen   = pkgLen - 1;
+      rLen   = pktLen - 1;
       //Sop
       iWrSop = 1'b1;
       `DELAY(1, iClk)
@@ -94,7 +94,7 @@ module tb_CrcDataSend;
       `DELAY(1, iClk)
       iWrVld = 1'b0;
       //Data frame
-      repeat (pkgLen >> 2) begin
+      repeat (pktLen >> 2) begin
         `DELAY(delay, iClk)
         iWrVld  = 1'b1;
         iWrData = $random;
@@ -103,12 +103,12 @@ module tb_CrcDataSend;
         iWrVld = 1'b0;
       end
       iWrData = 32'bx;
-      if (pkgLen[1:0]) begin
+      if (pktLen[1:0]) begin
         `DELAY(delay, iClk)
         iWrVld = 1'b1;
         iWrData[31:24] = 8'b0;
-        iWrData[23:16] = pkgLen[1:0] > 2 ? $random : 8'b0;
-        iWrData[15:8] = pkgLen[1:0] > 1 ? $random : 8'b0;
+        iWrData[23:16] = pktLen[1:0] > 2 ? $random : 8'b0;
+        iWrData[15:8] = pktLen[1:0] > 1 ? $random : 8'b0;
         iWrData[7:0] = $random;
         @(posedge iClk);
         #1;

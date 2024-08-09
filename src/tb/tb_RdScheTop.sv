@@ -219,13 +219,13 @@ begin
     //if(intRdCmdDst[idx] != rdCmdMsg[idx]) $error("ERROR at intRdCmd[idx], Wrong RdCmd.Dst, at %d", idx);
 
     if(rdCmdDrop[idx]) begin
-      $display("Info: Pkg Drop at %t", $realtime());
+      $display("Info: Pkt Drop at %t", $realtime());
       intRdCmdRdy[idx] = 1;
       @(posedge clk);
       #1;
       intRdCmdRdy[idx] = 0;
     end else begin
-      $display("Info: Pkg Trans at %t at port %d", $realtime(), idx);
+      $display("Info: Pkt Trans at %t at port %d", $realtime(), idx);
       intRdCmdRdy[idx] = 1;
       @(posedge clk);
       #1;

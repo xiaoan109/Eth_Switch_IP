@@ -1,5 +1,5 @@
 // +FHEADER =====================================================================
-// FilePath       : /Switch/src/tb/tb_PkgReadToXbar.v
+// FilePath       : /Switch/src/tb/tb_PktReadToXbar.v
 // Author         : wangxuanji 18364998790@163.com
 // CreateDate     : 24-05-16
 // LastEditors    : wangxuanji 18364998790@163.com
@@ -21,7 +21,7 @@
 //                  
 // 
 // -FHEADER =====================================================================
-module tb_PkgReadToXbar ();
+module tb_PktReadToXbar ();
 
   // Parameters
   localparam ADDR_LENTH = 12;
@@ -128,11 +128,11 @@ module tb_PkgReadToXbar ();
   wire                    oBlockAddrVld    [3:0];
   wire                    oMmuReadReq      [3:0];
   wire                    oMmuReadLast     [3:0];
-  reg  [ADDR_LENTH - 1:0] iPkgFirAddr      [3:0];
-  reg                     iPkgFirAddrVld   [3:0];
-  reg  [           3 : 0] iPkgBlockNum     [3:0];
-  reg                     iPkgDrop         [3:0];
-  wire                    oPkgFirAddrRdy   [3:0];
+  reg  [ADDR_LENTH - 1:0] iPktFirAddr      [3:0];
+  reg                     iPktFirAddrVld   [3:0];
+  reg  [           3 : 0] iPktBlockNum     [3:0];
+  reg                     iPktDrop         [3:0];
+  wire                    oPktFirAddrRdy   [3:0];
   wire [DATA_WIDTH - 1:0] oWrrData         [3:0];
   wire                    oWrrVld          [3:0];
   wire                    oWrrDataLast     [3:0];
@@ -300,10 +300,10 @@ module tb_PkgReadToXbar ();
   wire [          DW-1:0] iRDataA3;
   wire [          DW-1:0] iRDataB3;
 
-  PkgRead #(
+  PktRead #(
     .ADDR_LENTH(ADDR_LENTH),
     .DATA_WIDTH(DATA_WIDTH)
-  ) PkgRead_inst (
+  ) PktRead_inst (
     .iClk            (iClk),
     .iRst_n          (iRst_n),
     .oRcvrAddr0      (oRcvrAddr[0]),
@@ -360,38 +360,38 @@ module tb_PkgReadToXbar ();
     .oBlockAddrVld3  (oBlockAddrVld[3]),
     .oMmuReadReq3    (oMmuReadReq[3]),
     .oMmuReadLast3   (oMmuReadLast[3]),
-    .iPkgFirAddr0    (iPkgFirAddr[0]),
-    .iPkgFirAddrVld0 (iPkgFirAddrVld[0]),
-    .iPkgBlockNum0   (iPkgBlockNum[0]),
-    .iPkgDrop0       (iPkgDrop[0]),
-    .oPkgFirAddrRdy0 (oPkgFirAddrRdy[0]),
+    .iPktFirAddr0    (iPktFirAddr[0]),
+    .iPktFirAddrVld0 (iPktFirAddrVld[0]),
+    .iPktBlockNum0   (iPktBlockNum[0]),
+    .iPktDrop0       (iPktDrop[0]),
+    .oPktFirAddrRdy0 (oPktFirAddrRdy[0]),
     .oWrrData0       (oWrrData[0]),
     .oWrrVld0        (oWrrVld[0]),
     .oWrrDataLast0   (oWrrDataLast[0]),
     .iWrrRdy0        (iWrrRdy[0]),
-    .iPkgFirAddr1    (iPkgFirAddr[1]),
-    .iPkgFirAddrVld1 (iPkgFirAddrVld[1]),
-    .iPkgBlockNum1   (iPkgBlockNum[1]),
-    .iPkgDrop1       (iPkgDrop[1]),
-    .oPkgFirAddrRdy1 (oPkgFirAddrRdy[1]),
+    .iPktFirAddr1    (iPktFirAddr[1]),
+    .iPktFirAddrVld1 (iPktFirAddrVld[1]),
+    .iPktBlockNum1   (iPktBlockNum[1]),
+    .iPktDrop1       (iPktDrop[1]),
+    .oPktFirAddrRdy1 (oPktFirAddrRdy[1]),
     .oWrrData1       (oWrrData[1]),
     .oWrrVld1        (oWrrVld[1]),
     .oWrrDataLast1   (oWrrDataLast[1]),
     .iWrrRdy1        (iWrrRdy[1]),
-    .iPkgFirAddr2    (iPkgFirAddr[2]),
-    .iPkgFirAddrVld2 (iPkgFirAddrVld[2]),
-    .iPkgBlockNum2   (iPkgBlockNum[2]),
-    .iPkgDrop2       (iPkgDrop[2]),
-    .oPkgFirAddrRdy2 (oPkgFirAddrRdy[2]),
+    .iPktFirAddr2    (iPktFirAddr[2]),
+    .iPktFirAddrVld2 (iPktFirAddrVld[2]),
+    .iPktBlockNum2   (iPktBlockNum[2]),
+    .iPktDrop2       (iPktDrop[2]),
+    .oPktFirAddrRdy2 (oPktFirAddrRdy[2]),
     .oWrrData2       (oWrrData[2]),
     .oWrrVld2        (oWrrVld[2]),
     .oWrrDataLast2   (oWrrDataLast[2]),
     .iWrrRdy2        (iWrrRdy[2]),
-    .iPkgFirAddr3    (iPkgFirAddr[3]),
-    .iPkgFirAddrVld3 (iPkgFirAddrVld[3]),
-    .iPkgBlockNum3   (iPkgBlockNum[3]),
-    .iPkgDrop3       (iPkgDrop[3]),
-    .oPkgFirAddrRdy3 (oPkgFirAddrRdy[3]),
+    .iPktFirAddr3    (iPktFirAddr[3]),
+    .iPktFirAddrVld3 (iPktFirAddrVld[3]),
+    .iPktBlockNum3   (iPktBlockNum[3]),
+    .iPktDrop3       (iPktDrop[3]),
+    .oPktFirAddrRdy3 (oPktFirAddrRdy[3]),
     .oWrrData3       (oWrrData[3]),
     .oWrrVld3        (oWrrVld[3]),
     .oWrrDataLast3   (oWrrDataLast[3]),
@@ -748,7 +748,7 @@ module tb_PkgReadToXbar ();
   reg [3:0] rFullBlockNum;
   reg [3:0] rWordNum;
   initial begin
-    $fsdbDumpfile("tb_PkgReadToXbar.fsdb");
+    $fsdbDumpfile("tb_PktReadToXbar.fsdb");
     $fsdbDumpvars("+all");
 
     iClk   <= 0;
@@ -756,11 +756,11 @@ module tb_PkgReadToXbar ();
     for (m = 0; m < 4; m = m + 1) begin
       iLdata[m]         <= 0;
       iLdataVld[m]      <= 0;
-      iPkgFirAddr[m]    <= 0;
-      iPkgFirAddrVld[m] <= 0;
-      iPkgBlockNum[m]   <= 0;
+      iPktFirAddr[m]    <= 0;
+      iPktFirAddrVld[m] <= 0;
+      iPktBlockNum[m]   <= 0;
       iWrrRdy[m]        <= 0;
-      iPkgDrop[m]       <= 0;
+      iPktDrop[m]       <= 0;
     end
     iDropData <= 0;
     iDropDataVld <= 0;
@@ -808,14 +808,14 @@ module tb_PkgReadToXbar ();
     input [3:0] wordNum;  //0-15, last block word 0-15
     input [11:0] firstAddr;
     begin
-      iPkgFirAddr[inPort] <= firstAddr + inPort;
-      iPkgFirAddrVld[inPort] <= 1;
-      iPkgBlockNum[inPort] <= blockNum;
+      iPktFirAddr[inPort] <= firstAddr + inPort;
+      iPktFirAddrVld[inPort] <= 1;
+      iPktBlockNum[inPort] <= blockNum;
       @(posedge iClk);
-      while (!oPkgFirAddrRdy[inPort]) @(posedge iClk);
-      iPkgFirAddr[inPort] <= 0;
-      iPkgFirAddrVld[inPort] <= 0;
-      iPkgBlockNum[inPort] <= 0;
+      while (!oPktFirAddrRdy[inPort]) @(posedge iClk);
+      iPktFirAddr[inPort] <= 0;
+      iPktFirAddrVld[inPort] <= 0;
+      iPktBlockNum[inPort] <= 0;
     end
   endtask
 

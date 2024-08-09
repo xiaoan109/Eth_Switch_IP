@@ -64,26 +64,26 @@ module UnpackSgDma #(
   input  wire        iWrrRdy1,
   input  wire        iWrrRdy2,
   input  wire        iWrrRdy3,
-  output wire [11:0] oPkgFirAddr0,
-  output wire [11:0] oPkgFirAddr1,
-  output wire [11:0] oPkgFirAddr2,
-  output wire [11:0] oPkgFirAddr3,
-  output wire [ 3:0] oPkgLen0,          // 0-15, full Block, 0 represents 1, 15 represents 16
-  output wire [ 3:0] oPkgLen1,
-  output wire [ 3:0] oPkgLen2,
-  output wire [ 3:0] oPkgLen3,
-  output wire [ 2:0] oPkgPri0,
-  output wire [ 2:0] oPkgPri1,
-  output wire [ 2:0] oPkgPri2,
-  output wire [ 2:0] oPkgPri3,
-  output wire [ 3:0] oPkgDstPort0,
-  output wire [ 3:0] oPkgDstPort1,
-  output wire [ 3:0] oPkgDstPort2,
-  output wire [ 3:0] oPkgDstPort3,
-  output wire        oPkgTagVld0,
-  output wire        oPkgTagVld1,
-  output wire        oPkgTagVld2,
-  output wire        oPkgTagVld3,
+  output wire [11:0] oPktFirAddr0,
+  output wire [11:0] oPktFirAddr1,
+  output wire [11:0] oPktFirAddr2,
+  output wire [11:0] oPktFirAddr3,
+  output wire [ 3:0] oPktLen0,          // 0-15, full Block, 0 represents 1, 15 represents 16
+  output wire [ 3:0] oPktLen1,
+  output wire [ 3:0] oPktLen2,
+  output wire [ 3:0] oPktLen3,
+  output wire [ 2:0] oPktPri0,
+  output wire [ 2:0] oPktPri1,
+  output wire [ 2:0] oPktPri2,
+  output wire [ 2:0] oPktPri3,
+  output wire [ 3:0] oPktDstPort0,
+  output wire [ 3:0] oPktDstPort1,
+  output wire [ 3:0] oPktDstPort2,
+  output wire [ 3:0] oPktDstPort3,
+  output wire        oPktTagVld0,
+  output wire        oPktTagVld1,
+  output wire        oPktTagVld2,
+  output wire        oPktTagVld3,
   //Lsram
   output wire [11:0] oLdata0,           //link list data(next addr)
   output wire [11:0] oLdata1,
@@ -98,26 +98,26 @@ module UnpackSgDma #(
   output wire        oLaddrVld2,
   output wire        oLaddrVld3,
   //mmu
-  output wire [31:0] oPkgData0,
-  output wire [31:0] oPkgData1,
-  output wire [31:0] oPkgData2,
-  output wire [31:0] oPkgData3,
-  output wire        oPkgDataVld0,
-  output wire        oPkgDataVld1,
-  output wire        oPkgDataVld2,
-  output wire        oPkgDataVld3,
-  output wire [11:0] oPkgAddr0,
-  output wire [11:0] oPkgAddr1,
-  output wire [11:0] oPkgAddr2,
-  output wire [11:0] oPkgAddr3,
-  output wire        oPkgAddrVld0,
-  output wire        oPkgAddrVld1,
-  output wire        oPkgAddrVld2,
-  output wire        oPkgAddrVld3,
-  output wire        oPkgWrLast0,
-  output wire        oPkgWrLast1,
-  output wire        oPkgWrLast2,
-  output wire        oPkgWrLast3,
+  output wire [31:0] oPktData0,
+  output wire [31:0] oPktData1,
+  output wire [31:0] oPktData2,
+  output wire [31:0] oPktData3,
+  output wire        oPktDataVld0,
+  output wire        oPktDataVld1,
+  output wire        oPktDataVld2,
+  output wire        oPktDataVld3,
+  output wire [11:0] oPktAddr0,
+  output wire [11:0] oPktAddr1,
+  output wire [11:0] oPktAddr2,
+  output wire [11:0] oPktAddr3,
+  output wire        oPktAddrVld0,
+  output wire        oPktAddrVld1,
+  output wire        oPktAddrVld2,
+  output wire        oPktAddrVld3,
+  output wire        oPktWrLast0,
+  output wire        oPktWrLast1,
+  output wire        oPktWrLast2,
+  output wire        oPktWrLast3,
   input  wire        iMmuRdy0,
   input  wire        iMmuRdy1,
   input  wire        iMmuRdy2,
@@ -132,6 +132,14 @@ module UnpackSgDma #(
   wire [3:0] wIdleState;
   wire [3:0] wAllLast;
   wire [3:0] wAllLastPosedge;
+  wire [3:0] wAllLastNegedge;
+  wire [3:0] wAllLastNegedge_latch;
+  wire [11:0] wPktFirAddr[3:0];
+  wire [3:0] wPktLen[3:0];
+  wire [2:0] wPktPri[3:0];
+  wire [3:0] wPktDstPort[3:0];
+  wire [3:0] wPktTagVld;
+  wire [3:0] wTagFifoFull;
 
   //--------------------Fifo--------------------//
   Fifo #(
@@ -261,8 +269,17 @@ module UnpackSgDma #(
         .clock(iClk),
         .level_in(wAllLast[i]),
         .pulse_posedge_out(wAllLastPosedge[i]),
-        .pulse_negedge_out(),
+        .pulse_negedge_out(wAllLastNegedge[i]),
         .pulse_anyedge_out()
+      );
+
+      Pulse_Latch #(
+        .RESET_VALUE(1'b0)
+      ) Pulse_Latch_inst (
+        .clock(iClk),
+        .clear(wTagFifoFull[i]),
+        .pulse_in(wAllLastNegedge[i]),
+        .level_out(wAllLastNegedge_latch[i])
       );
     end
   endgenerate
@@ -340,20 +357,20 @@ module UnpackSgDma #(
     .iEptyAddrVld   (iEptyAddrVld0),
     .oEptyAddrRcvRdy(oEptyAddrRcvRdy0),
     .iWrrRdy        (iWrrRdy0),
-    .oPkgPri        (oPkgPri0),
-    .oPkgDstPort    (oPkgDstPort0),
-    .oPkgFirAddr    (oPkgFirAddr0),
-    .oPkgLen        (oPkgLen0),
-    .oPkgTagVld     (oPkgTagVld0),
+    .oPktPri        (wPktPri[0]),
+    .oPktDstPort    (wPktDstPort[0]),
+    .oPktFirAddr    (wPktFirAddr[0]),
+    .oPktLen        (wPktLen[0]),
+    .oPktTagVld     (wPktTagVld[0]),
     .oLdata         (oLdata0),
     .oLaddr         (oLaddr0),
     .oLaddrVld      (oLaddrVld0),
-    .iPkgDataRdy    (iMmuRdy0),
-    .oPkgData       (oPkgData0),
-    .oPkgDataVld    (oPkgDataVld0),
-    .oPkgAddr       (oPkgAddr0),
-    .oPkgAddrVld    (oPkgAddrVld0),
-    .oPkgWrLast     (oPkgWrLast0),
+    .iPktDataRdy    (iMmuRdy0),
+    .oPktData       (oPktData0),
+    .oPktDataVld    (oPktDataVld0),
+    .oPktAddr       (oPktAddr0),
+    .oPktAddrVld    (oPktAddrVld0),
+    .oPktWrLast     (oPktWrLast0),
     .oIdleState     (wIdleState[0]),
     .oAllLast       (wAllLast[0])
   );
@@ -370,20 +387,20 @@ module UnpackSgDma #(
     .iEptyAddrVld   (iEptyAddrVld1),
     .oEptyAddrRcvRdy(oEptyAddrRcvRdy1),
     .iWrrRdy        (iWrrRdy1),
-    .oPkgPri        (oPkgPri1),
-    .oPkgDstPort    (oPkgDstPort1),
-    .oPkgFirAddr    (oPkgFirAddr1),
-    .oPkgLen        (oPkgLen1),
-    .oPkgTagVld     (oPkgTagVld1),
+    .oPktPri        (wPktPri[1]),
+    .oPktDstPort    (wPktDstPort[1]),
+    .oPktFirAddr    (wPktFirAddr[1]),
+    .oPktLen        (wPktLen[1]),
+    .oPktTagVld     (wPktTagVld[1]),
     .oLdata         (oLdata1),
     .oLaddr         (oLaddr1),
     .oLaddrVld      (oLaddrVld1),
-    .iPkgDataRdy    (iMmuRdy1),
-    .oPkgData       (oPkgData1),
-    .oPkgDataVld    (oPkgDataVld1),
-    .oPkgAddr       (oPkgAddr1),
-    .oPkgAddrVld    (oPkgAddrVld1),
-    .oPkgWrLast     (oPkgWrLast1),
+    .iPktDataRdy    (iMmuRdy1),
+    .oPktData       (oPktData1),
+    .oPktDataVld    (oPktDataVld1),
+    .oPktAddr       (oPktAddr1),
+    .oPktAddrVld    (oPktAddrVld1),
+    .oPktWrLast     (oPktWrLast1),
     .oIdleState     (wIdleState[1]),
     .oAllLast       (wAllLast[1])
   );
@@ -400,20 +417,20 @@ module UnpackSgDma #(
     .iEptyAddrVld   (iEptyAddrVld2),
     .oEptyAddrRcvRdy(oEptyAddrRcvRdy2),
     .iWrrRdy        (iWrrRdy2),
-    .oPkgPri        (oPkgPri2),
-    .oPkgDstPort    (oPkgDstPort2),
-    .oPkgFirAddr    (oPkgFirAddr2),
-    .oPkgLen        (oPkgLen2),
-    .oPkgTagVld     (oPkgTagVld2),
+    .oPktPri        (wPktPri[2]),
+    .oPktDstPort    (wPktDstPort[2]),
+    .oPktFirAddr    (wPktFirAddr[2]),
+    .oPktLen        (wPktLen[2]),
+    .oPktTagVld     (wPktTagVld[2]),
     .oLdata         (oLdata2),
     .oLaddr         (oLaddr2),
     .oLaddrVld      (oLaddrVld2),
-    .iPkgDataRdy    (iMmuRdy2),
-    .oPkgData       (oPkgData2),
-    .oPkgDataVld    (oPkgDataVld2),
-    .oPkgAddr       (oPkgAddr2),
-    .oPkgAddrVld    (oPkgAddrVld2),
-    .oPkgWrLast     (oPkgWrLast2),
+    .iPktDataRdy    (iMmuRdy2),
+    .oPktData       (oPktData2),
+    .oPktDataVld    (oPktDataVld2),
+    .oPktAddr       (oPktAddr2),
+    .oPktAddrVld    (oPktAddrVld2),
+    .oPktWrLast     (oPktWrLast2),
     .oIdleState     (wIdleState[2]),
     .oAllLast       (wAllLast[2])
   );
@@ -430,21 +447,83 @@ module UnpackSgDma #(
     .iEptyAddrVld   (iEptyAddrVld3),
     .oEptyAddrRcvRdy(oEptyAddrRcvRdy3),
     .iWrrRdy        (iWrrRdy3),
-    .oPkgPri        (oPkgPri3),
-    .oPkgDstPort    (oPkgDstPort3),
-    .oPkgFirAddr    (oPkgFirAddr3),
-    .oPkgLen        (oPkgLen3),
-    .oPkgTagVld     (oPkgTagVld3),
+    .oPktPri        (wPktPri[3]),
+    .oPktDstPort    (wPktDstPort[3]),
+    .oPktFirAddr    (wPktFirAddr[3]),
+    .oPktLen        (wPktLen[3]),
+    .oPktTagVld     (wPktTagVld[3]),
     .oLdata         (oLdata3),
     .oLaddr         (oLaddr3),
     .oLaddrVld      (oLaddrVld3),
-    .iPkgDataRdy    (iMmuRdy3),
-    .oPkgData       (oPkgData3),
-    .oPkgDataVld    (oPkgDataVld3),
-    .oPkgAddr       (oPkgAddr3),
-    .oPkgAddrVld    (oPkgAddrVld3),
-    .oPkgWrLast     (oPkgWrLast3),
+    .iPktDataRdy    (iMmuRdy3),
+    .oPktData       (oPktData3),
+    .oPktDataVld    (oPktDataVld3),
+    .oPktAddr       (oPktAddr3),
+    .oPktAddrVld    (oPktAddrVld3),
+    .oPktWrLast     (oPktWrLast3),
     .oIdleState     (wIdleState[3]),
     .oAllLast       (wAllLast[3])
   );
+
+  Fifo #(
+    .FIFO_DEPTH(1),
+    .DATA_WIDTH(23)  //12bit addr, 4bit block len, 3bit prio, 4bit dstport 
+  ) U0_TagFifo (
+    .iClk        (iClk),
+    .iRst_n      (iRst_n),
+    .iWData      ({wPktFirAddr[0], wPktLen[0], wPktPri[0], wPktDstPort[0]}),
+    .iWEn        (wPktTagVld[0] && iWrrRdy0),
+    .iREn        (wAllLastNegedge_latch[0]),
+    .oReadData   ({oPktFirAddr0, oPktLen0, oPktPri0, oPktDstPort0}),
+    .oReadDataVld(oPktTagVld0),
+    .oFull       (wTagFifoFull[0]),
+    .oEmpty      ()
+  );
+
+  Fifo #(
+    .FIFO_DEPTH(1),
+    .DATA_WIDTH(23)  //12bit addr, 4bit block len, 3bit prio, 4bit dstport 
+  ) U1_TagFifo (
+    .iClk        (iClk),
+    .iRst_n      (iRst_n),
+    .iWData      ({wPktFirAddr[1], wPktLen[1], wPktPri[1], wPktDstPort[1]}),
+    .iWEn        (wPktTagVld[1] && iWrrRdy1),
+    .iREn        (wAllLastNegedge_latch[1]),
+    .oReadData   ({oPktFirAddr1, oPktLen1, oPktPri1, oPktDstPort1}),
+    .oReadDataVld(oPktTagVld1),
+    .oFull       (wTagFifoFull[1]),
+    .oEmpty      ()
+  );
+
+  Fifo #(
+    .FIFO_DEPTH(1),
+    .DATA_WIDTH(23)  //12bit addr, 4bit block len, 3bit prio, 4bit dstport 
+  ) U2_TagFifo (
+    .iClk        (iClk),
+    .iRst_n      (iRst_n),
+    .iWData      ({wPktFirAddr[2], wPktLen[2], wPktPri[2], wPktDstPort[2]}),
+    .iWEn        (wPktTagVld[2] && iWrrRdy2),
+    .iREn        (wAllLastNegedge_latch[2]),
+    .oReadData   ({oPktFirAddr2, oPktLen2, oPktPri2, oPktDstPort2}),
+    .oReadDataVld(oPktTagVld2),
+    .oFull       (wTagFifoFull[2]),
+    .oEmpty      ()
+  );
+
+  Fifo #(
+    .FIFO_DEPTH(1),
+    .DATA_WIDTH(23)  //12bit addr, 4bit block len, 3bit prio, 4bit dstport 
+  ) U3_TagFifo (
+    .iClk        (iClk),
+    .iRst_n      (iRst_n),
+    .iWData      ({wPktFirAddr[3], wPktLen[3], wPktPri[3], wPktDstPort[3]}),
+    .iWEn        (wPktTagVld[3] && iWrrRdy3),
+    .iREn        (wAllLastNegedge_latch[3]),
+    .oReadData   ({oPktFirAddr3, oPktLen3, oPktPri3, oPktDstPort3}),
+    .oReadDataVld(oPktTagVld3),
+    .oFull       (wTagFifoFull[3]),
+    .oEmpty      ()
+  );
+
+
 endmodule

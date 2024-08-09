@@ -74,14 +74,14 @@ module tb_CrcDataCheck;
     `DELAY(10, iClk)
     iRst_n = 1'b1;
     `DELAY(10, iClk)
-    PKGSEND(64, 0);
+    PKTSEND(64, 0);
 
     #1000 $finish;
   end
 
 
-  task PKGSEND;
-    input [10:0] pkgLen;  //Byte :64-1024
+  task PKTSEND;
+    input [10:0] pktLen;  //Byte :64-1024
     input integer delay;  //random delay
     begin
       //Sop
@@ -89,7 +89,7 @@ module tb_CrcDataCheck;
       `DELAY(1, iClk)
       iRdSop = 1'b0;
       //Data frame
-      repeat (pkgLen >> 2) begin
+      repeat (pktLen >> 2) begin
         `DELAY(delay, iClk)
         iRdVld  = 1'b1;
         iRdData = $random;
@@ -99,12 +99,12 @@ module tb_CrcDataCheck;
         iRdVld = 1'b0;
       end
       iRdData = 32'bx;
-      if (pkgLen[1:0]) begin
+      if (pktLen[1:0]) begin
         `DELAY(delay, iClk)
         iRdVld = 1'b1;
         iRdData[31:24] = 8'b0;
-        iRdData[23:16] = pkgLen[1:0] > 2 ? $random : 8'b0;
-        iRdData[15:8] = pkgLen[1:0] > 1 ? $random : 8'b0;
+        iRdData[23:16] = pktLen[1:0] > 2 ? $random : 8'b0;
+        iRdData[15:8] = pktLen[1:0] > 1 ? $random : 8'b0;
         iRdData[7:0] = $random;
         @(posedge iClk);
         while (!iReady) @(posedge iClk);

@@ -31,7 +31,7 @@ module PortCtrl #(
   Decoupled.slave                   iTagQueueIn,       // Decoupled#(.DW(`ADDR_LENTH+8), .AW(0))
   Decoupled.slave                   iTagDropIn,        // Decoupled#(.DW(`ADDR_LENTH+8), .AW(0))
 
-  Decoupled.master                  oRdCmd,     // Decoupled#(.DW(`ADDR_LENTH+9), .AW(4))     // { firAddr, pkgLen, dstPort, dropFlag}
+  Decoupled.master                  oRdCmd,     // Decoupled#(.DW(`ADDR_LENTH+9), .AW(4))     // { firAddr, pktLen, dstPort, dropFlag}
   
   Decoupled.slave                   iRdData,    // Decoupled#(.DW(`DATA_WIDTH+1), .AW(4))
 

@@ -38,23 +38,23 @@ module tb_Unpack ();
   wire        oEptyAddrRcvRdy;
   //wrr
   reg         iWrrRdy;
-  wire [ 2:0] oPkgPri;
-  wire [ 3:0] oPkgDstPort;
-  wire [11:0] oPkgFirAddr;  //包首地址
-  wire [ 3:0] oPkgLen;
-  wire        oPkgTagVld;
+  wire [ 2:0] oPktPri;
+  wire [ 3:0] oPktDstPort;
+  wire [11:0] oPktFirAddr;  //包首地址
+  wire [ 3:0] oPktLen;
+  wire        oPktTagVld;
   //Lsram
   reg         iLWriteRdy;
   wire [11:0] oLdata;
   wire [31:0] oLaddr;  //link list addr
   wire        oLaddrVld;
   //MMU
-  reg         iPkgDataRdy;  //mmu
-  wire [31:0] oPkgData;
-  wire        oPkgDataVld;
-  wire [11:0] oPkgAddr;
-  wire        oPkgAddrVld;
-  wire        oPkgWrLast;
+  reg         iPktDataRdy;  //mmu
+  wire [31:0] oPktData;
+  wire        oPktDataVld;
+  wire [11:0] oPktAddr;
+  wire        oPktAddrVld;
+  wire        oPktWrLast;
 
   Unpack U_Unpack (
     .iClk           (iClk),
@@ -68,21 +68,21 @@ module tb_Unpack ();
     .iEptyAddrVld   (iEptyAddrVld),
     .oEptyAddrRcvRdy(oEptyAddrRcvRdy),
     .iWrrRdy        (iWrrRdy),
-    .oPkgPri        (oPkgPri),
-    .oPkgDstPort    (oPkgDstPort),
-    .oPkgFirAddr    (oPkgFirAddr),
-    .oPkgLen        (oPkgLen),
-    .oPkgTagVld     (oPkgTagVld),
+    .oPktPri        (oPktPri),
+    .oPktDstPort    (oPktDstPort),
+    .oPktFirAddr    (oPktFirAddr),
+    .oPktLen        (oPktLen),
+    .oPktTagVld     (oPktTagVld),
     .iLWriteRdy     (iLWriteRdy),
     .oLdata         (oLdata),
     .oLaddr         (oLaddr),
     .oLaddrVld      (oLaddrVld),
-    .iPkgDataRdy    (iPkgDataRdy),
-    .oPkgData       (oPkgData),
-    .oPkgDataVld    (oPkgDataVld),
-    .oPkgAddr       (oPkgAddr),
-    .oPkgAddrVld    (oPkgAddrVld),
-    .oPkgWrLast     (oPkgWrLast)
+    .iPktDataRdy    (iPktDataRdy),
+    .oPktData       (oPktData),
+    .oPktDataVld    (oPktDataVld),
+    .oPktAddr       (oPktAddr),
+    .oPktAddrVld    (oPktAddrVld),
+    .oPktWrLast     (oPktWrLast)
   );
 
 
@@ -108,7 +108,7 @@ module tb_Unpack ();
     end
   end
 
-  reg [10:0] rPkgLen;  // 64-1024
+  reg [10:0] rPktLen;  // 64-1024
   reg [ 4:0] rBlockLen;  // 1-17
   initial begin
     iRst_n = 1'b0;
@@ -120,16 +120,16 @@ module tb_Unpack ();
     iEptyAddrVld = 1'b0;
     iWrrRdy = 1'b0;
     iLWriteRdy = 1'b0;
-    iPkgDataRdy = 1'b0;
+    iPktDataRdy = 1'b0;
     `DELAY(10, iClk)
     iRst_n = 1'b1;
-    // rPkgLen = 64 + {$random($get_initial_random_seed)} % (1025 - 64);
-    rPkgLen = 1024;
-    rBlockLen = (rPkgLen + 63 + 4) >> 6;
+    // rPktLen = 64 + {$random($get_initial_random_seed)} % (1025 - 64);
+    rPktLen = 1024;
+    rBlockLen = (rPktLen + 63 + 4) >> 6;
     fork
       begin
         `DELAY(5, iClk)
-        PKGSEND(0, 0, rPkgLen, 0);
+        PKTSEND(0, 0, rPktLen, 0);
       end
       begin
         `DELAY(5, iClk)
@@ -159,14 +159,14 @@ module tb_Unpack ();
 
   // reg oWrRdy_s;
 
-  task PKGSEND;
+  task PKTSEND;
     input [2:0] prio;  // 0-7
     input [3:0] destPort;  // 0-15
-    input [10:0] pkgLen;  //Byte :64-1024
+    input [10:0] pktLen;  //Byte :64-1024
     input integer delay;  //random delay
     reg [9:0] rLen;
     begin
-      rLen   = pkgLen - 1;
+      rLen   = pktLen - 1;
       //Sop
       iWrSop = 1'b1;
       `DELAY(1, iClk)
@@ -178,7 +178,7 @@ module tb_Unpack ();
       `DELAY(1, iClk)
       iWrVld = 1'b0;
       //Data frame
-      repeat (pkgLen >> 2) begin
+      repeat (pktLen >> 2) begin
         `DELAY(delay, iClk)
         iWrVld  = 1'b1;
         iWrData = $random;
@@ -188,12 +188,12 @@ module tb_Unpack ();
         iWrVld = 1'b0;
       end
       iWrData = 32'bx;
-      if (pkgLen[1:0]) begin
+      if (pktLen[1:0]) begin
         `DELAY(delay, iClk)
         iWrVld = 1'b1;
         iWrData[31:24] = 8'b0;
-        iWrData[23:16] = pkgLen[1:0] > 2 ? $random : 8'b0;
-        iWrData[15:8] = pkgLen[1:0] > 1 ? $random : 8'b0;
+        iWrData[23:16] = pktLen[1:0] > 2 ? $random : 8'b0;
+        iWrData[15:8] = pktLen[1:0] > 1 ? $random : 8'b0;
         iWrData[7:0] = $random;
         @(posedge iClk);
         while (!oWrRdy) @(posedge iClk);
@@ -243,9 +243,9 @@ module tb_Unpack ();
       repeat (max_cyc) begin
         `DELAY(1, iClk)
         if (rdm_on) begin
-          iPkgDataRdy = $random;
+          iPktDataRdy = $random;
         end else begin
-          iPkgDataRdy = ready_on;
+          iPktDataRdy = ready_on;
         end
       end
     end
@@ -292,10 +292,10 @@ module tb_Unpack ();
       cnt1 = 0;
       repeat (max_cyc) begin
         @(posedge iClk);
-        if (oPkgAddrVld && oPkgDataVld && iPkgDataRdy) begin
+        if (oPktAddrVld && oPktDataVld && iPktDataRdy) begin
           cnt = cnt + 1;
           $display("@%t, Data Send Success! Total: %d", $time, cnt);
-          if (oPkgWrLast) begin
+          if (oPktWrLast) begin
             cnt1 = cnt1 + 1;
             $display("@%t, Block Send Success! Total: %d", $time, cnt1);
           end

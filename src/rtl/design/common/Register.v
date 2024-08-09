@@ -60,14 +60,17 @@ module Register #(
   // override any previous assignment with the current value of `data_out` if
   // `clear` is not asserted!
 
+
+  //Modified: decrease clear signal priority
   always @(posedge clock) begin
+    if (clear == 1'b1) begin
+      data_out <= RESET_VALUE;
+    end
+
     if (clock_enable == 1'b1) begin
       data_out <= data_in;
     end
 
-    if (clear == 1'b1) begin
-      data_out <= RESET_VALUE;
-    end
   end
 
 endmodule

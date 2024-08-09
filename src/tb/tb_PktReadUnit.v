@@ -1,5 +1,5 @@
 // +FHEADER =====================================================================
-// FilePath       : /Switch/src/tb/tb_PkgReadUnit.v
+// FilePath       : /Switch/src/tb/tb_PktReadUnit.v
 // Author         : liuyanlong 2283670208@qq.com
 // CreateDate     : 24-05-07
 // LastEditors    : wangxuanji 18364998790@163.com
@@ -22,11 +22,11 @@
 // 
 // -FHEADER =====================================================================
 
-module tb_PkgReadUnit ();
+module tb_PktReadUnit ();
   localparam ADDR_LENTH = 12;
   localparam DATA_WIDTH = 32;
 
-  localparam PKGNUM = 2;  //0代表1个整包，1代表2个整包
+  localparam PKTNUM = 2;  //0代表1个整包，1代表2个整包
   localparam WORDNUM = 15;
 
   localparam FIRADDR = 1;
@@ -47,10 +47,10 @@ module tb_PkgReadUnit ();
   wire                    oMmuReadLast;
   reg  [DATA_WIDTH - 1:0] iData;
   wire                    oMmuRdy;
-  reg  [ADDR_LENTH - 1:0] iPkgFirAddr;
-  reg                     iPkgFirAddrVld;
+  reg  [ADDR_LENTH - 1:0] iPktFirAddr;
+  reg                     iPktFirAddrVld;
   reg  [             3:0] iBlockNum;
-  wire                    oPkgFirAddrRdy;
+  wire                    oPktFirAddrRdy;
   wire [DATA_WIDTH - 1:0] oWrrData;
   wire                    oWrrVld;
   reg                     iWrrRdy;
@@ -61,7 +61,7 @@ module tb_PkgReadUnit ();
   reg  [            11:0] rCnt;
 
   initial begin
-    $fsdbDumpfile("tb_PkgReadUnit.fsdb");
+    $fsdbDumpfile("tb_PktReadUnit.fsdb");
     $fsdbDumpvars("+all");
 
     iClk           <= 0;
@@ -70,8 +70,8 @@ module tb_PkgReadUnit ();
     iLdataVld      <= 0;
     iMmuRdy        <= 0;
     iData          <= 0;
-    iPkgFirAddr    <= 0;
-    iPkgFirAddrVld <= 0;
+    iPktFirAddr    <= 0;
+    iPktFirAddrVld <= 0;
     iBlockNum      <= 0;
     iWrrRdy        <= 0;
     rCnt           <= 0;
@@ -97,10 +97,10 @@ module tb_PkgReadUnit ();
       iLdataVld <= 0;
       rCnt      <= 0;
     end else if (wNxtEn) begin
-      if (rCnt == PKGNUM + 1 & WORDNUM != 0) begin
+      if (rCnt == PKTNUM + 1 & WORDNUM != 0) begin
         iLdata <= WORDNUM;
         rCnt   <= 0;
-      end else if (WORDNUM == 0 && rCnt == PKGNUM) begin
+      end else if (WORDNUM == 0 && rCnt == PKTNUM) begin
         iLdata <= WORDNUM;
         rCnt   <= 0;
       end else begin
@@ -149,16 +149,16 @@ module tb_PkgReadUnit ();
 
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
-      iPkgFirAddr    <= FIRADDR;
-      iPkgFirAddrVld <= 1;
-      iBlockNum      <= PKGNUM;
-    end else if (!iPkgFirAddrVld) begin
-      iPkgFirAddr    <= FIRADDR;
-      iPkgFirAddrVld <= 1;
-      iBlockNum      <= PKGNUM;
-    end else if (oPkgFirAddrRdy & iPkgFirAddrVld) begin
-      iPkgFirAddr    <= 0;
-      iPkgFirAddrVld <= 0;
+      iPktFirAddr    <= FIRADDR;
+      iPktFirAddrVld <= 1;
+      iBlockNum      <= PKTNUM;
+    end else if (!iPktFirAddrVld) begin
+      iPktFirAddr    <= FIRADDR;
+      iPktFirAddrVld <= 1;
+      iBlockNum      <= PKTNUM;
+    end else if (oPktFirAddrRdy & iPktFirAddrVld) begin
+      iPktFirAddr    <= 0;
+      iPktFirAddrVld <= 0;
       iBlockNum      <= 0;
     end
   end
@@ -174,10 +174,10 @@ module tb_PkgReadUnit ();
       iWrrRdy <= 1;
     end
 
-  PkgReadUnit #(
+  PktReadUnit #(
     .ADDR_LENTH(ADDR_LENTH),
     .DATA_WIDTH(DATA_WIDTH)
-  ) PkgReadUnit_0 (
+  ) PktReadUnit_0 (
     .iClk  (iClk),
     .iRst_n(iRst_n),
 
@@ -201,11 +201,11 @@ module tb_PkgReadUnit ();
     .iData           (iData),
 
     //WRR
-    .iPkgFirAddr   (iPkgFirAddr),
-    .iPkgFirAddrVld(iPkgFirAddrVld),
+    .iPktFirAddr   (iPktFirAddr),
+    .iPktFirAddrVld(iPktFirAddrVld),
     .iBlockNum     (iBlockNum),
-    .iPkgDrop      (1'b0),
-    .oPkgFirAddrRdy(oPkgFirAddrRdy),
+    .iPktDrop      (1'b0),
+    .oPktFirAddrRdy(oPktFirAddrRdy),
     .oWrrData      (oWrrData),
     .oWrrDataLast  (),
     .oWrrVld       (oWrrVld),

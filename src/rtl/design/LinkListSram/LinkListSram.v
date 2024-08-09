@@ -45,7 +45,7 @@ module LinkListSram #(
   input wire [ADDR_LENTH - 1:0] iWriteLaddr3,
   input wire                    iWriteLaddrVld3,
 
-  //PkgRead
+  //PktRead
   output wire [ADDR_LENTH - 1:0] oLdata0,
   output wire                    oLdataVld0,
   input  wire [ADDR_LENTH - 1:0] iLaddr0,

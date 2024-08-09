@@ -38,23 +38,23 @@ module Unpack #(
   output wire        oEptyAddrRcvRdy,
   //wrr
   input  wire        iWrrRdy,
-  output wire [ 2:0] oPkgPri,
-  output wire [ 3:0] oPkgDstPort,
-  output wire [11:0] oPkgFirAddr,      //包首地址
-  output wire [ 3:0] oPkgLen,
-  output wire        oPkgTagVld,
+  output reg  [ 2:0] oPktPri,
+  output reg  [ 3:0] oPktDstPort,
+  output wire [11:0] oPktFirAddr,      //包首地址
+  output reg  [ 3:0] oPktLen,
+  output wire        oPktTagVld,
   //Lsram
   // input  wire        iLWriteRdy,
   output wire [11:0] oLdata,
   output wire [11:0] oLaddr,           //link list addr
   output wire        oLaddrVld,
   //MMU
-  input  wire        iPkgDataRdy,      //mmu
-  output wire [31:0] oPkgData,
-  output wire        oPkgDataVld,
-  output wire [11:0] oPkgAddr,
-  output wire        oPkgAddrVld,
-  output wire        oPkgWrLast,
+  input  wire        iPktDataRdy,      //mmu
+  output wire [31:0] oPktData,
+  output wire        oPktDataVld,
+  output wire [11:0] oPktAddr,
+  output wire        oPktAddrVld,
+  output wire        oPktWrLast,
   //Ctrl Sop&Eop
   output wire        oIdleState,
   output wire        oAllLast
@@ -65,7 +65,7 @@ module Unpack #(
   localparam DATAFRM = 2'b10;  //数据传输
   localparam ENDFRM = 2'b11;  //结束传输
 
-  //[6:4] priority [3:0] dest_port [16:7]: lenth of pkg
+  //[6:4] priority [3:0] dest_port [16:7]: lenth of pkt
   wire [31:0] iWrData_r;
   wire        iWrVld_r;
   wire        oWrRdy_r;
@@ -163,15 +163,65 @@ module Unpack #(
     end
   end
 
+  wire pulse_posedge_out;
+  reg [1:0] pulse_posedge_out_r;
+  Pulse_Generator Pulse_Generator_inst (
+    .clock(iClk),
+    .level_in(rWrCtrlVld),
+    .pulse_posedge_out(pulse_posedge_out),
+    .pulse_negedge_out(),
+    .pulse_anyedge_out()
+  );
 
-  assign oPkgPri = rWrCtrl[6:4];
-  assign oPkgDstPort = rWrCtrl[3:0];
-  assign oPkgLen     = ((rWrCtrl[16:7] | 2'b11) + 4 - 63) >> 6;  // in blocks (count: 1-16 --> number: 0-15)
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      pulse_posedge_out_r <= 2'b0;
+    end else begin
+      pulse_posedge_out_r <= {pulse_posedge_out_r[0], pulse_posedge_out};
+    end
+  end
 
-  wire [3:0] wWordLen;  // words(32bit) in last block (count: 0-15 --> number: 0-15)
-  assign wWordLen = ((rWrCtrl[16:7] | 2'b11) + 4 - ((64 << oPkgLen) - 1)) >> 2;
-  wire [4:0] wAllBlockLen;
-  assign wAllBlockLen = wWordLen ? oPkgLen + 1 : oPkgLen;
+  // CLK0: Pkt Info
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      oPktDstPort <= 0;
+      oPktPri <= 0;
+      oPktLen <= 0;  //MAX LEN
+    end else if (pulse_posedge_out) begin
+      oPktDstPort <= rWrCtrl[3:0];
+      oPktPri <= rWrCtrl[6:4];
+      oPktLen <= ((rWrCtrl[16:7] | 2'b11) + 4 - 63) >> 6;  // in blocks (count: 1-16 --> number: 0-15)
+    end
+  end
+
+  reg [3:0] wWordLen;
+  reg [4:0] wAllBlockLen;
+  // CLK1: Calculate Last Block Word Length
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      wWordLen <= 4'hf;
+    end else if (pulse_posedge_out_r[0]) begin
+      wWordLen <= ((rWrCtrl[16:7] | 2'b11) + 4 - ((64 << oPktLen) - 1)) >> 2;
+    end
+  end
+
+  // CLK2: Calculate Blocks Num In Total
+  always @(posedge iClk or negedge iRst_n) begin
+    if (!iRst_n) begin
+      wAllBlockLen <= 5'h10;
+    end else if (pulse_posedge_out_r[1]) begin
+      wAllBlockLen <= wWordLen ? oPktLen + 1 : oPktLen;
+    end
+  end
+
+  // assign oPktPri = rWrCtrl[6:4];
+  // assign oPktDstPort = rWrCtrl[3:0];
+  // assign oPktLen     = ((rWrCtrl[16:7] | 2'b11) + 4 - 63) >> 6;  // in blocks (count: 1-16 --> number: 0-15)
+
+  // wire [3:0] wWordLen;  // words(32bit) in last block (count: 0-15 --> number: 0-15)
+  // assign wWordLen = ((rWrCtrl[16:7] | 2'b11) + 4 - ((64 << oPktLen) - 1)) >> 2;
+  // wire [4:0] wAllBlockLen;
+  // assign wAllBlockLen = wWordLen ? oPktLen + 1 : oPktLen;
 
   reg rWaitFirAddr;
   reg [11:0] rFirstAddr;
@@ -192,7 +242,7 @@ module Unpack #(
     end else if (rState == CTRLFRM && rNxtState == DATAFRM) begin  //每次准备切到DATAFRM时
       rWaitFirAddr <= 1;
       rFirstAddr   <= 0;
-    end else if (rWaitFirAddr && rEptyAddrVld && !oPkgDataVld) begin  // No data is sending
+    end else if (rWaitFirAddr && rEptyAddrVld && !oPktDataVld) begin  // No data is sending
       rWaitFirAddr <= 0;
       rFirstAddr   <= rEptyAddr;
     end else begin
@@ -201,8 +251,8 @@ module Unpack #(
     end
   end
 
-  assign oPkgTagVld  = rState == ENDFRM ? rWrCtrlVld : 0;
-  assign oPkgFirAddr = rState == ENDFRM ? rFirstAddr : 0;
+  assign oPktTagVld  = rState == ENDFRM ? rWrCtrlVld : 0;
+  assign oPktFirAddr = rState == ENDFRM ? rFirstAddr : 0;
 
 
   //------------------------data 、addr recive and sent------------------------//
@@ -219,7 +269,7 @@ module Unpack #(
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
       rBlockCnt <= 0;
-    end else if (rWrDataVld && iPkgDataRdy) begin
+    end else if (rWrDataVld && iPktDataRdy) begin
       if (rBlockCnt == wAllBlockLen && rDataCnt == (wWordLen - 4'b1)) begin
         rBlockCnt <= 0;
       end else if (rDataCnt == 15) begin
@@ -239,7 +289,7 @@ module Unpack #(
     end else begin
       if (rEptyAddrVld == 1) begin  //rEptyAddrVld == 1时接收数据，否则只接收地址
         if (wNoLastBlock | wLastBlock) begin  //已经接收完了16组数据，开始发送sram的数据
-          if (rWrDataVld && iPkgDataRdy) begin
+          if (rWrDataVld && iPktDataRdy) begin
             rEptyAddr    <= rEptyAddr;
             rDataCnt     <= 0;
             rEptyAddrVld <= 0;
@@ -252,7 +302,7 @@ module Unpack #(
             rWrData      <= rWrData;
             rWrDataVld   <= rWrDataVld;
           end
-        end else if(rWrDataVld && iPkgDataRdy)begin//每和下级握手成功一次数据计数加1,并接收下一组数据
+        end else if(rWrDataVld && iPktDataRdy)begin//每和下级握手成功一次数据计数加1,并接收下一组数据
           rEptyAddr    <= rEptyAddr;
           rDataCnt     <= rDataCnt + 1;
           rEptyAddrVld <= rEptyAddrVld;
@@ -282,16 +332,16 @@ module Unpack #(
   end
 
 
-  assign oPkgData = rWrData;
-  assign oPkgDataVld = rWrDataVld;
-  assign oPkgAddr = rEptyAddr;
-  assign oPkgAddrVld = rEptyAddrVld;//16个包数据传输的时候相同的地址每一次vld都拉高，可以用作xbar的Req信号
-  assign oPkgWrLast = wLastBlock | wNoLastBlock;
+  assign oPktData = rWrData;
+  assign oPktDataVld = rWrDataVld;
+  assign oPktAddr = rEptyAddr;
+  assign oPktAddrVld = rEptyAddrVld;//16个包数据传输的时候相同的地址每一次vld都拉高，可以用作xbar的Req信号
+  assign oPktWrLast = wLastBlock | wNoLastBlock;
   assign oAllLast = wLastBlock;
 
   assign oEptyAddrRcvRdy = !rEptyAddrVld && (rState == DATAFRM);
   //对应通道的端口没有数据则请求数据，下一个周期来了数据只保持一个周期下个周期传入rEptyAddr中
-  assign oWrRdy_r = (rState == CTRLFRM ) | (!(wNoLastBlock | wLastBlock) && (rEptyAddrVld == 1) && (!rWrDataVld | (rWrDataVld && iPkgDataRdy)));
+  assign oWrRdy_r = (rState == CTRLFRM ) | (!(wNoLastBlock | wLastBlock) && (rEptyAddrVld == 1) && (!rWrDataVld | (rWrDataVld && iPktDataRdy)));
   //当rEptyAddrVld == 1，处于接收数据状态时，并且WrData寄存器无效或者与下级握手成功时才接收数据
   //rDataCnt == 15的时候Rdy拉低，防止清零的时候新的数据进来
   //CTRLFRM下只接收控制帧，但是不会发送到MMU
@@ -306,7 +356,7 @@ module Unpack #(
       rEptyAddr_r1    <= 13'h1000; //保证第一次判断一定不相等
       rEptyAddrVld_r1 <= 0;
     end else if (rState == DATAFRM) begin
-      if(rEptyAddrVld && rEptyAddr_r1 != {1'b0, rEptyAddr} && rDataCnt == 15 && rWrDataVld && iPkgDataRdy) begin//rEptyAddr_r1!=rEptyAddr的时候说明下一个地址传入了，且保证最后一个数据发送完成
+      if(rEptyAddrVld && rEptyAddr_r1 != {1'b0, rEptyAddr} && rDataCnt == 15 && rWrDataVld && iPktDataRdy) begin//rEptyAddr_r1!=rEptyAddr的时候说明下一个地址传入了，且保证最后一个数据发送完成
         rEptyAddr_r1    <= rEptyAddr;
         rEptyAddrVld_r1 <= rEptyAddrVld;
       end else begin

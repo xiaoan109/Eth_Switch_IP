@@ -1,5 +1,5 @@
 // +FHEADER =====================================================================
-// FilePath       : /src/tb/tb_PkgWriteAndDrop.v
+// FilePath       : /src/tb/tb_PktWriteAndDrop.v
 // Author         : liuyanlong 2283670208@qq.com
 // CreateDate     : 24-05-09
 // LastEditors    : wangxuanji 18364998790@163.com
@@ -21,7 +21,7 @@
 //                  
 // 
 // -FHEADER =====================================================================
-module tb_PkgWriteAndDrop ();
+module tb_PktWriteAndDrop ();
   localparam ADDR_LENTH = 12;
   localparam DATA_WIDTH = 32;
 
@@ -38,25 +38,25 @@ module tb_PkgWriteAndDrop ();
   reg                       iWriteLaddrVld0;
   reg                       iEptyAddrRdy0;
 
-  reg  [ADDR_LENTH - 1 : 0] iPkgFirAddr1;
-  reg                       iPkgFirAddrVld1;
-  reg  [               3:0] iPkgBlockNum1;
-  reg                       iPkgDrop1;
+  reg  [ADDR_LENTH - 1 : 0] iPktFirAddr1;
+  reg                       iPktFirAddrVld1;
+  reg  [               3:0] iPktBlockNum1;
+  reg                       iPktDrop1;
 
-  reg  [ADDR_LENTH - 1 : 0] iPkgFirAddr0;
-  reg                       iPkgFirAddrVld0;
-  reg  [               3:0] iPkgBlockNum0;
-  reg                       iPkgDrop0;
+  reg  [ADDR_LENTH - 1 : 0] iPktFirAddr0;
+  reg                       iPktFirAddrVld0;
+  reg  [               3:0] iPktBlockNum0;
+  reg                       iPktDrop0;
 
-  reg  [ADDR_LENTH - 1 : 0] iPkgFirAddr2;
-  reg                       iPkgFirAddrVld2;
-  reg  [               3:0] iPkgBlockNum2;
-  reg                       iPkgDrop2;
+  reg  [ADDR_LENTH - 1 : 0] iPktFirAddr2;
+  reg                       iPktFirAddrVld2;
+  reg  [               3:0] iPktBlockNum2;
+  reg                       iPktDrop2;
 
-  reg  [ADDR_LENTH - 1 : 0] iPkgFirAddr3;
-  reg                       iPkgFirAddrVld3;
-  reg  [               3:0] iPkgBlockNum3;
-  reg                       iPkgDrop3;
+  reg  [ADDR_LENTH - 1 : 0] iPktFirAddr3;
+  reg                       iPktFirAddrVld3;
+  reg  [               3:0] iPktBlockNum3;
+  reg                       iPktDrop3;
 
   reg  [ADDR_LENTH - 1 : 0] iDropData;
   reg                       iDropDataVld;
@@ -66,7 +66,7 @@ module tb_PkgWriteAndDrop ();
 
   wire [ADDR_LENTH - 1 : 0] oEptyAddr0;
   wire                      oEptyAddrVld0;
-  wire                      oPkgFirAddrRdy1;
+  wire                      oPktFirAddrRdy1;
   reg  [ADDR_LENTH - 1 : 0] rRecAddr2;
   reg                       rRecAddrVld2;
   wire [ADDR_LENTH - 1 : 0] wDropData, wDropAddr;
@@ -75,7 +75,7 @@ module tb_PkgWriteAndDrop ();
 
 
   initial begin
-    $fsdbDumpfile("tb_PkgWriteAndDrop.fsdb");
+    $fsdbDumpfile("tb_PktWriteAndDrop.fsdb");
     $fsdbDumpvars("+all");
 
     iWriteLdata0    <= 0;
@@ -83,25 +83,25 @@ module tb_PkgWriteAndDrop ();
     iWriteLaddrVld0 <= 0;
     iEptyAddrRdy0   <= 0;
 
-    iPkgFirAddr0    <= 0;
-    iPkgFirAddrVld0 <= 0;
-    iPkgBlockNum0   <= 0;
-    iPkgDrop0       <= 0;
+    iPktFirAddr0    <= 0;
+    iPktFirAddrVld0 <= 0;
+    iPktBlockNum0   <= 0;
+    iPktDrop0       <= 0;
 
-    iPkgFirAddr1    <= 0;
-    iPkgFirAddrVld1 <= 0;
-    iPkgBlockNum1   <= 0;
-    iPkgDrop1       <= 0;
+    iPktFirAddr1    <= 0;
+    iPktFirAddrVld1 <= 0;
+    iPktBlockNum1   <= 0;
+    iPktDrop1       <= 0;
 
-    iPkgFirAddr2    <= 0;
-    iPkgFirAddrVld2 <= 0;
-    iPkgBlockNum2   <= 0;
-    iPkgDrop2       <= 0;
+    iPktFirAddr2    <= 0;
+    iPktFirAddrVld2 <= 0;
+    iPktBlockNum2   <= 0;
+    iPktDrop2       <= 0;
 
-    iPkgFirAddr3    <= 0;
-    iPkgFirAddrVld3 <= 0;
-    iPkgBlockNum3   <= 0;
-    iPkgDrop3       <= 0;
+    iPktFirAddr3    <= 0;
+    iPktFirAddrVld3 <= 0;
+    iPktBlockNum3   <= 0;
+    iPktDrop3       <= 0;
 
     iDropData       <= 0;
     iDropDataVld    <= 0;
@@ -131,54 +131,54 @@ module tb_PkgWriteAndDrop ();
   task DROP();
     fork
       begin
-        iPkgFirAddr1    <= 20;
-        iPkgFirAddrVld1 <= 1;
-        iPkgBlockNum1   <= 10;  //num
-        iPkgDrop1       <= 1;
+        iPktFirAddr1    <= 20;
+        iPktFirAddrVld1 <= 1;
+        iPktBlockNum1   <= 10;  //num
+        iPktDrop1       <= 1;
         @(posedge iClk);
-        iPkgFirAddr1    <= 0;
-        iPkgFirAddrVld1 <= 0;
-        iPkgBlockNum1   <= 0;
-        iPkgDrop1       <= 0;
-        @(posedge iClk);
-      end
-
-      begin
-        iPkgFirAddr0    <= 1;
-        iPkgFirAddrVld0 <= 1;
-        iPkgBlockNum0   <= 9;  //num
-        iPkgDrop0       <= 1;
-        @(posedge iClk);
-        iPkgFirAddr0    <= 0;
-        iPkgFirAddrVld0 <= 0;
-        iPkgBlockNum0   <= 0;
-        iPkgDrop0       <= 0;
+        iPktFirAddr1    <= 0;
+        iPktFirAddrVld1 <= 0;
+        iPktBlockNum1   <= 0;
+        iPktDrop1       <= 0;
         @(posedge iClk);
       end
 
       begin
-        iPkgFirAddr2    <= 35;
-        iPkgFirAddrVld2 <= 1;
-        iPkgBlockNum2   <= 15;  //num
-        iPkgDrop2       <= 1;
+        iPktFirAddr0    <= 1;
+        iPktFirAddrVld0 <= 1;
+        iPktBlockNum0   <= 9;  //num
+        iPktDrop0       <= 1;
         @(posedge iClk);
-        iPkgFirAddr2    <= 0;
-        iPkgFirAddrVld2 <= 0;
-        iPkgBlockNum2   <= 0;
-        iPkgDrop2       <= 0;
+        iPktFirAddr0    <= 0;
+        iPktFirAddrVld0 <= 0;
+        iPktBlockNum0   <= 0;
+        iPktDrop0       <= 0;
         @(posedge iClk);
       end
 
       begin
-        iPkgFirAddr3    <= 70;
-        iPkgFirAddrVld3 <= 1;
-        iPkgBlockNum3   <= 0;  //num
-        iPkgDrop3       <= 1;
+        iPktFirAddr2    <= 35;
+        iPktFirAddrVld2 <= 1;
+        iPktBlockNum2   <= 15;  //num
+        iPktDrop2       <= 1;
         @(posedge iClk);
-        iPkgFirAddr3    <= 0;
-        iPkgFirAddrVld3 <= 0;
-        iPkgBlockNum3   <= 0;
-        iPkgDrop3       <= 0;
+        iPktFirAddr2    <= 0;
+        iPktFirAddrVld2 <= 0;
+        iPktBlockNum2   <= 0;
+        iPktDrop2       <= 0;
+        @(posedge iClk);
+      end
+
+      begin
+        iPktFirAddr3    <= 70;
+        iPktFirAddrVld3 <= 1;
+        iPktBlockNum3   <= 0;  //num
+        iPktDrop3       <= 1;
+        @(posedge iClk);
+        iPktFirAddr3    <= 0;
+        iPktFirAddrVld3 <= 0;
+        iPktBlockNum3   <= 0;
+        iPktDrop3       <= 0;
         @(posedge iClk);
       end
     join
@@ -263,10 +263,10 @@ module tb_PkgWriteAndDrop ();
     .oAlmostFull()
   );
 
-  PkgRead #(
+  PktRead #(
     .ADDR_LENTH(ADDR_LENTH),
     .DATA_WIDTH(DATA_WIDTH)
-  ) PkgRead_u0 (
+  ) PktRead_u0 (
     .iClk            (iClk),
     .iRst_n          (iRst_n),
     .oRcvrAddr0      (),
@@ -319,35 +319,35 @@ module tb_PkgWriteAndDrop ();
     .oBlockAddr3    (),
     .oBlockAddrVld3 (),
     .oMmuReadReq3   (),
-    .iPkgFirAddr0   (iPkgFirAddr0),
-    .iPkgFirAddrVld0(iPkgFirAddrVld0),
-    .iPkgBlockNum0  (iPkgBlockNum0),
-    .iPkgDrop0      (iPkgDrop0),
-    .oPkgFirAddrRdy0(),
+    .iPktFirAddr0   (iPktFirAddr0),
+    .iPktFirAddrVld0(iPktFirAddrVld0),
+    .iPktBlockNum0  (iPktBlockNum0),
+    .iPktDrop0      (iPktDrop0),
+    .oPktFirAddrRdy0(),
     .oWrrData0      (),
     .oWrrVld0       (),
     .iWrrRdy0       (0),
-    .iPkgFirAddr1   (iPkgFirAddr1),
-    .iPkgFirAddrVld1(iPkgFirAddrVld1),
-    .iPkgBlockNum1  (iPkgBlockNum1),
-    .iPkgDrop1      (iPkgDrop1),
-    .oPkgFirAddrRdy1(oPkgFirAddrRdy1),
+    .iPktFirAddr1   (iPktFirAddr1),
+    .iPktFirAddrVld1(iPktFirAddrVld1),
+    .iPktBlockNum1  (iPktBlockNum1),
+    .iPktDrop1      (iPktDrop1),
+    .oPktFirAddrRdy1(oPktFirAddrRdy1),
     .oWrrData1      (),
     .oWrrVld1       (),
     .iWrrRdy1       (0),
-    .iPkgFirAddr2   (iPkgFirAddr2),
-    .iPkgFirAddrVld2(iPkgFirAddrVld2),
-    .iPkgBlockNum2  (iPkgBlockNum2),
-    .iPkgDrop2      (iPkgDrop2),
-    .oPkgFirAddrRdy2(),
+    .iPktFirAddr2   (iPktFirAddr2),
+    .iPktFirAddrVld2(iPktFirAddrVld2),
+    .iPktBlockNum2  (iPktBlockNum2),
+    .iPktDrop2      (iPktDrop2),
+    .oPktFirAddrRdy2(),
     .oWrrData2      (),
     .oWrrVld2       (),
     .iWrrRdy2       (0),
-    .iPkgFirAddr3   (iPkgFirAddr3),
-    .iPkgFirAddrVld3(iPkgFirAddrVld3),
-    .iPkgBlockNum3  (iPkgBlockNum3),
-    .iPkgDrop3      (iPkgDrop3),
-    .oPkgFirAddrRdy3(),
+    .iPktFirAddr3   (iPktFirAddr3),
+    .iPktFirAddrVld3(iPktFirAddrVld3),
+    .iPktBlockNum3  (iPktBlockNum3),
+    .iPktDrop3      (iPktDrop3),
+    .oPktFirAddrRdy3(),
     .oWrrData3      (),
     .oWrrVld3       (),
     .iWrrRdy3       (0),

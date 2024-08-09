@@ -148,13 +148,13 @@ initial begin
     if(oRdCmd.Dst != rdCmdMsg) $error("ERROR at oRdCmd, Wrong RdCmd.Dst");
 
     if(rdCmdDrop) begin
-      $display("Info: Pkg Drop at %t", $realtime());
+      $display("Info: Pkt Drop at %t", $realtime());
       oRdCmd.Rdy = 1;
       @(posedge clk);
       #1;
       oRdCmd.Rdy = 0;
     end else begin
-      $display("Info: Pkg Trans at %t", $realtime());
+      $display("Info: Pkt Trans at %t", $realtime());
       oRdCmd.Rdy = 1;
       @(posedge clk);
       #1;

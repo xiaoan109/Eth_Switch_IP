@@ -28,10 +28,12 @@ FILELIST 	:= 	$(SIM_DIR)/filelist.f
 DPIC_FILES	:=	$(wildcard $(C_PATH)/*.c $(C_PATH)/*.cpp)
 
 ifneq ($(HOSTNAME), localhost.localdomain)
+ifneq ($(HOSTNAME), 192.168.238.129)
 ifneq ($(HOSTNAME),login)
 BSUB_OPTION := bsub -I -m $(LSF_MACHINE)
 else
 BSUB_OPTION := bsub -I
+endif
 endif
 endif
 
@@ -104,6 +106,8 @@ endif
 	find $(TB_PATH) -name "tb_$(DUT).v" >> $(SIM_DIR)/filelist.f
 	find $(MODEL_PATH) -name "*.v" >> $(SIM_DIR)/filelist.f
 ifneq ($(SV_ENABLE),)
+	find $(TB_PATH) -name "*_pkg.sv" >> $(SIM_DIR)/filelist.f
+	find $(TB_PATH) -name "*_intf.sv" >> $(SIM_DIR)/filelist.f
 	find $(TB_PATH) -name "tb_$(DUT).sv" >> $(SIM_DIR)/filelist.f
 	find $(MODEL_PATH) -name "*.sv" >> $(SIM_DIR)/filelist.f
 endif

@@ -1,5 +1,5 @@
 // +FHEADER =====================================================================
-// FilePath       : /src/rtl/design/PkgRead/PkgReadUnit.v
+// FilePath       : /src/rtl/design/PktRead/PktReadUnit.v
 // Author         : liuyanlong 2283670208@qq.com
 // CreateDate     : 24-04-16
 // LastEditors    : wangxuanji 18364998790@163.com
@@ -21,7 +21,7 @@
 //                  
 // 
 // -FHEADER =====================================================================
-module PkgReadUnit #(
+module PktReadUnit #(
   parameter ADDR_LENTH = 12,
   parameter DATA_WIDTH = 32
 ) (
@@ -52,11 +52,11 @@ module PkgReadUnit #(
   input wire [DATA_WIDTH - 1:0] iData,  //读数据
 
   //WRR
-  input  wire [ADDR_LENTH - 1:0] iPkgFirAddr,
-  input  wire                    iPkgFirAddrVld,
+  input  wire [ADDR_LENTH - 1:0] iPktFirAddr,
+  input  wire                    iPktFirAddrVld,
   input  wire [           3 : 0] iBlockNum,
-  input  wire                    iPkgDrop,
-  output wire                    oPkgFirAddrRdy,
+  input  wire                    iPktDrop,
+  output wire                    oPktFirAddrRdy,
 
   output wire [DATA_WIDTH - 1:0] oWrrData,      //帧数据
   output wire                    oWrrVld,       //数据有效
@@ -74,7 +74,7 @@ module PkgReadUnit #(
   reg [ADDR_LENTH - 1:0] rNxtAddr;  //下一个地址
   reg rNxtAddrVld;  //下一个地址有效
 
-  wire wPkgReadEnd;  //包传输结束  
+  wire wPktReadEnd;  //包传输结束  
   wire wDropEnd;
 
 
@@ -86,7 +86,7 @@ module PkgReadUnit #(
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
       rBlockCnt <= 0;
-    end else if (wPkgReadEnd) begin
+    end else if (wPktReadEnd) begin
       rBlockCnt <= 0;
     end else if (oBlockAddrVld & iMmuRdy & rDataRcvCnt == 15) begin
       rBlockCnt <= rBlockCnt + 1;
@@ -97,7 +97,7 @@ module PkgReadUnit #(
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
       rDataRcvCnt <= 0;
-    end else if (wPkgReadEnd) begin  //rDataRcvCnt == 15, plus 1 = 0
+    end else if (wPktReadEnd) begin  //rDataRcvCnt == 15, plus 1 = 0
       rDataRcvCnt <= 0;
     end else if (oBlockAddrVld & iMmuRdy) begin
       rDataRcvCnt <= rDataRcvCnt + 1;
@@ -141,9 +141,9 @@ module PkgReadUnit #(
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
       oMmuReadReq <= 0;
-    end else if (wPkgReadEnd | wDropEnd) begin
+    end else if (wPktReadEnd | wDropEnd) begin
       oMmuReadReq <= 0;
-    end else if (oPkgFirAddrRdy & iPkgFirAddrVld) begin
+    end else if (oPktFirAddrRdy & iPktFirAddrVld) begin
       oMmuReadReq <= 1;
     end
   end
@@ -154,7 +154,7 @@ module PkgReadUnit #(
       rCurAddr    <= 0;
       rCurAddrVld <= 0;
     end else if (rCurAddrVld) begin
-      if (wPkgReadEnd) begin  //当传完了完整的包，同时余下的字数也传完则整个包已经传完
+      if (wPktReadEnd) begin  //当传完了完整的包，同时余下的字数也传完则整个包已经传完
         rCurAddrVld <= 0;
         rCurAddr    <= rCurAddr; //避免因为最后一个不完整的包太短，导致地址回收错误
       end else if (rDataRcvCnt == 15 & oBlockAddrVld & iMmuRdy) begin  //下一个周期会发下一个block的地址
@@ -164,15 +164,15 @@ module PkgReadUnit #(
         rCurAddr    <= rCurAddr;
         rCurAddrVld <= rCurAddrVld;
       end
-    end else if (iPkgFirAddrVld & !iPkgDrop) begin
-      rCurAddr    <= iPkgFirAddr;
+    end else if (iPktFirAddrVld & !iPktDrop) begin
+      rCurAddr    <= iPktFirAddr;
       rCurAddrVld <= 1;
     end
   end
 
-  assign oPkgFirAddrRdy = !oMmuReadReq;
+  assign oPktFirAddrRdy = !oMmuReadReq;
   assign oBlockAddr = rCurAddr;
-  assign oBlockAddrVld = rBlockCnt == rBlockNum ? rBlockNum == 0 ? 0 : (!rInDataVld | wDataRdy) & (oLNxtAddrReq == 0) & !wPkgReadEnd : rCurAddrVld & (!rInDataVld | wDataRdy);
+  assign oBlockAddrVld = rBlockCnt == rBlockNum ? rBlockNum == 0 ? 0 : (!rInDataVld | wDataRdy) & (oLNxtAddrReq == 0) & !wPktReadEnd : rCurAddrVld & (!rInDataVld | wDataRdy);
 
   //如果rCurAddr有效，同时Data寄存器准备好或者当前输入数据无效，就发出读请求
   ////包末尾需要等取到Nxtaddr再发读请求，防止因为末尾太短而连续请求造成NxtAddr的wWordNum不能及时收到
@@ -198,9 +198,9 @@ module PkgReadUnit #(
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
       rBlockNum <= 0;
-    end else if (wPkgReadEnd) begin
+    end else if (wPktReadEnd) begin
       rBlockNum <= 0;
-    end else if (iPkgFirAddrVld & oPkgFirAddrRdy) begin  //读请求的下一周期输入数据有效
+    end else if (iPktFirAddrVld & oPktFirAddrRdy) begin  //读请求的下一周期输入数据有效
       rBlockNum <= iBlockNum + 1;  //+1是因为完整的block0代表1，1代表2，以节约内存
     end else begin
       rBlockNum <= rBlockNum;
@@ -234,7 +234,7 @@ module PkgReadUnit #(
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
       rWrrDataLast <= 0;
-    end else if (wPkgReadEnd) begin
+    end else if (wPktReadEnd) begin
       if (rInDataVld & wDataRdy) begin
         rWrrDataLast <= 0;
       end else begin
@@ -249,7 +249,7 @@ module PkgReadUnit #(
     if (!iRst_n) begin
       oWrrDataLast <= 0;
     end else if (rInDataVld & wDataRdy) begin
-      if (wPkgReadEnd) begin
+      if (wPktReadEnd) begin
         oWrrDataLast <= 1;
       end else if (rWrrDataLast) begin
         oWrrDataLast <= 1;
@@ -269,7 +269,7 @@ module PkgReadUnit #(
       oLNxtAddrReq <= 0;
     end else if (oLNxtAddrReq & iLdataVld) begin  //握手成功，请求信号拉低
       oLNxtAddrReq <= 0;
-    end else if (iPkgFirAddrVld | (oBlockAddrVld & iMmuRdy & rDataRcvCnt == 15 & wWordNum != 0)) begin
+    end else if (iPktFirAddrVld | (oBlockAddrVld & iMmuRdy & rDataRcvCnt == 15 & wWordNum != 0)) begin
       oLNxtAddrReq <= 1;
     end else begin
       oLNxtAddrReq <= oLNxtAddrReq;
@@ -281,7 +281,7 @@ module PkgReadUnit #(
     if (!iRst_n) begin
       rNxtAddrVld <= 0;
       rNxtAddr    <= 0;
-    end else if (wPkgReadEnd) begin  //包全部传完置零
+    end else if (wPktReadEnd) begin  //包全部传完置零
       rNxtAddrVld <= 0;
       rNxtAddr    <= 0;
     end else if (oLNxtAddrReq & iLdataVld) begin  //握手成功，收到下一个指针
@@ -293,7 +293,7 @@ module PkgReadUnit #(
     end
   end
 
-  assign wPkgReadEnd = ((rBlockCnt == rBlockNum) & (wWordNum == rDataRcvCnt)) & rCurAddrVld;  //& rCurAddrVld为了防止包还没来的时候就判断结束
+  assign wPktReadEnd = ((rBlockCnt == rBlockNum) & (wWordNum == rDataRcvCnt)) & rCurAddrVld;  //& rCurAddrVld为了防止包还没来的时候就判断结束
   assign oMmuReadLast = ((rBlockCnt == rBlockNum) & (wWordNum - 1 == rDataRcvCnt)) | ((rBlockCnt != rBlockNum) & (rDataRcvCnt == 15)); // TODO: confusion while wWordNum = 1
   assign wWordNum = rNxtAddr;
   //最后一个的Block是没有下一个指针的，所以其中存的是包末尾不完整Block的字数，rBlockCnt == rBlockNum时候才生效
@@ -321,7 +321,7 @@ module PkgReadUnit #(
     end else if (oDropRun & wDropEnd) begin
       rDropNum <= 0;
       oDropRun <= 0;
-    end else if (iPkgFirAddrVld & iPkgDrop) begin
+    end else if (iPktFirAddrVld & iPktDrop) begin
       rDropNum <= iBlockNum + 1;  //15代表16个包
       oDropRun <= 1;
     end else begin
@@ -341,8 +341,8 @@ module PkgReadUnit #(
     end else if (oDropRun & iDropChnRdy) begin
       oDropRcvrAddr    <= iLdata;
       oDropRcvrAddrVld <= iLdataVld;
-    end else if (iPkgFirAddrVld & iPkgDrop) begin
-      oDropRcvrAddr    <= iPkgFirAddr;
+    end else if (iPktFirAddrVld & iPktDrop) begin
+      oDropRcvrAddr    <= iPktFirAddr;
       oDropRcvrAddrVld <= 1;
     end else begin
       oDropRcvrAddr    <= oDropRcvrAddr   ;

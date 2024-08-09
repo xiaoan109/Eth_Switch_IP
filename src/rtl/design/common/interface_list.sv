@@ -28,16 +28,16 @@
 //  logic   [3:0]               DstPort; //16个端口
 //  logic   [`ADDR_LENTH-1:0]   FirAddr; //包首地址
 //  logic   [3:0]               Len;     //包长度（完整block数）,0代表1,1代表2,15代表16
-//} u2w_pkg_req_pld_t;
+//} u2w_pkt_req_pld_t;
 
-//function logic [`ADDR_LENTH+10:0] cat_u2w_pkg_req_pld_f(u2w_pkg_req_pld_t pld);
+//function logic [`ADDR_LENTH+10:0] cat_u2w_pkt_req_pld_f(u2w_pkt_req_pld_t pld);
 //  logic [`ADDR_LENTH+10:0] ret;
 //  ret = {pld.Pri, pld.DstPort, pld.FirAddr, pld.Len};
 //  return ret;
 //endfunction
 
-//function u2w_pkg_req_pld_t split_u2w_pkg_req_pld_f(logic [`ADDR_LENTH+10:0] pld);
-//  u2w_pkg_req_pld_t ret;
+//function u2w_pkt_req_pld_t split_u2w_pkt_req_pld_f(logic [`ADDR_LENTH+10:0] pld);
+//  u2w_pkt_req_pld_t ret;
 //  ret.Pri = pld[`ADDR_LENTH+10:`ADDR_LENTH+8];
 //  ret.DstPort = pld[`ADDR_LENTH+7:`ADDR_LENTH+4];
 //  ret.FirAddr = pld[`ADDR_LENTH+3:4];
@@ -45,8 +45,8 @@
 //  return ret;
 //endfunction
 
-//interface u2w_pkg_req;
-//  u2w_pkg_req_pld_t Pld;
+//interface u2w_pkt_req;
+//  u2w_pkt_req_pld_t Pld;
 //  logic             Vld;
 //  logic             Rdy;
 //  modport slave (
@@ -111,8 +111,8 @@ endinterface //interfacename
 
 //endtask
 
-//task u2w_pkg_req_wr(
-//  virtual u2w_pkg_req sport, 
+//task u2w_pkt_req_wr(
+//  virtual u2w_pkt_req sport, 
 //  ref logic clk,
 //  input int DstPort);
 //  begin
@@ -131,8 +131,8 @@ endinterface //interfacename
 //  end
 //endtask
 
-//task u2w_pkg_req_rd(
-//  virtual u2w_pkg_req mport, 
+//task u2w_pkt_req_rd(
+//  virtual u2w_pkt_req mport, 
 //  ref logic clk);
 //  mport.Rdy = 0;
 //  begin
@@ -175,24 +175,24 @@ endinterface //interfacename
 
 // endinterface //u2w_rdata
 
-// interface w2u_pkg_rsp;
-//   logic [`ADDR_LENTH-1:0]   PkgFirAddr;   //待读包首地址
-//   logic                     PkgFirAddrVld;//地址有效
-//   logic [3:0]               PkgBlockNum;  //包块数
-//   logic                     PkgDrop,
-//   logic                     PkgFirAddrRdy;//可以接收读请求rdy
+// interface w2u_pkt_rsp;
+//   logic [`ADDR_LENTH-1:0]   PktFirAddr;   //待读包首地址
+//   logic                     PktFirAddrVld;//地址有效
+//   logic [3:0]               PktBlockNum;  //包块数
+//   logic                     PktDrop,
+//   logic                     PktFirAddrRdy;//可以接收读请求rdy
 //   modport slave (
-//   input   PkgFirAddr,
-//   input   PkgFirAddrVld,
-//   input   PkgBlockNum,
-//   input   PkgDrop,
-//   output  PkgFirAddrRdy
+//   input   PktFirAddr,
+//   input   PktFirAddrVld,
+//   input   PktBlockNum,
+//   input   PktDrop,
+//   output  PktFirAddrRdy
 //   );
 //   modport master (
-//   output  PkgFirAddr,
-//   output  PkgFirAddrVld,
-//   output  PkgBlockNum,
-//   output  PkgDrop,
-//   input   PkgFirAddrRdy
+//   output  PktFirAddr,
+//   output  PktFirAddrVld,
+//   output  PktBlockNum,
+//   output  PktDrop,
+//   input   PktFirAddrRdy
 //   );
-// endinterface //w2u_pkg_rsp
+// endinterface //w2u_pkt_rsp

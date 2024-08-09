@@ -35,3 +35,5 @@ end
 `define SDPRAM
 
 // `define SYNTHESIS
+
+// `define DEBUG

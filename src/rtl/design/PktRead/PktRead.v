@@ -1,5 +1,5 @@
 // +FHEADER =====================================================================
-// FilePath       : /Switch/src/rtl/design/PkgRead/PkgRead.v
+// FilePath       : /Switch/src/rtl/design/PktRead/PktRead.v
 // Author         : liuyanlong 2283670208@qq.com
 // CreateDate     : 24-04-16
 // LastEditors    : wangxuanji 18364998790@163.com
@@ -21,7 +21,7 @@
 //                  
 // 
 // -FHEADER =====================================================================
-module PkgRead #(
+module PktRead #(
   parameter ADDR_LENTH = 12,
   parameter DATA_WIDTH = 32
 ) (
@@ -103,11 +103,11 @@ module PkgRead #(
   output wire                    oMmuReadLast3,
 
   //WRR
-  input  wire [ADDR_LENTH - 1:0] iPkgFirAddr0,     //待读包首地址
-  input  wire                    iPkgFirAddrVld0,  //地址有效
-  input  wire [           3 : 0] iPkgBlockNum0,    //包块数
-  input  wire                    iPkgDrop0,        //丢包信号
-  output wire                    oPkgFirAddrRdy0,  //可以接收读请求rdy
+  input  wire [ADDR_LENTH - 1:0] iPktFirAddr0,     //待读包首地址
+  input  wire                    iPktFirAddrVld0,  //地址有效
+  input  wire [           3 : 0] iPktBlockNum0,    //包块数
+  input  wire                    iPktDrop0,        //丢包信号
+  output wire                    oPktFirAddrRdy0,  //可以接收读请求rdy
 
   output wire [DATA_WIDTH - 1:0] oWrrData0,
   output wire                    oWrrVld0,
@@ -115,11 +115,11 @@ module PkgRead #(
   input  wire                    iWrrRdy0,
 
 
-  input  wire [ADDR_LENTH - 1:0] iPkgFirAddr1,
-  input  wire                    iPkgFirAddrVld1,
-  input  wire [           3 : 0] iPkgBlockNum1,
-  input  wire                    iPkgDrop1,
-  output wire                    oPkgFirAddrRdy1,
+  input  wire [ADDR_LENTH - 1:0] iPktFirAddr1,
+  input  wire                    iPktFirAddrVld1,
+  input  wire [           3 : 0] iPktBlockNum1,
+  input  wire                    iPktDrop1,
+  output wire                    oPktFirAddrRdy1,
 
   output wire [DATA_WIDTH - 1:0] oWrrData1,
   output wire                    oWrrVld1,
@@ -127,11 +127,11 @@ module PkgRead #(
   input  wire                    iWrrRdy1,
 
 
-  input  wire [ADDR_LENTH - 1:0] iPkgFirAddr2,
-  input  wire                    iPkgFirAddrVld2,
-  input  wire [           3 : 0] iPkgBlockNum2,
-  input  wire                    iPkgDrop2,
-  output wire                    oPkgFirAddrRdy2,
+  input  wire [ADDR_LENTH - 1:0] iPktFirAddr2,
+  input  wire                    iPktFirAddrVld2,
+  input  wire [           3 : 0] iPktBlockNum2,
+  input  wire                    iPktDrop2,
+  output wire                    oPktFirAddrRdy2,
 
   output wire [DATA_WIDTH - 1:0] oWrrData2,
   output wire                    oWrrVld2,
@@ -139,11 +139,11 @@ module PkgRead #(
   input  wire                    iWrrRdy2,
 
 
-  input  wire [ADDR_LENTH - 1:0] iPkgFirAddr3,
-  input  wire                    iPkgFirAddrVld3,
-  input  wire [           3 : 0] iPkgBlockNum3,
-  input  wire                    iPkgDrop3,
-  output wire                    oPkgFirAddrRdy3,
+  input  wire [ADDR_LENTH - 1:0] iPktFirAddr3,
+  input  wire                    iPktFirAddrVld3,
+  input  wire [           3 : 0] iPktBlockNum3,
+  input  wire                    iPktDrop3,
+  output wire                    oPktFirAddrRdy3,
 
   output wire [DATA_WIDTH - 1:0] oWrrData3,
   output wire                    oWrrVld3,
@@ -163,18 +163,19 @@ module PkgRead #(
   //用于指示那个通道正在想要丢包
   wire wDropRun, wDropRun0, wDropRun1, wDropRun2, wDropRun3;
 
-  wire wPkgDrop;
-  wire wPkgFirAddrRdy0, wPkgFirAddrRdy1, wPkgFirAddrRdy2, wPkgFirAddrRdy3;
+  wire wPktDrop;
+  wire wPktFirAddrRdy0, wPktFirAddrRdy1, wPktFirAddrRdy2, wPktFirAddrRdy3;
 
-  reg [ADDR_LENTH-1:0] rPkgFirAddr0, rPkgFirAddr1, rPkgFirAddr2, rPkgFirAddr3;
-  reg rPkgFirAddrVld0, rPkgFirAddrVld1, rPkgFirAddrVld2, rPkgFirAddrVld3;
-  reg rPkgDrop0, rPkgDrop1, rPkgDrop2, rPkgDrop3;
+  reg [ADDR_LENTH-1:0] rPktFirAddr0, rPktFirAddr1, rPktFirAddr2, rPktFirAddr3;
+  reg rPktFirAddrVld0, rPktFirAddrVld1, rPktFirAddrVld2, rPktFirAddrVld3;
+  reg [3:0] rPktBlockNum0, rPktBlockNum1, rPktBlockNum2, rPktBlockNum3;
+  reg rPktDrop0, rPktDrop1, rPktDrop2, rPktDrop3;
 
 
-  PkgReadUnit #(
+  PktReadUnit #(
     .ADDR_LENTH(12),
     .DATA_WIDTH(32)
-  ) PkgReadUnit_U0 (
+  ) PktReadUnit_U0 (
     .iClk  (iClk),
     .iRst_n(iRst_n),
 
@@ -198,11 +199,11 @@ module PkgRead #(
     .iData        (iData0),
 
 
-    .iPkgFirAddr   (rPkgFirAddr0),
-    .iPkgFirAddrVld(rPkgFirAddrVld0),
-    .iBlockNum     (iPkgBlockNum0),
-    .iPkgDrop      (rPkgDrop0),
-    .oPkgFirAddrRdy(wPkgFirAddrRdy0),
+    .iPktFirAddr   (rPktFirAddr0),
+    .iPktFirAddrVld(rPktFirAddrVld0),
+    .iBlockNum     (rPktBlockNum0),
+    .iPktDrop      (rPktDrop0),
+    .oPktFirAddrRdy(wPktFirAddrRdy0),
 
     .oWrrData    (oWrrData0),
     .oWrrVld     (oWrrVld0),
@@ -212,10 +213,10 @@ module PkgRead #(
     .iDropChnRdy(wDropChnRdy0)
   );
 
-  PkgReadUnit #(
+  PktReadUnit #(
     .ADDR_LENTH(12),
     .DATA_WIDTH(32)
-  ) PkgReadUnit_U1 (
+  ) PktReadUnit_U1 (
     .iClk  (iClk),
     .iRst_n(iRst_n),
 
@@ -237,11 +238,11 @@ module PkgRead #(
     .oMmuReadLast (oMmuReadLast1),
     .iData        (iData1),
 
-    .iPkgFirAddr   (rPkgFirAddr1),
-    .iPkgFirAddrVld(rPkgFirAddrVld1),
-    .iBlockNum     (iPkgBlockNum1),
-    .iPkgDrop      (rPkgDrop1),
-    .oPkgFirAddrRdy(wPkgFirAddrRdy1),
+    .iPktFirAddr   (rPktFirAddr1),
+    .iPktFirAddrVld(rPktFirAddrVld1),
+    .iBlockNum     (rPktBlockNum1),
+    .iPktDrop      (rPktDrop1),
+    .oPktFirAddrRdy(wPktFirAddrRdy1),
 
     .oWrrData    (oWrrData1),
     .oWrrVld     (oWrrVld1),
@@ -251,10 +252,10 @@ module PkgRead #(
     .iDropChnRdy(wDropChnRdy1)
   );
 
-  PkgReadUnit #(
+  PktReadUnit #(
     .ADDR_LENTH(12),
     .DATA_WIDTH(32)
-  ) PkgReadUnit_U2 (
+  ) PktReadUnit_U2 (
     .iClk  (iClk),
     .iRst_n(iRst_n),
 
@@ -276,11 +277,11 @@ module PkgRead #(
     .oMmuReadLast (oMmuReadLast2),
     .iData        (iData2),
 
-    .iPkgFirAddr   (rPkgFirAddr2),
-    .iPkgFirAddrVld(rPkgFirAddrVld2),
-    .iBlockNum     (iPkgBlockNum2),
-    .iPkgDrop      (rPkgDrop2),
-    .oPkgFirAddrRdy(wPkgFirAddrRdy2),
+    .iPktFirAddr   (rPktFirAddr2),
+    .iPktFirAddrVld(rPktFirAddrVld2),
+    .iBlockNum     (rPktBlockNum2),
+    .iPktDrop      (rPktDrop2),
+    .oPktFirAddrRdy(wPktFirAddrRdy2),
 
     .oWrrData    (oWrrData2),
     .oWrrVld     (oWrrVld2),
@@ -290,10 +291,10 @@ module PkgRead #(
     .iDropChnRdy(wDropChnRdy2)
   );
 
-  PkgReadUnit #(
+  PktReadUnit #(
     .ADDR_LENTH(12),
     .DATA_WIDTH(32)
-  ) PkgReadUnit_U3 (
+  ) PktReadUnit_U3 (
     .iClk  (iClk),
     .iRst_n(iRst_n),
 
@@ -315,11 +316,11 @@ module PkgRead #(
     .oMmuReadLast (oMmuReadLast3),
     .iData        (iData3),
 
-    .iPkgFirAddr   (rPkgFirAddr3),
-    .iPkgFirAddrVld(rPkgFirAddrVld3),
-    .iBlockNum     (iPkgBlockNum3),
-    .iPkgDrop      (rPkgDrop3),
-    .oPkgFirAddrRdy(wPkgFirAddrRdy3),
+    .iPktFirAddr   (rPktFirAddr3),
+    .iPktFirAddrVld(rPktFirAddrVld3),
+    .iBlockNum     (rPktBlockNum3),
+    .iPktDrop      (rPktDrop3),
+    .oPktFirAddrRdy(wPktFirAddrRdy3),
 
     .oWrrData    (oWrrData3),
     .oWrrVld     (oWrrVld3),
@@ -384,12 +385,12 @@ module PkgRead #(
   assign oDropAddrVld = oDropRcvrAddrVld;
 
   assign wDropRun = wDropRun0 | wDropRun1 | wDropRun2 | wDropRun3;
-  assign wPkgDrop = (rPkgDrop0 & rPkgFirAddrVld0) | (rPkgDrop1 & rPkgFirAddrVld1) | (rPkgDrop2 & rPkgFirAddrVld2) | (rPkgDrop3 & rPkgFirAddrVld3);
+  assign wPktDrop = (rPktDrop0 & rPktFirAddrVld0) | (rPktDrop1 & rPktFirAddrVld1) | (rPktDrop2 & rPktFirAddrVld2) | (rPktDrop3 & rPktFirAddrVld3);
 
-  assign oPkgFirAddrRdy0 = (!rPkgFirAddrVld0 | wPkgFirAddrRdy0) & !wDropRun & !wPkgDrop;//丢包的时候所有通道不能接收新的读请求
-  assign oPkgFirAddrRdy1 = (!rPkgFirAddrVld1 | wPkgFirAddrRdy1) & !wDropRun & !wPkgDrop;
-  assign oPkgFirAddrRdy2 = (!rPkgFirAddrVld2 | wPkgFirAddrRdy2) & !wDropRun & !wPkgDrop;
-  assign oPkgFirAddrRdy3 = (!rPkgFirAddrVld3 | wPkgFirAddrRdy3) & !wDropRun & !wPkgDrop;
+  assign oPktFirAddrRdy0 = (!rPktFirAddrVld0 | wPktFirAddrRdy0) & !wDropRun & !wPktDrop;//丢包的时候所有通道不能接收新的读请求
+  assign oPktFirAddrRdy1 = (!rPktFirAddrVld1 | wPktFirAddrRdy1) & !wDropRun & !wPktDrop;
+  assign oPktFirAddrRdy2 = (!rPktFirAddrVld2 | wPktFirAddrRdy2) & !wDropRun & !wPktDrop;
+  assign oPktFirAddrRdy3 = (!rPktFirAddrVld3 | wPktFirAddrRdy3) & !wDropRun & !wPktDrop;
 
   assign wLdata0 = wDropRun0 ? iDropData : iLdata0;
   assign wLdata1 = wDropRun1 ? iDropData : iLdata1;
@@ -404,65 +405,77 @@ module PkgRead #(
   // strict priority 0-3
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
-      rPkgDrop0 <= 0;
-      rPkgFirAddr0 <= 0;
-      rPkgFirAddrVld0 <= 0;
-    end else if (iPkgFirAddrVld0 & oPkgFirAddrRdy0) begin
-      rPkgDrop0 <= iPkgDrop0;
-      rPkgFirAddr0 <= iPkgFirAddr0;
-      rPkgFirAddrVld0 <= 1;
+      rPktDrop0 <= 0;
+      rPktFirAddr0 <= 0;
+      rPktFirAddrVld0 <= 0;
+      rPktBlockNum0 <= 0;
+    end else if (iPktFirAddrVld0 & oPktFirAddrRdy0) begin
+      rPktDrop0 <= iPktDrop0;
+      rPktFirAddr0 <= iPktFirAddr0;
+      rPktFirAddrVld0 <= 1;
+      rPktBlockNum0 <= iPktBlockNum0;
     end else begin
-      rPkgDrop0 <= 0;
-      rPkgFirAddr0 <= 0;
-      rPkgFirAddrVld0 <= 0;
+      rPktDrop0 <= 0;
+      rPktFirAddr0 <= 0;
+      rPktFirAddrVld0 <= 0;
+      rPktBlockNum0 <= 0;
     end
   end
 
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
-      rPkgDrop1 <= 0;
-      rPkgFirAddr1 <= 0;
-      rPkgFirAddrVld1 <= 0;
-    end else if (iPkgFirAddrVld1 & oPkgFirAddrRdy1 & !(iPkgDrop0 & iPkgFirAddrVld0)) begin
-      rPkgDrop1 <= iPkgDrop1;
-      rPkgFirAddr1 <= iPkgFirAddr1;
-      rPkgFirAddrVld1 <= 1;
+      rPktDrop1 <= 0;
+      rPktFirAddr1 <= 0;
+      rPktFirAddrVld1 <= 0;
+      rPktBlockNum1 <= 0;
+    end else if (iPktFirAddrVld1 & oPktFirAddrRdy1 & !(iPktDrop0 & iPktFirAddrVld0)) begin
+      rPktDrop1 <= iPktDrop1;
+      rPktFirAddr1 <= iPktFirAddr1;
+      rPktFirAddrVld1 <= 1;
+      rPktBlockNum1 <= iPktBlockNum1;
     end else begin
-      rPkgDrop1 <= 0;
-      rPkgFirAddr1 <= 0;
-      rPkgFirAddrVld1 <= 0;
+      rPktDrop1 <= 0;
+      rPktFirAddr1 <= 0;
+      rPktFirAddrVld1 <= 0;
+      rPktBlockNum1 <= 0;
     end
   end
 
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
-      rPkgDrop2 <= 0;
-      rPkgFirAddr2 <= 0;
-      rPkgFirAddrVld2 <= 0;
-    end else if (iPkgFirAddrVld2 & oPkgFirAddrRdy2 & !(iPkgDrop0 & iPkgFirAddrVld0) & !(iPkgDrop1 & iPkgFirAddrVld1)) begin
-      rPkgDrop2 <= iPkgDrop2;
-      rPkgFirAddr2 <= iPkgFirAddr2;
-      rPkgFirAddrVld2 <= 1;
+      rPktDrop2 <= 0;
+      rPktFirAddr2 <= 0;
+      rPktFirAddrVld2 <= 0;
+      rPktBlockNum2 <= 0;
+    end else if (iPktFirAddrVld2 & oPktFirAddrRdy2 & !(iPktDrop0 & iPktFirAddrVld0) & !(iPktDrop1 & iPktFirAddrVld1)) begin
+      rPktDrop2 <= iPktDrop2;
+      rPktFirAddr2 <= iPktFirAddr2;
+      rPktFirAddrVld2 <= 1;
+      rPktBlockNum2 <= iPktBlockNum2;
     end else begin
-      rPkgDrop2 <= 0;
-      rPkgFirAddr2 <= 0;
-      rPkgFirAddrVld2 <= 0;
+      rPktDrop2 <= 0;
+      rPktFirAddr2 <= 0;
+      rPktFirAddrVld2 <= 0;
+      rPktBlockNum2 <= 0;
     end
   end
 
   always @(posedge iClk or negedge iRst_n) begin
     if (!iRst_n) begin
-      rPkgDrop3 <= 0;
-      rPkgFirAddr3 <= 0;
-      rPkgFirAddrVld3 <= 0;
-    end else if (iPkgFirAddrVld3 & oPkgFirAddrRdy3 & !(iPkgDrop0 & iPkgFirAddrVld0) & !(iPkgDrop1 & iPkgFirAddrVld1) & !(iPkgDrop2 & iPkgFirAddrVld2)) begin
-      rPkgDrop3 <= iPkgDrop3;
-      rPkgFirAddr3 <= iPkgFirAddr3;
-      rPkgFirAddrVld3 <= 1;
+      rPktDrop3 <= 0;
+      rPktFirAddr3 <= 0;
+      rPktFirAddrVld3 <= 0;
+      rPktBlockNum3 <= 0;
+    end else if (iPktFirAddrVld3 & oPktFirAddrRdy3 & !(iPktDrop0 & iPktFirAddrVld0) & !(iPktDrop1 & iPktFirAddrVld1) & !(iPktDrop2 & iPktFirAddrVld2)) begin
+      rPktDrop3 <= iPktDrop3;
+      rPktFirAddr3 <= iPktFirAddr3;
+      rPktFirAddrVld3 <= 1;
+      rPktBlockNum3 <= iPktBlockNum3;
     end else begin
-      rPkgDrop3 <= 0;
-      rPkgFirAddr3 <= 0;
-      rPkgFirAddrVld3 <= 0;
+      rPktDrop3 <= 0;
+      rPktFirAddr3 <= 0;
+      rPktFirAddrVld3 <= 0;
+      rPktBlockNum3 <= 0;
     end
   end
 
