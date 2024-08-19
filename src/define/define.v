@@ -29,11 +29,11 @@ end
 `define ADDR_LENTH 12
 `define DATA_WIDTH 32
 
-`define RDDATA_CRSBAR_SHARE_MODE
+// `define RDDATA_CRSBAR_SHARE_MODE
 
 `define FPGA
 `define SDPRAM
 
 // `define SYNTHESIS
 
-// `define DEBUG
+`define DEBUG

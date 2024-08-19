@@ -1,5 +1,7 @@
 package SwitchTop_pkg;
 
+  // import "DPI" function int sine(input real degree);
+
   semaphore pktSendEndFlags = new();
   event startWaitIdle;
   semaphore pktIdleFlags = new();
@@ -18,21 +20,34 @@ package SwitchTop_pkg;
     rand int pkt_nidles;
     bit rsp;
     local static int obj_id = 0;
+    local bit [31:0] data_pre[256];
+    rand bit [9:0] pktLen_mod;
 
     constraint cstr {
-      if (pktLen[1:0] == 2'b11)
-      data.size() == ((this.pktLen + 1) >> 2) + 1;
+      // if (pktLen[1:0] == 2'b11)
+      // data.size() == ((this.pktLen + 1) >> 2) + 1;
+      // else
+      // data.size() == ((this.pktLen + 1) >> 2) + 1 + 1;
+      if (((this.pktLen | 2'b11) & 6'h3f) == 6'h3f)  //TODO: Fix Unpack Bug
+      data.size() == (((this.pktLen | 2'b11) + 1) >> 2) + 2;
       else
-      data.size() == ((this.pktLen + 1) >> 2) + 1 + 1;
+      data.size() == (((this.pktLen | 2'b11) + 1) >> 2) + 1;
+
+      if (((this.pktLen | 2'b11) & 6'h3f) == 6'h3f)  //TODO: Fix Unpack Bug
+      pktLen_mod == (this.pktLen | 2'b11) + 4;
+      else
+      pktLen_mod == (this.pktLen | 2'b11);
 
       foreach (data[i])
       if (i == 0)
-      data[i] == {15'b0, this.pktLen, this.prio, this.dstPort};
+      data[i] == {15'b0, this.pktLen_mod, this.prio, this.dstPort};
       else
       if (i == 1)
-      data[i] == {3'b0, this.pktId, this.pktLen, this.prio, this.dstPort, this.srcPort};
+      data[i] == {3'b0, this.pktId, this.pktLen_mod, this.prio, this.dstPort, this.srcPort};
       else
+      // data[i] == data_pre[i];
       data[i] == 'hc0000000 + (this.pktId << 12) + i;
+
 
       srcPort inside {[0 : 15]};
       dstPort inside {[0 : 15]};
@@ -42,6 +57,11 @@ package SwitchTop_pkg;
       data_nidles inside {[0 : 2]};
       pkt_nidles inside {[1 : 10]};
     }
+
+    function void pre_randomize();
+      // real offset = $urandom;
+      // foreach (this.data_pre[i]) this.data_pre[i] = sine(i * 3 + offset);
+    endfunction
 
     function new();
       this.obj_id++;
@@ -71,6 +91,8 @@ package SwitchTop_pkg;
       s = {s, $sformatf("dstPort = %0d: \n", this.dstPort)};
       s = {s, $sformatf("prio = %0d: \n", this.prio)};
       s = {s, $sformatf("pktLen = %0d: \n", this.pktLen)};
+      s = {s, $sformatf("pktLen_mod = %0d: \n", this.pktLen_mod)};
+      s = {s, $sformatf("data.size() = %0d: \n", this.data.size())};
       s = {s, $sformatf("pktId = %0d: \n", this.pktId)};
       s = {s, $sformatf("data_nidles = %0d: \n", this.data_nidles)};
       s = {s, $sformatf("pkt_nidles = %0d: \n", this.pkt_nidles)};
@@ -80,6 +102,7 @@ package SwitchTop_pkg;
     endfunction
   endclass
 
+  bit [2:0] prio_arr[16];
   // Generate multi pkts class
   class pkt_generator;
     rand int srcPort_q[$];
@@ -91,12 +114,14 @@ package SwitchTop_pkg;
     rand int data_nidles = -1;
     rand int pkt_nidles = -1;
     rand int ntests;  //Test num
+    rand int order_prio;
     int srcPort = -1;
     int dstPort = -1;
     int prio = -1;
     int pktLen = -1;  // 63-1023 indicates 64B-1024B
     int pktId = -1;
     int ntrans = 10;
+
 
 
     mailbox #(pkt_transaction) req_mb;
@@ -109,6 +134,7 @@ package SwitchTop_pkg;
       pktLen_q.size() == ntests;
       pktId_q.size() == ntests;
       ntrans_q.size() == ntests;
+      soft order_prio == 0;
       soft data_nidles == -1;
       soft pkt_nidles == -1;
       soft ntrans == 10;
@@ -144,7 +170,12 @@ package SwitchTop_pkg;
       assert (req.randomize with {
         local:: srcPort >= 0 -> srcPort == local:: srcPort;
         local:: dstPort >= 0 -> dstPort == local:: dstPort;
+
+        if (order_prio)
+        prio == prio_arr[dstPort];
+        else
         local:: prio >= 0 -> prio == local:: prio;
+
         local:: pktLen >= 0 -> pktLen == local:: pktLen;
         local:: pktId >= 0 -> pktId == local:: pktId;
         local:: data_nidles >= 0 -> data_nidles == local:: data_nidles;
@@ -153,6 +184,7 @@ package SwitchTop_pkg;
       else $fatal("[RNDFAIL] channel packet randomization failure!");
       if (this.pktId == 255) this.pktId = 0;
       else this.pktId++;
+      if (this.order_prio) prio_arr[req.dstPort]++;
 `ifdef DEBUG
       $display(req.sprint());
 `endif
@@ -281,6 +313,7 @@ package SwitchTop_pkg;
     local virtual wrPortIntf intf;
     mailbox #(pktInfo_t) send_mb[16];
     local state_e sendState = SOP;
+    mailbox sendCnt_mb;
 
     function new(string name = "pkt_send_monitor");
       this.name = name;
@@ -308,6 +341,7 @@ package SwitchTop_pkg;
             // if (intf.mon_ck.wrVld === 'b1 && intf.mon_ck.fifoFull === 'b0 &&  intf.mon_ck.sramAlmostFull === 'b0) begin
             if (intf.mon_ck.wrVld === 'b1 && intf.mon_ck.fifoFull === 'b0) begin
               sendState = DATA0;
+              sendCnt_mb.put(1);
 `ifdef DEBUG
               $display("%0t %s monitored pkt send ctrl frame %8x", $time, this.name,
                        intf.mon_ck.wrData);
@@ -318,6 +352,7 @@ package SwitchTop_pkg;
             // if (intf.mon_ck.wrVld === 'b1 && intf.mon_ck.fifoFull === 'b0 &&  intf.mon_ck.sramAlmostFull === 'b0) begin
             if (intf.mon_ck.wrVld === 'b1 && intf.mon_ck.fifoFull === 'b0) begin
               sendState = DATAN;
+              sendCnt_mb.put(1);
               {p.pktId, p.pktLen, p.prio, p.dstPort, p.srcPort} = intf.mon_ck.wrData;
               send_mb[p.dstPort].put(p);
 `ifdef DEBUG
@@ -329,6 +364,7 @@ package SwitchTop_pkg;
             // if (intf.mon_ck.wrVld === 'b1 && intf.mon_ck.fifoFull === 'b0 &&  intf.mon_ck.sramAlmostFull === 'b0) begin
             if (intf.mon_ck.wrVld === 'b1 && intf.mon_ck.fifoFull === 'b0) begin
               sendState = DATAN;
+              sendCnt_mb.put(1);
 `ifdef DEBUG
               $display("%0t %s monitored pkt send data frameN %8x", $time, this.name,
                        intf.mon_ck.wrData);
@@ -402,10 +438,8 @@ package SwitchTop_pkg;
               receiveState = EOP;
               if (intf.mon_ck.err === 1'b1) begin
                 err_mb.put(1);
-`ifdef DEBUG
                 $display("%0t %s monitored pkt receive CRC error! Total CRC error: %0d", $time,
                          this.name, err_mb.num());
-`endif
               end
             end
           end
@@ -525,6 +559,7 @@ package SwitchTop_pkg;
     mailbox #(pktInfo_t) receive_mb[16];
     mailbox drop_mb[16];
     mailbox err_mb[16];
+    mailbox sendCnt_mb[16];
     local int ntests;
 
     function new(string name = "pkt_checker", int ntests);
@@ -534,6 +569,7 @@ package SwitchTop_pkg;
       foreach (this.receive_mb[i]) this.receive_mb[i] = new();
       foreach (this.drop_mb[i]) this.drop_mb[i] = new();
       foreach (this.err_mb[i]) this.err_mb[i] = new();
+      foreach (this.sendCnt_mb[i]) this.sendCnt_mb[i] = new();
     endfunction
 
     function void set_interface(virtual fifoUsageIntf intf[16]);
@@ -615,6 +651,7 @@ package SwitchTop_pkg;
         foreach (this.drop_mb[i]) $display("drop_mb[%0d]: %0d", i, this.drop_mb[i].num());
         foreach (this.err_mb[i]) $display("err_mb[%0d]: %0d", i, this.err_mb[i].num());
         foreach (this.pktStore[i]) $display("pktStore[%0d]: %0d", i, this.pktStore[i]);
+        foreach (this.sendCnt_mb[i]) $display("sendCnt_mb[%0d]: %0d", i, this.sendCnt_mb[i].num());
         $fatal;
       end
     endtask
@@ -640,6 +677,7 @@ package SwitchTop_pkg;
         this.agent[i].driver.req_mb = this.gen[i].req_mb;
         this.agent[i].driver.rsp_mb = this.gen[i].rsp_mb;
         this.agent[i].send_mon.send_mb = this.chker.send_mb[i];
+        this.agent[i].send_mon.sendCnt_mb = this.chker.sendCnt_mb[i];
         this.agent[i].drop_mon.drop_mb = this.chker.drop_mb;
       end
       foreach (receive_mon[i]) begin
@@ -941,6 +979,30 @@ package SwitchTop_pkg;
         $finish();
       end
     endtask
+  endclass
+
+  class max_test extends root_test;
+    function new(string name = "max_test");
+      super.new(name, 1);
+    endfunction
+
+    virtual function void do_config();
+      foreach (gen[i]) begin
+        assert (gen[i].randomize() with {
+          foreach (srcPort_q[j]) srcPort_q[j] == i;
+          foreach (dstPort_q[j]) dstPort_q[j] == -1;  // -1 indicates random in every trans
+          foreach (prio_q[j]) prio_q[j] == -1;
+          foreach (pktLen_q[j]) pktLen_q[j] == -1;
+          foreach (pktId_q[j]) pktId_q[j] == 0;
+          foreach (ntrans_q[j]) ntrans_q[j] == 500;
+          order_prio == 1;  //do not shuffle prio
+          ntests == local:: ntests;
+          data_nidles == 0;
+          pkt_nidles == 1;
+        })
+        else $fatal("[RNDFAIL] gen[%0d] randomization failure!", i);
+      end
+    endfunction
   endclass
 endpackage
 

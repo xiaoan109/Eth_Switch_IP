@@ -29,7 +29,7 @@ int float_to_q31_f(double x){
     return ((int)((x) < 1 ? ((x) >= -1 ? (x)*0x80000000 : 0x80000000) : 0x7FFFFFFF));
 }
 
-int SIN(double degree) {
+int sine(double degree) {
     const double pi = acos(-1.0);
     double r, ret;
     r = degree*pi/180;

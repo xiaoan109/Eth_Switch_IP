@@ -140,6 +140,7 @@ module UnpackSgDma #(
   wire [3:0] wPktDstPort[3:0];
   wire [3:0] wPktTagVld;
   wire [3:0] wTagFifoFull;
+  wire [3:0] wTagFifoEmpty;
 
   //--------------------Fifo--------------------//
   Fifo #(
@@ -277,7 +278,7 @@ module UnpackSgDma #(
         .RESET_VALUE(1'b0)
       ) Pulse_Latch_inst (
         .clock(iClk),
-        .clear(wTagFifoFull[i]),
+        .clear(wAllLastNegedge_latch[i] && wTagFifoFull[i]),
         .pulse_in(wAllLastNegedge[i]),
         .level_out(wAllLastNegedge_latch[i])
       );
@@ -475,9 +476,9 @@ module UnpackSgDma #(
     .iWEn        (wPktTagVld[0] && iWrrRdy0),
     .iREn        (wAllLastNegedge_latch[0]),
     .oReadData   ({oPktFirAddr0, oPktLen0, oPktPri0, oPktDstPort0}),
-    .oReadDataVld(oPktTagVld0),
+    .oReadDataVld(),
     .oFull       (wTagFifoFull[0]),
-    .oEmpty      ()
+    .oEmpty      (wTagFifoEmpty[0])
   );
 
   Fifo #(
@@ -490,9 +491,9 @@ module UnpackSgDma #(
     .iWEn        (wPktTagVld[1] && iWrrRdy1),
     .iREn        (wAllLastNegedge_latch[1]),
     .oReadData   ({oPktFirAddr1, oPktLen1, oPktPri1, oPktDstPort1}),
-    .oReadDataVld(oPktTagVld1),
+    .oReadDataVld(),
     .oFull       (wTagFifoFull[1]),
-    .oEmpty      ()
+    .oEmpty      (wTagFifoEmpty[1])
   );
 
   Fifo #(
@@ -505,9 +506,9 @@ module UnpackSgDma #(
     .iWEn        (wPktTagVld[2] && iWrrRdy2),
     .iREn        (wAllLastNegedge_latch[2]),
     .oReadData   ({oPktFirAddr2, oPktLen2, oPktPri2, oPktDstPort2}),
-    .oReadDataVld(oPktTagVld2),
+    .oReadDataVld(),
     .oFull       (wTagFifoFull[2]),
-    .oEmpty      ()
+    .oEmpty      (wTagFifoEmpty[2])
   );
 
   Fifo #(
@@ -520,10 +521,14 @@ module UnpackSgDma #(
     .iWEn        (wPktTagVld[3] && iWrrRdy3),
     .iREn        (wAllLastNegedge_latch[3]),
     .oReadData   ({oPktFirAddr3, oPktLen3, oPktPri3, oPktDstPort3}),
-    .oReadDataVld(oPktTagVld3),
+    .oReadDataVld(),
     .oFull       (wTagFifoFull[3]),
-    .oEmpty      ()
+    .oEmpty      (wTagFifoEmpty[3])
   );
 
+  assign oPktTagVld0 = !wTagFifoEmpty[0];
+  assign oPktTagVld1 = !wTagFifoEmpty[1];
+  assign oPktTagVld2 = !wTagFifoEmpty[2];
+  assign oPktTagVld3 = !wTagFifoEmpty[3];
 
 endmodule

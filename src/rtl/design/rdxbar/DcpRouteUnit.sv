@@ -53,6 +53,7 @@ module DcpRouteUnit #(
   int j;
   always_comb begin
     if(swiInVld) begin
+      swiInRdy = 1'b0;
       for(j=0; j<RNUM; j=j+1) begin
         //if(swiInDst == j) begin
         if(swiInDst[AW-1-:$clog2(RNUM)] == j) begin  // SHOULD INDEX FROM LSB!

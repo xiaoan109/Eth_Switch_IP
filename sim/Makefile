@@ -106,8 +106,10 @@ endif
 	find $(TB_PATH) -name "tb_$(DUT).v" >> $(SIM_DIR)/filelist.f
 	find $(MODEL_PATH) -name "*.v" >> $(SIM_DIR)/filelist.f
 ifneq ($(SV_ENABLE),)
+ifeq ($(DUT), SwitchTop)
 	find $(TB_PATH) -name "*_pkg.sv" >> $(SIM_DIR)/filelist.f
 	find $(TB_PATH) -name "*_intf.sv" >> $(SIM_DIR)/filelist.f
+endif
 	find $(TB_PATH) -name "tb_$(DUT).sv" >> $(SIM_DIR)/filelist.f
 	find $(MODEL_PATH) -name "*.sv" >> $(SIM_DIR)/filelist.f
 endif

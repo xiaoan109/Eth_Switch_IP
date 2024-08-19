@@ -335,6 +335,7 @@ module tb_SwitchTop ();
   m2s_test m2s_test_h;
   random_test random_test_h;
   sram_full_test sram_full_test_h;
+  max_test max_test_h;
   root_test tests[string];
   string name;
   initial begin
@@ -343,11 +344,13 @@ module tb_SwitchTop ();
     m2s_test_h = new();
     random_test_h = new();
     sram_full_test_h = new();
+    max_test_h = new();
     tests["ROOTTEST"] = root_test_h;
     tests["S2STEST"] = s2s_test_h;
     tests["M2STEST"] = m2s_test_h;
     tests["RANDOMTEST"] = random_test_h;
     tests["SRAMFULLTEST"] = sram_full_test_h;
+    tests["MAXTEST"] = max_test_h;
 
     fork
       RESET();

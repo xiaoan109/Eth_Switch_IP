@@ -428,7 +428,7 @@ module PktRead #(
       rPktFirAddr1 <= 0;
       rPktFirAddrVld1 <= 0;
       rPktBlockNum1 <= 0;
-    end else if (iPktFirAddrVld1 & oPktFirAddrRdy1 & !(iPktDrop0 & iPktFirAddrVld0)) begin
+    end else if (iPktFirAddrVld1 & oPktFirAddrRdy1) begin
       rPktDrop1 <= iPktDrop1;
       rPktFirAddr1 <= iPktFirAddr1;
       rPktFirAddrVld1 <= 1;
@@ -447,7 +447,7 @@ module PktRead #(
       rPktFirAddr2 <= 0;
       rPktFirAddrVld2 <= 0;
       rPktBlockNum2 <= 0;
-    end else if (iPktFirAddrVld2 & oPktFirAddrRdy2 & !(iPktDrop0 & iPktFirAddrVld0) & !(iPktDrop1 & iPktFirAddrVld1)) begin
+    end else if (iPktFirAddrVld2 & oPktFirAddrRdy2) begin
       rPktDrop2 <= iPktDrop2;
       rPktFirAddr2 <= iPktFirAddr2;
       rPktFirAddrVld2 <= 1;
@@ -466,7 +466,7 @@ module PktRead #(
       rPktFirAddr3 <= 0;
       rPktFirAddrVld3 <= 0;
       rPktBlockNum3 <= 0;
-    end else if (iPktFirAddrVld3 & oPktFirAddrRdy3 & !(iPktDrop0 & iPktFirAddrVld0) & !(iPktDrop1 & iPktFirAddrVld1) & !(iPktDrop2 & iPktFirAddrVld2)) begin
+    end else if (iPktFirAddrVld3 & oPktFirAddrRdy3) begin
       rPktDrop3 <= iPktDrop3;
       rPktFirAddr3 <= iPktFirAddr3;
       rPktFirAddrVld3 <= 1;
